@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class CarController : NetworkBehaviour
 {
+    public static int LastCheckpointCollected = 0;
+    public static int RoundsCompleted = 0;
+    private Vector3 lastCheckpointPosition;
+    private Vector3 lastCheckpointRotation;
     [SerializeField] bool debugMode = true;
 
     [Header("Speed")]
@@ -40,6 +44,7 @@ public class CarController : NetworkBehaviour
         if(!IsOwner)
         {
             camera.SetActive(false);
+            SetLastCheckpoint(transform.position, transform.eulerAngles);
         }
     }
 
@@ -151,10 +156,31 @@ public class CarController : NetworkBehaviour
 
             carRigidbody.AddForce(collision.impulse * collisionBouncer.BounceRate(), ForceMode.Impulse);
         }
+
+        if (collision.gameObject.CompareTag("DeathBarrier"))
+        {
+            ReturnToLastCheckpoint();
+        }
     }
 
     public void ChangeGravityDirectionTo(Vector3 newGravityDirection)
     {
         gravityDirection = newGravityDirection.normalized;
+    }
+
+    // Checkpoint Logic
+    public void SetLastCheckpoint(Vector3 checkpointPosition, Vector3 checkpointRotation)
+    {
+        Vector3 offset = new Vector3(0, 5, 0);
+        lastCheckpointPosition = checkpointPosition;
+        lastCheckpointRotation = checkpointRotation; 
+    }
+
+    public void ReturnToLastCheckpoint()
+    {
+        carRigidbody.velocity = Vector3.zero; 
+        carRigidbody.angularVelocity = Vector3.zero; 
+        transform.position = lastCheckpointPosition;
+        transform.eulerAngles = lastCheckpointRotation; 
     }
 }
