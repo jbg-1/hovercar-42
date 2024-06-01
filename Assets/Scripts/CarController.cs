@@ -213,15 +213,8 @@ public class CarController : NetworkBehaviour
         }
 
         if (bufferIndex == -1) return;
-        
-        ClientRpcParams clientRpcParams = new ClientRpcParams
-        {
-            Send = new ClientRpcSendParams
-            {
-                TargetClientIds = new ulong[] { OwnerClientId }
-            }
-        };
-        SendToClientRpc(serverStateBuffer.Get(bufferIndex), clientRpcParams);
+       
+        SendToClientRpc(serverStateBuffer.Get(bufferIndex));
         HandleExtrapolation(serverStateBuffer.Get(bufferIndex), CalculateLatencyInMillis(inputPayload));
     }
 
@@ -266,7 +259,7 @@ public class CarController : NetworkBehaviour
     bool ShouldExtrapolate(float latency) => latency < extrapolationLimit && latency > Time.fixedDeltaTime;
 
     [ClientRpc]
-    void SendToClientRpc(StatePayload statePayload, ClientRpcParams clientRpcParams)
+    void SendToClientRpc(StatePayload statePayload)
     {
         if (!IsOwner) return;
         lastServerState = statePayload;
@@ -444,7 +437,8 @@ public class CarController : NetworkBehaviour
             turnForward = -Vector3.Dot(gravityDirection, transform.forward) * networkTimer.MinTimeBetweenTicks * rotationSpeed;
             turnRight = Vector3.Dot(gravityDirection, transform.right) * networkTimer.MinTimeBetweenTicks * rotationSpeed;
         }
-        
+
+        //carRigidbody.velocity += (accelerationMovement + gravityToAdd * networkTimer.MinTimeBetweenTicks) *networkTimer.MinTimeBetweenTicks;
         carRigidbody.AddRelativeTorque(new Vector3(turnForward, angle, turnRight), ForceMode.Acceleration);
         carRigidbody.AddForce(accelerationMovement + gravityToAdd * networkTimer.MinTimeBetweenTicks, ForceMode.Acceleration);
         //carRigidbody.AddRelativeTorque(new Vector3(0, angle, 0), ForceMode.Acceleration);
