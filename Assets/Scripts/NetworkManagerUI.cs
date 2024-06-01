@@ -36,7 +36,7 @@ public class NetworkManagerUI : MonoBehaviour
 
     private void SwitchCanvas()
     {
-        menuCanvas.SetActive(false);
-        hudCanvas.SetActive(true);
+        //menuCanvas.SetActive(false);
+        //hudCanvas.SetActive(true);
     }
 }

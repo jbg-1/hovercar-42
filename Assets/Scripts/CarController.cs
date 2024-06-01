@@ -25,6 +25,17 @@ public struct StatePayload : INetworkSerializable
         serializer.SerializeValue(ref velocity);
         serializer.SerializeValue(ref angularVelocity);
     }
+
+    public override String ToString()
+    {
+        return "tick: " + tick +
+               "networkObjectId: " + networkObjectId +
+               "position: " + position +
+               "rotation: " + rotation +
+               "velocity: " + velocity +
+               "angularVelocity: " + angularVelocity;
+
+    }
 }
 
 public struct InputPayload : INetworkSerializable
@@ -42,6 +53,16 @@ public struct InputPayload : INetworkSerializable
         serializer.SerializeValue(ref networkObjectId);
         serializer.SerializeValue(ref angle);
         serializer.SerializeValue(ref position);
+    }
+    
+    public override String ToString()
+    {
+        return "tick: " + tick +
+               "networkObjectId: " + networkObjectId +
+               "timestamp: " + timestamp +
+               "angle: " + angle +
+               "position: " + position;
+
     }
 }
 
@@ -181,10 +202,13 @@ public class CarController : NetworkBehaviour
         while (serverInputQueue.Count > 0)
         {
             inputPayload = serverInputQueue.Dequeue();
+            Debug.Log("Server inputPayload " + inputPayload.ToString());
 
             bufferIndex = inputPayload.tick % k_bufferSize;
 
             StatePayload statePayload = ProcessMovement(inputPayload);
+            Debug.Log("Server statePayload " + statePayload.ToString());
+
             serverStateBuffer.Add(statePayload, bufferIndex);
         }
 
@@ -264,10 +288,14 @@ public class CarController : NetworkBehaviour
             position = transform.position
         };
 
+        Debug.Log("Client inputPayload " + inputPayload.ToString());
+
         clientInputBuffer.Add(inputPayload, bufferIndex);
         SendToServerRpc(inputPayload);
 
         StatePayload statePayload = ProcessMovement(inputPayload);
+        Debug.Log("Client statePayload " + statePayload.ToString());
+
         clientStateBuffer.Add(statePayload, bufferIndex);
 
         HandleServerReconciliation();
@@ -434,7 +462,7 @@ public class CarController : NetworkBehaviour
         }
     }
 
-    /*
+    
     private void OnCollisionEnter(Collision collision)
     {
         Bouncer collisionBouncer;
@@ -446,10 +474,10 @@ public class CarController : NetworkBehaviour
 
         if (collision.gameObject.CompareTag("DeathBarrier"))
         {
-            ReturnToLastCheckpoint();
+            //ReturnToLastCheckpoint();
         }
     }
-
+    /*
     public void ChangeGravityDirectionTo(Vector3 newGravityDirection)
     {
         gravityDirection = newGravityDirection.normalized;

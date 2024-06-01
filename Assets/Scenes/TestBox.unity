@@ -2812,7 +2812,7 @@ MonoBehaviour:
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
-    Address: 192.168.2.140
+    Address: 192.168.0.159
     Port: 7777
     ServerListenAddress: 0.0.0.0
   DebugSimulator:
@@ -3044,45 +3044,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1442083b3f62f9745818677ca5332498, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cubeControlEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1160805170}
-        m_TargetAssemblyTypeName: AppInputController, Assembly-CSharp
-        m_MethodName: HandleCubeControl
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  cubeStateEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  notificationEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  validConnectionEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  debugControlEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  appDatagramEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  poseEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  mqttCommunication: {fileID: 1160805172}
-  zmqCommunication: {fileID: 1160805168}
-  appController: {fileID: 1160805170}
-  helloCubesEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &1160805172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4742,6 +4703,8 @@ MonoBehaviour:
   hostButton: {fileID: 278001027}
   clientButton: {fileID: 1362189191}
   serverButton: {fileID: 1945565717}
+  menuCanvas: {fileID: 0}
+  hudCanvas: {fileID: 0}
 --- !u!1 &1810292635
 GameObject:
   m_ObjectHideFlags: 0
