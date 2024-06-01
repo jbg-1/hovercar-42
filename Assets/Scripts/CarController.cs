@@ -438,9 +438,9 @@ public class CarController : NetworkBehaviour
             turnRight = Vector3.Dot(gravityDirection, transform.right) * networkTimer.MinTimeBetweenTicks * rotationSpeed;
         }
 
-        //carRigidbody.velocity += (accelerationMovement + gravityToAdd * networkTimer.MinTimeBetweenTicks) *networkTimer.MinTimeBetweenTicks;
+        carRigidbody.velocity += (accelerationMovement + gravityToAdd * networkTimer.MinTimeBetweenTicks) *networkTimer.MinTimeBetweenTicks;
         carRigidbody.AddRelativeTorque(new Vector3(turnForward, angle, turnRight), ForceMode.Acceleration);
-        carRigidbody.AddForce(accelerationMovement + gravityToAdd * networkTimer.MinTimeBetweenTicks, ForceMode.Acceleration);
+        //carRigidbody.AddForce(accelerationMovement + gravityToAdd * networkTimer.MinTimeBetweenTicks, ForceMode.Acceleration);
         //carRigidbody.AddRelativeTorque(new Vector3(0, angle, 0), ForceMode.Acceleration);
         //carRigidbody.AddForce(accelerationMovement * networkTimer.MinTimeBetweenTicks, ForceMode.Acceleration);
     }
