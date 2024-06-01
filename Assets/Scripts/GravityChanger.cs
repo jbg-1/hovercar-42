@@ -20,7 +20,7 @@ public class GravityChanger : MonoBehaviour {
         CarController carControllerVar;
         if(other.TryGetComponent<CarController>(out carControllerVar))
         {
-            carControllerVar.ChangeGravityDirectionTo(gravityDirection);
+            //carControllerVar.ChangeGravityDirectionTo(gravityDirection);
         }
     }
 }

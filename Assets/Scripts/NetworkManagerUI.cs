@@ -14,7 +14,7 @@ public class NetworkManagerUI : MonoBehaviour
 
     private void Awake()
     {
-        hudCanvas.SetActive(false);
+        //hudCanvas.SetActive(false);
 
         hostButton.onClick.AddListener(() =>
         {

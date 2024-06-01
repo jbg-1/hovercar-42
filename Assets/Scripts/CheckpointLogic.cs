@@ -22,7 +22,7 @@ public class Checkpoint : MonoBehaviour
 
                 Vector3 checkpointPosition = GetComponent<Collider>().bounds.center;
                 Vector3 checkpointRotation = transform.eulerAngles;
-                car.SetLastCheckpoint(checkpointPosition, checkpointRotation);
+                //car.SetLastCheckpoint(checkpointPosition, checkpointRotation);
 
                 Debug.Log("Checkpoint set to: " + checkpointPosition);
             }
