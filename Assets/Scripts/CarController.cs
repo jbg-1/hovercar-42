@@ -44,7 +44,6 @@ public struct InputPayload : INetworkSerializable
     public DateTime timestamp;
     public ulong networkObjectId;
     public float angle;
-    public Vector3 position;
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
@@ -52,7 +51,6 @@ public struct InputPayload : INetworkSerializable
         serializer.SerializeValue(ref timestamp);
         serializer.SerializeValue(ref networkObjectId);
         serializer.SerializeValue(ref angle);
-        serializer.SerializeValue(ref position);
     }
     
     public override String ToString()
@@ -60,9 +58,7 @@ public struct InputPayload : INetworkSerializable
         return "tick: " + tick +
                "networkObjectId: " + networkObjectId +
                "timestamp: " + timestamp +
-               "angle: " + angle +
-               "position: " + position;
-
+               "angle: " + angle;
     }
 }
 
@@ -278,7 +274,6 @@ public class CarController : NetworkBehaviour
             timestamp = DateTime.Now,
             networkObjectId = NetworkObjectId,
             angle = Input.GetAxis("Horizontal"),
-            position = transform.position
         };
 
         Debug.Log("Client inputPayload " + inputPayload.ToString());
