@@ -88,12 +88,20 @@ public class CarController : NetworkBehaviour
 
     private void Awake()
     {
+
+        if (!IsOwner && !IsServer) return;
+       
         minTimeBetweenTicks = 1f / SERVER_TICK_RATE;
 
         stateBuffer = new StatePayload[BUFFER_SIZE];
         inputBuffer = new InputPayload[BUFFER_SIZE];
         inputQueue = new Queue<InputPayload>();
         aimedClient = new ClientRpcParams { Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { OwnerClientId } } };
+
+        if (IsOwner)
+        {
+            GetComponent<ClientNetworkTransform>().authorityMode = AuthorityMode.Client;
+        }
     }
 
     private void Start()
@@ -106,6 +114,8 @@ public class CarController : NetworkBehaviour
 
     void Update()
     {
+        if (!IsOwner && !IsServer) return;
+
         timer += Time.deltaTime;
 
         while (timer >= minTimeBetweenTicks)
