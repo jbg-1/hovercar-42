@@ -124,7 +124,7 @@ MonoBehaviour:
   RightBackTurbine: {fileID: 7594664244091242849}
   LeftBackTurbine: {fileID: 3582148278432951305}
   reconciliationCooldownTime: 1
-  reconciliationThreshold: 10
+  reconciliationThreshold: 100
   extrapolationLimit: 0.5
   extrapolationMultiplier: 1.2
 --- !u!136 &69724395390018772

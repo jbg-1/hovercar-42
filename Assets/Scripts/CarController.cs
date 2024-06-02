@@ -169,12 +169,7 @@ public class CarController : NetworkBehaviour
         networkTimer.Update(Time.deltaTime);
         reconciliationTimer.Tick(Time.deltaTime);
         extrapolationTimer.Tick(Time.deltaTime);
-        Extraplolate();
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            transform.position += transform.forward * 20f;
-        }
+        //Extraplolate();
     }
 
     void FixedUpdate()
@@ -185,7 +180,7 @@ public class CarController : NetworkBehaviour
             HandleServerTick();
         }
 
-        Extraplolate();
+        //Extraplolate();
     }
 
     //The Server looks into the 
@@ -432,11 +427,11 @@ public class CarController : NetworkBehaviour
             turnForward = -Vector3.Dot(gravityDirection, transform.forward) * networkTimer.MinTimeBetweenTicks * rotationSpeed;
             turnRight = Vector3.Dot(gravityDirection, transform.right) * networkTimer.MinTimeBetweenTicks * rotationSpeed;
         }
-
-        //carRigidbody.velocity += (accelerationMovement + gravityToAdd * networkTimer.MinTimeBetweenTicks) *networkTimer.MinTimeBetweenTicks;
+        
+        //carRigidbody.velocity = transform.forward; //(accelerationMovement + gravityToAdd * networkTimer.MinTimeBetweenTicks) *networkTimer.MinTimeBetweenTicks;
         carRigidbody.AddRelativeTorque(new Vector3(turnForward, angle, turnRight), ForceMode.Acceleration);
         // + gravityToAdd * networkTimer.MinTimeBetweenTicks
-        carRigidbody.AddForce(accelerationMovement, ForceMode.Acceleration);
+        carRigidbody.AddForce(accelerationMovement + gravityToAdd * networkTimer.MinTimeBetweenTicks, ForceMode.Acceleration);
         //carRigidbody.AddRelativeTorque(new Vector3(0, angle, 0), ForceMode.Acceleration);
         //carRigidbody.AddForce(accelerationMovement * networkTimer.MinTimeBetweenTicks, ForceMode.Acceleration);
     }
@@ -459,7 +454,7 @@ public class CarController : NetworkBehaviour
         if(collision.gameObject.TryGetComponent<Bouncer>(out collisionBouncer))
         {
 
-            carRigidbody.AddForce(collision.impulse * collisionBouncer.BounceRate(), ForceMode.Impulse);
+            //carRigidbody.AddForce(collision.impulse * collisionBouncer.BounceRate(), ForceMode.Impulse);
         }
 
         if (collision.gameObject.CompareTag("DeathBarrier"))
