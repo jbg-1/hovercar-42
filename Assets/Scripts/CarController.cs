@@ -364,76 +364,8 @@ public class CarController : NetworkBehaviour
 
     void Move(float angle)
     {
-        Vector3 parallelVector = (Vector3.Dot(transform.forward, carRigidbody.velocity)) * transform.forward;
-        Vector3 orthogonalVector = carRigidbody.velocity - parallelVector;
-        Vector3 accelerationMovement = (-orthogonalVector * horizontalDriftDamping + transform.forward * horizontalForwardAcceleration) * networkTimer.MinTimeBetweenTicks;
-     
-
-        RaycastHit hit;
-        float leftFrontHeight = flyingHeight * 2;
-        float rightFrontHeight = flyingHeight * 2;
-        float leftBackHeight = flyingHeight * 2;
-        float rightBackHeight = flyingHeight * 2;
-        if (Physics.Raycast(LeftFrontTurbine.transform.position, gravityDirection, out hit, flyingHeight * 2, groundMask))
-        {
-            leftFrontHeight = hit.distance;
-        }
-        if (Physics.Raycast(RightFrontTurbine.transform.position, gravityDirection, out hit, flyingHeight * 2, groundMask))
-        {
-            rightFrontHeight = hit.distance;
-        }
-        if (Physics.Raycast(LeftBackTurbine.transform.position, gravityDirection, out hit, flyingHeight * 2, groundMask))
-        {
-            leftBackHeight = hit.distance;
-        }
-        if (Physics.Raycast(RightBackTurbine.transform.position, gravityDirection, out hit, flyingHeight * 2, groundMask))
-        {
-            rightBackHeight = hit.distance;
-        }
-        float total = (leftFrontHeight + rightFrontHeight + leftBackHeight + rightBackHeight) / 4;
-        Vector3 gravityToAdd;
-        if (total < flyingHeight)
-        {
-            gravityToAdd = -upwardsAcceleration * (1 - total / flyingHeight) * gravityDirection;
-        }
-        else
-        {
-            gravityToAdd = gravityDirection * gravityStrength;
-        }
-        float turnRight;
-        float turnForward;
-        if (total < flyingHeight * 1.1)
-        {
-            if ((leftFrontHeight + leftBackHeight) / 2 > (rightBackHeight + rightFrontHeight) / 2)
-            {
-                turnRight = networkTimer.MinTimeBetweenTicks * rotationSpeed;
-            }
-            else
-            {
-                turnRight = -networkTimer.MinTimeBetweenTicks * rotationSpeed;
-            }
-
-            if ((leftFrontHeight + rightFrontHeight) / 2 > (leftBackHeight + rightBackHeight) / 2)
-            {
-                turnForward = networkTimer.MinTimeBetweenTicks * rotationSpeed;
-            }
-            else
-            {
-                turnForward = -networkTimer.MinTimeBetweenTicks * rotationSpeed;
-            }
-        }
-        else
-        {
-            turnForward = -Vector3.Dot(gravityDirection, transform.forward) * networkTimer.MinTimeBetweenTicks * rotationSpeed;
-            turnRight = Vector3.Dot(gravityDirection, transform.right) * networkTimer.MinTimeBetweenTicks * rotationSpeed;
-        }
-        
-        //carRigidbody.velocity = transform.forward; //(accelerationMovement + gravityToAdd * networkTimer.MinTimeBetweenTicks) *networkTimer.MinTimeBetweenTicks;
-        carRigidbody.AddRelativeTorque(new Vector3(turnForward, angle, turnRight), ForceMode.Acceleration);
-        // + gravityToAdd * networkTimer.MinTimeBetweenTicks
-        carRigidbody.AddForce(accelerationMovement + gravityToAdd * networkTimer.MinTimeBetweenTicks, ForceMode.Acceleration);
-        //carRigidbody.AddRelativeTorque(new Vector3(0, angle, 0), ForceMode.Acceleration);
-        //carRigidbody.AddForce(accelerationMovement * networkTimer.MinTimeBetweenTicks, ForceMode.Acceleration);
+        carRigidbody.velocity = transform.forward * 10;
+        carRigidbody.AddTorque(angle * 100 * Vector3.up);
     }
 
     private void LateUpdate()
