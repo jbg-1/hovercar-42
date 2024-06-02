@@ -8,7 +8,7 @@ public class HUD : MonoBehaviour
 
     private void Update()
     {
-        checkpointText.text = "Last Checkpoint: " + CarController.LastCheckpointCollected;
-        roundsText.text = "Round " + (CarController.RoundsCompleted + 1) + "/3";
+        //checkpointText.text = "Last Checkpoint: " + CarController.LastCheckpointCollected;
+        //roundsText.text = "Round " + (CarController.RoundsCompleted + 1) + "/3";
     }
 }

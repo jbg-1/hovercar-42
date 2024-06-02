@@ -3,14 +3,9 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-using System.Linq;
-using UnityEditor.PackageManager;
-
-
 public struct StatePayload : INetworkSerializable
 {
     public int tick;
-    public ulong networkObjectId;
     public Vector3 position;
     public Quaternion rotation;
     public Vector3 velocity;
@@ -19,7 +14,6 @@ public struct StatePayload : INetworkSerializable
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref tick);
-        serializer.SerializeValue(ref networkObjectId);
         serializer.SerializeValue(ref position);
         serializer.SerializeValue(ref rotation);
         serializer.SerializeValue(ref velocity);
@@ -28,12 +22,13 @@ public struct StatePayload : INetworkSerializable
 
     public override String ToString()
     {
-        return "tick: " + tick +
-               "networkObjectId: " + networkObjectId +
-               "position: " + position +
-               "rotation: " + rotation +
-               "velocity: " + velocity +
-               "angularVelocity: " + angularVelocity;
+        return "StatePayload(" +
+               "tick: " + tick +
+               " position: " + position +
+               " rotation: " + rotation +
+               " velocity: " + velocity +
+               " angularVelocity: " + angularVelocity +
+               ")";
 
     }
 }
@@ -41,53 +36,33 @@ public struct StatePayload : INetworkSerializable
 public struct InputPayload : INetworkSerializable
 {
     public int tick;
-    public DateTime timestamp;
-    public ulong networkObjectId;
     public float angle;
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref tick);
-        serializer.SerializeValue(ref timestamp);
-        serializer.SerializeValue(ref networkObjectId);
         serializer.SerializeValue(ref angle);
     }
     
     public override String ToString()
     {
-        return "tick: " + tick +
-               "networkObjectId: " + networkObjectId +
-               "timestamp: " + timestamp +
-               "angle: " + angle;
+        return "InputPayload(" +
+               "tick: " + tick +
+               " angle: " + angle +
+               ")";
     }
 }
 
 public class CarController : NetworkBehaviour
 {
-    public static int LastCheckpointCollected = 0;
-    public static int RoundsCompleted = 0;
-    private Vector3 lastCheckpointPosition;
-    private Vector3 lastCheckpointRotation;
+
+    private Vector3 velocity;
+    private Vector3 angularVelocity;
+
     [SerializeField] bool debugMode = true;
 
-    [Header("Speed")]
-    [SerializeField] private float horizontalForwardAcceleration = 10;
-    [SerializeField] private float horizontalDriftDamping = 10;
-    [Tooltip("The accerleration")]
-    [SerializeField] private float verticalRotationSpeed = 30;
-    [SerializeField] private float rotationSpeedCarVelocityInfluence = 0.1f;
-    [SerializeField] private float rotationSpeed = 15;
-
-    [Header("Flying")]
-    [SerializeField] private Vector3 gravityDirection = Vector3.down;
-    [SerializeField] private float gravityStrength = 10;
-    [SerializeField] private float upwardsAcceleration = 20;
-    [SerializeField] private float flyingHeight = 2f;
-    [SerializeField] private LayerMask groundMask;
-
-
     [Header("Needed Components")]
-    [SerializeField] private Rigidbody carRigidbody;
+    [SerializeField] private CharacterController characterController;
     [SerializeField] private Transform cameraParent;
     [SerializeField] private GameObject camera;
 
@@ -96,64 +71,29 @@ public class CarController : NetworkBehaviour
     [SerializeField] private GameObject RightBackTurbine;
     [SerializeField] private GameObject LeftBackTurbine;
 
-    //Netcode
-    NetworkTimer networkTimer;
-    const float k_serverTickRate = 60f; // 60 FPS
-    const int k_bufferSize = 1024;
+    //ClientPrediction
+    private float timer;
+    private int currentTick;
+    private float minTimeBetweenTicks;
+    const float SERVER_TICK_RATE = 30f; // 60 FPS
+    const int BUFFER_SIZE = 1024;
 
-    // Netcode client specific
-    CircularBuffer<StatePayload> clientStateBuffer;
-    CircularBuffer<InputPayload> clientInputBuffer;
+    private StatePayload[] stateBuffer;
+    private InputPayload[] inputBuffer;
+    private Queue<InputPayload> inputQueue;
+
     StatePayload lastServerState;
     StatePayload lastProcessedState;
-
-    ClientNetworkTransform clientNetworkTransform;
-
-    // Netcode server specific
-    CircularBuffer<StatePayload> serverStateBuffer;
-    Queue<InputPayload> serverInputQueue;
-    CountdownTimer reconciliationTimer;
-    CountdownTimer extrapolationTimer;
-    StatePayload extrapolationState;
-    [SerializeField] float reconciliationCooldownTime = 1f;
-    [SerializeField] float reconciliationThreshold = 10f;
-    [SerializeField] float extrapolationLimit = 0.5f;
-    [SerializeField] float extrapolationMultiplier = 1.2f;
+    ClientRpcParams aimedClient;
 
     private void Awake()
     {
-        clientNetworkTransform = GetComponent<ClientNetworkTransform>();
-        networkTimer = new NetworkTimer(k_serverTickRate);
-        clientStateBuffer = new CircularBuffer<StatePayload>(k_bufferSize);
-        clientInputBuffer = new CircularBuffer<InputPayload>(k_bufferSize);
+        minTimeBetweenTicks = 1f / SERVER_TICK_RATE;
 
-        serverStateBuffer = new CircularBuffer<StatePayload>(k_bufferSize);
-        serverInputQueue = new Queue<InputPayload>();
-
-        reconciliationTimer = new CountdownTimer(reconciliationCooldownTime);
-        extrapolationTimer = new CountdownTimer(extrapolationLimit);
-
-        reconciliationTimer.OnTimerStart += () => {
-            extrapolationTimer.Stop();
-        };
-
-        extrapolationTimer.OnTimerStart += () => {
-            reconciliationTimer.Stop();
-            SwitchAuthorityMode(AuthorityMode.Server);
-        };
-        extrapolationTimer.OnTimerStop += () => {
-            extrapolationState = default;
-            SwitchAuthorityMode(AuthorityMode.Client);
-        };
-    }
-
-    void SwitchAuthorityMode(AuthorityMode mode)
-    {
-        clientNetworkTransform.authorityMode = mode;
-        bool shouldSync = mode == AuthorityMode.Client;
-        clientNetworkTransform.SyncPositionX = shouldSync;
-        clientNetworkTransform.SyncPositionY = shouldSync;
-        clientNetworkTransform.SyncPositionZ = shouldSync;
+        stateBuffer = new StatePayload[BUFFER_SIZE];
+        inputBuffer = new InputPayload[BUFFER_SIZE];
+        inputQueue = new Queue<InputPayload>();
+        aimedClient = new ClientRpcParams { Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { OwnerClientId } } };
     }
 
     private void Start()
@@ -166,255 +106,125 @@ public class CarController : NetworkBehaviour
 
     void Update()
     {
-        networkTimer.Update(Time.deltaTime);
-        reconciliationTimer.Tick(Time.deltaTime);
-        extrapolationTimer.Tick(Time.deltaTime);
-        //Extraplolate();
-    }
+        timer += Time.deltaTime;
 
-    void FixedUpdate()
-    {
-        while (networkTimer.ShouldTick())
+        while (timer >= minTimeBetweenTicks)
         {
+            timer -= minTimeBetweenTicks;
             HandleClientTick();
             HandleServerTick();
+            currentTick++;
         }
+    }  
 
-        //Extraplolate();
-    }
-
-    //The Server looks into the 
-    void HandleServerTick()
+    private void HandleClientTick()
     {
-        if (!IsServer) return;
+        if (!IsClient || !IsOwner) return;
 
-        var bufferIndex = -1;
-        InputPayload inputPayload = default;
-        while (serverInputQueue.Count > 0)
+        if(!lastServerState.Equals(default(StatePayload)) && 
+            lastProcessedState.Equals(default(StatePayload)) || 
+            !lastServerState.Equals(lastProcessedState))
         {
-            inputPayload = serverInputQueue.Dequeue();
-            Debug.Log("Server inputPayload " + inputPayload.ToString());
-
-            bufferIndex = inputPayload.tick % k_bufferSize;
-
-            StatePayload statePayload = ProcessMovement(inputPayload);
-            Debug.Log("Server statePayload " + statePayload.ToString());
-
-            serverStateBuffer.Add(statePayload, bufferIndex);
-        }
-
-        if (bufferIndex == -1) return;
-       
-        SendToClientRpc(serverStateBuffer.Get(bufferIndex));
-        HandleExtrapolation(serverStateBuffer.Get(bufferIndex), CalculateLatencyInMillis(inputPayload));
-    }
-
-    static float CalculateLatencyInMillis(InputPayload inputPayload) => (DateTime.Now - inputPayload.timestamp).Milliseconds / 1000f;
-
-    void Extraplolate()
-    {
-        if (IsServer && extrapolationTimer.IsRunning)
-        {
-            transform.position += extrapolationState.position;
-        }
-    }
-
-    //Wenn die Latenz zu Groß wird übernimmt der Server die Kontrolle und gleicht den Rigedbody ab
-    void HandleExtrapolation(StatePayload latest, float latency)
-    {
-        if (ShouldExtrapolate(latency))
-        {
-            // Calculate the arc the object would traverse in degrees
-            float axisLength = latency * latest.angularVelocity.magnitude * Mathf.Rad2Deg;
-            Quaternion angularRotation = Quaternion.AngleAxis(axisLength, latest.angularVelocity);
-
-            if (extrapolationState.position != default)
-            {
-                latest = extrapolationState;
-            }
-
-            // Update position and rotation based on extrapolation
-            var posAdjustment = latest.velocity * (1 + latency * extrapolationMultiplier);
-            extrapolationState.position = posAdjustment;
-            extrapolationState.rotation = angularRotation * transform.rotation;
-            extrapolationState.velocity = latest.velocity;
-            extrapolationState.angularVelocity = latest.angularVelocity;
-            extrapolationTimer.Start();
+            HandleServerReconciliation();
+            Debug.Log("Should Reconcile");
         }
         else
         {
-            extrapolationTimer.Stop();
+            Debug.Log("Not Reconcile");
         }
+
+        int bufferIndex = currentTick % BUFFER_SIZE;
+
+        InputPayload inputPayload = new InputPayload()
+        {
+            tick = currentTick,
+            angle = Input.GetAxis("Horizontal")
+        };
+
+        inputBuffer[bufferIndex] = inputPayload;
+        stateBuffer[bufferIndex] = ProcessMovement(inputPayload);
+
+        //SendInputToServer
     }
 
-    bool ShouldExtrapolate(float latency) => latency < extrapolationLimit && latency > Time.fixedDeltaTime;
+    private void HandleServerTick()
+    {
+        if(!IsServer) return;
 
+        int bufferIndex = -1;
+        while (inputQueue.Count > 0) { 
+            InputPayload inputPayload = inputQueue.Dequeue();
+            bufferIndex = inputPayload.tick % BUFFER_SIZE;
+            StatePayload statePayload = ProcessMovement(inputPayload);
+            stateBuffer[bufferIndex] = statePayload;
+        }
+        if (bufferIndex != -1)
+        {
+            SendToClientRpc(stateBuffer[bufferIndex], aimedClient);
+        }
+    }
+    
     [ClientRpc]
-    void SendToClientRpc(StatePayload statePayload)
+    private void SendToClientRpc(StatePayload statePayload,ClientRpcParams clientRpcSendParams)
     {
         if (!IsOwner) return;
         lastServerState = statePayload;
     }
 
-    void HandleClientTick()
-    {
-        if (!IsClient || !IsOwner) return;
-
-        var currentTick = networkTimer.CurrentTick;
-        var bufferIndex = currentTick % k_bufferSize;
-
-        InputPayload inputPayload = new InputPayload()
-        {
-            tick = currentTick,
-            timestamp = DateTime.Now,
-            networkObjectId = NetworkObjectId,
-            angle = Input.GetAxis("Horizontal"),
-        };
-
-        Debug.Log("Client inputPayload " + inputPayload.ToString());
-
-        clientInputBuffer.Add(inputPayload, bufferIndex);
-        SendToServerRpc(inputPayload);
-
-        StatePayload statePayload = ProcessMovement(inputPayload);
-        Debug.Log("Client statePayload " + statePayload.ToString());
-
-        clientStateBuffer.Add(statePayload, bufferIndex);
-
-        HandleServerReconciliation();
-    }
-
-    bool ShouldReconcile()
-    {
-        bool isNewServerState = !lastServerState.Equals(default);
-        bool isLastStateUndefinedOrDifferent = lastProcessedState.Equals(default)
-                                               || !lastProcessedState.Equals(lastServerState);
-
-        return isNewServerState && isLastStateUndefinedOrDifferent && !reconciliationTimer.IsRunning && !extrapolationTimer.IsRunning;
-    }
-
-    void HandleServerReconciliation()
-    {
-        if (!ShouldReconcile()) return;
-
-        float positionError;
-        int bufferIndex;
-
-        bufferIndex = lastServerState.tick % k_bufferSize;
-        if (bufferIndex - 1 < 0) return; // Not enough information to reconcile
-
-        StatePayload rewindState = IsHost ? serverStateBuffer.Get(bufferIndex - 1) : lastServerState; // Host RPCs execute immediately, so we can use the last server state
-        StatePayload clientState = IsHost ? clientStateBuffer.Get(bufferIndex - 1) : clientStateBuffer.Get(bufferIndex);
-        positionError = Vector3.Distance(rewindState.position, clientState.position);
-
-        if (positionError > reconciliationThreshold)
-        {
-            ReconcileState(rewindState);
-            reconciliationTimer.Start();
-        }
-
-        lastProcessedState = rewindState;
-    }
-
-    void ReconcileState(StatePayload rewindState)
-    {
-        transform.position = rewindState.position;
-        transform.rotation = rewindState.rotation;
-        carRigidbody.velocity = rewindState.velocity;
-        carRigidbody.angularVelocity = rewindState.angularVelocity;
-
-        if (!rewindState.Equals(lastServerState)) return;
-
-        clientStateBuffer.Add(rewindState, rewindState.tick % k_bufferSize);
-
-        // Replay all inputs from the rewind state to the current state
-        int tickToReplay = lastServerState.tick;
-
-        while (tickToReplay < networkTimer.CurrentTick)
-        {
-            int bufferIndex = tickToReplay % k_bufferSize;
-            StatePayload statePayload = ProcessMovement(clientInputBuffer.Get(bufferIndex));
-            clientStateBuffer.Add(statePayload, bufferIndex);
-            tickToReplay++;
-        }
-    }
-
-    //Dem Server die informationen der eingabe senden
     [ServerRpc]
-    void SendToServerRpc(InputPayload input)
+    private void SendToServerRpc(InputPayload input)
     {
-        serverInputQueue.Enqueue(input);
+        inputQueue.Enqueue(input);
     }
 
-    //Das Ausführen der bewegung mit Rückmeldung der rigdbody Information inform einer StatePayload
-    StatePayload ProcessMovement(InputPayload input)
+    //ProcessMovement muss deterministisch sein
+    private StatePayload ProcessMovement(InputPayload input)
     {
-        Move(input.angle);
+        characterController.Move(transform.forward * 10 * minTimeBetweenTicks);
+        transform.Rotate(transform.up, input.angle);
 
-        return new StatePayload()
+        return new StatePayload
         {
             tick = input.tick,
-            networkObjectId = NetworkObjectId,
-            position = transform.position,
+            angularVelocity = angularVelocity,
+            position = transform.position ,
             rotation = transform.rotation,
-            velocity = carRigidbody.velocity,
-            angularVelocity = carRigidbody.angularVelocity
+            velocity = velocity
         };
     }
-
-    void Move(float angle)
-    {
-        carRigidbody.velocity = transform.forward * 10;
-        carRigidbody.AddTorque(angle * 100 * Vector3.up);
-    }
-
-    private void LateUpdate()
-    {
-        if (IsOwner)
-        {
-            if(carRigidbody.velocity.magnitude > 0.1f)
-                cameraParent.rotation = Quaternion.LookRotation(carRigidbody.velocity);
-            else
-                cameraParent.rotation = Quaternion.LookRotation(transform.forward);
-        }
-    }
-
     
-    private void OnCollisionEnter(Collision collision)
+    private void HandleServerReconciliation()
     {
-        Bouncer collisionBouncer;
-        if(collision.gameObject.TryGetComponent<Bouncer>(out collisionBouncer))
+        lastProcessedState = lastServerState;
+
+        int serverStateBufferIndex = lastServerState.tick % BUFFER_SIZE;
+        float positionError = Vector3.Distance(lastServerState.position, stateBuffer[serverStateBufferIndex].position);
+
+        if (positionError > 0.001f)
         {
+            Debug.Log("Reconcile");
 
-            //carRigidbody.AddForce(collision.impulse * collisionBouncer.BounceRate(), ForceMode.Impulse);
+            //Setze alle den Zustand beschreibenden Werte aud den letzten vom Server richtig berechneten Wert
+            transform.position = lastProcessedState.position;
+            transform.rotation = lastServerState.rotation;
+            velocity = lastServerState.velocity;
+            angularVelocity = lastServerState.angularVelocity;
+
+            stateBuffer[serverStateBufferIndex] = lastServerState;
+
+            int tickToProcess = lastServerState.tick + 1;
+
+            //Alle weiteren Eingaben simulieren
+            while (tickToProcess < currentTick)
+            {
+                int bufferIndex = tickToProcess % BUFFER_SIZE;
+
+                StatePayload statePayload = ProcessMovement(inputBuffer[bufferIndex]);
+
+                stateBuffer[bufferIndex] = statePayload;
+
+                tickToProcess++;
+            }
         }
-
-        if (collision.gameObject.CompareTag("DeathBarrier"))
-        {
-            //ReturnToLastCheckpoint();
-        }
     }
-    /*
-    public void ChangeGravityDirectionTo(Vector3 newGravityDirection)
-    {
-        gravityDirection = newGravityDirection.normalized;
-    }
-
-    /*
-    // Checkpoint Logic
-    public void SetLastCheckpoint(Vector3 checkpointPosition, Vector3 checkpointRotation)
-    {
-        Vector3 offset = new Vector3(0, 5, 0);
-        lastCheckpointPosition = checkpointPosition;
-        lastCheckpointRotation = checkpointRotation; 
-    }
-
-    public void ReturnToLastCheckpoint()
-    {
-        carRigidbody.velocity = Vector3.zero; 
-        carRigidbody.angularVelocity = Vector3.zero; 
-        transform.position = lastCheckpointPosition;
-        transform.eulerAngles = lastCheckpointRotation; 
-    }
-    */
 }

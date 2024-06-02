@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3083587652464786982}
-  - component: {fileID: 1204701178504809845}
   - component: {fileID: 4422478382746698628}
   - component: {fileID: 409883570070344538}
-  - component: {fileID: 4246866200816361627}
+  - component: {fileID: -8344964999696085928}
+  - component: {fileID: 8425549445072670216}
   - component: {fileID: 8107944106438914974}
   - component: {fileID: 6533270082665670174}
   - component: {fileID: 172817951341212147}
@@ -47,33 +47,6 @@ Transform:
   - {fileID: 7997367907224652419}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &1204701178504809845
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 528598495421748030}
-  serializedVersion: 4
-  m_Mass: 250
-  m_Drag: 0
-  m_AngularDrag: 1
-  m_CenterOfMass: {x: 0, y: 0.2, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 0
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &4422478382746698628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,30 +81,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugMode: 1
-  horizontalForwardAcceleration: 300
-  horizontalDriftDamping: 100
-  verticalRotationSpeed: -7
-  rotationSpeedCarVelocityInfluence: 0.3
-  rotationSpeed: 50
-  gravityDirection: {x: 0, y: -1, z: 0}
-  gravityStrength: 2000
-  upwardsAcceleration: 2000
-  flyingHeight: 2
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 64
-  carRigidbody: {fileID: 1204701178504809845}
+  characterController: {fileID: -8344964999696085928}
   cameraParent: {fileID: 3275331330825546680}
   camera: {fileID: 6618455210087770310}
   RightFrontTurbine: {fileID: 3848962993222288025}
   LeftFrontTurbine: {fileID: 8939063287214039177}
   RightBackTurbine: {fileID: 7594664244091242849}
   LeftBackTurbine: {fileID: 3582148278432951305}
-  reconciliationCooldownTime: 1
-  reconciliationThreshold: 100
-  extrapolationLimit: 0.5
-  extrapolationMultiplier: 1.2
---- !u!114 &4246866200816361627
+--- !u!143 &-8344964999696085928
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528598495421748030}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 1
+  m_Radius: 0.8
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0.8, z: 0}
+--- !u!114 &8425549445072670216
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -140,7 +123,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 528598495421748030}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 558ed87fef535684dad477cac5e661c4, type: 3}
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
@@ -162,7 +145,6 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 0
   SlerpPosition: 0
-  authorityMode: 1
 --- !u!65 &8107944106438914974
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -180,7 +162,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1.5, z: 1.3}
   m_Center: {x: 0, y: 0.9, z: 0}
@@ -201,7 +183,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 0.2
   m_Center: {x: 0.65, y: 0.2, z: 0.55}
@@ -222,7 +204,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 0.2
   m_Center: {x: -0.65, y: 0.2, z: 0.55}
@@ -243,7 +225,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 0.2
   m_Center: {x: 0.65, y: 0.2, z: -0.55}
@@ -264,7 +246,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 0.2
   m_Center: {x: -0.65, y: 0.2, z: -0.55}

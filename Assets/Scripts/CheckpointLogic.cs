@@ -8,6 +8,7 @@ public class Checkpoint : MonoBehaviour
 
    private void OnTriggerEnter(Collider other)
     {
+        /*
         Debug.Log("OnTriggerEnter called");
 
         CarController car = other.gameObject.GetComponent<CarController>();
@@ -40,5 +41,6 @@ public class Checkpoint : MonoBehaviour
                 }
             }
         }
+        */
     }
 }
