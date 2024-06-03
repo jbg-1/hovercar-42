@@ -10,33 +10,28 @@ public class NetworkManagerUI : MonoBehaviour
     [SerializeField] private Button clientButton;
     [SerializeField] private Button serverButton;
     [SerializeField] private GameObject menuCanvas; 
-    [SerializeField] private GameObject hudCanvas; 
-
     private void Awake()
     {
-        //hudCanvas.SetActive(false);
-
         hostButton.onClick.AddListener(() =>
         {
             NetworkManager.Singleton.StartHost();
-            SwitchCanvas();
+            DisableUI();
         });
         serverButton.onClick.AddListener(() =>
         {
             NetworkManager.Singleton.StartServer();
-            SwitchCanvas();
+            DisableUI();
         });
 
         clientButton.onClick.AddListener(() =>
         {
             NetworkManager.Singleton.StartClient();
-            SwitchCanvas();
+            DisableUI();
         });
     }
 
-    private void SwitchCanvas()
+    public void DisableUI()
     {
-        //menuCanvas.SetActive(false);
-        //hudCanvas.SetActive(true);
+        menuCanvas.SetActive(false);
     }
 }

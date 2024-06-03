@@ -292,8 +292,8 @@ public class CarController : NetworkBehaviour
         acceleration = upwards * turbineStrength * transform.up + forward * turbineStrength * transform.forward + gravity;
 
         //damping
-        angularVelocity -= angularVelocity * angularDamping * minTimeBetweenTicks;
-        velocity -= velocity * damping * minTimeBetweenTicks;
+        angularVelocity -= angularDamping * minTimeBetweenTicks * angularVelocity;
+        velocity -= damping * minTimeBetweenTicks * velocity;
 
         //adding acceleration
         angularVelocity += angularAcceleration * minTimeBetweenTicks;
