@@ -13,7 +13,7 @@ public class ServerUI : MonoBehaviour
     [SerializeField] private GameObject levelUIItem;
     private Button[] buttons;
     private int lastSelecte;
-
+    [SerializeField] private Button startButton;
 
 
     [Header("PlayerList")]
@@ -22,7 +22,7 @@ public class ServerUI : MonoBehaviour
     private readonly List<GameObject> listOfItems = new ();
 
 
-    public void SetListItems(IReadOnlyList<ulong> ids)
+    public void SetListItems(IEnumerable<ulong> ids)
     {
         foreach(GameObject x in listOfItems)
         {
@@ -66,5 +66,10 @@ public class ServerUI : MonoBehaviour
         buttons[id].interactable = false;
         lastSelecte = id;
         lobbyController.SelectMap(id);
+    }
+
+    public void SetRaceStartable(bool value)
+    {
+        startButton.interactable = value;
     }
 }

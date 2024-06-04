@@ -5,10 +5,9 @@ using UnityEngine;
 
 public class ClientController : NetworkBehaviour
 {
-    public override void OnNetworkSpawn()
+
+
+    private void Start()
     {
-        if (IsServer)
-        {
-        }
     }
 }

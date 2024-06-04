@@ -23,8 +23,11 @@ public class LobbyController : NetworkBehaviour
 
     private int selectedMap = 0;
 
+    private SortedSet<ulong> clientIDList = new SortedSet<ulong>();
+
     private void Start()
     {
+        NetworkObject.DestroyWithScene = true;
         serverUI.gameObject.SetActive(clientOrServer == ClientServer.Server);
         clientUI.gameObject.SetActive(clientOrServer == ClientServer.Client);
         if (clientOrServer == ClientServer.Server)
@@ -42,14 +45,18 @@ public class LobbyController : NetworkBehaviour
 
     private void OnClientConnectedCallback(ulong clientId)
     {
-        serverUI.SetListItems(NetworkManager.Singleton.ConnectedClientsIds);
+        clientIDList.Add(clientId);
+        serverUI.SetListItems(clientIDList);
 
         SelectMapClientRpc(selectedMap);
+        serverUI.SetRaceStartable(clientIDList.Count > 0);
     }
 
     private void OnClientDisconnectCallback(ulong clientId)
     {
-        serverUI.SetListItems(NetworkManager.Singleton.ConnectedClientsIds);
+        clientIDList.Remove(clientId);
+        serverUI.SetListItems(clientIDList);
+        serverUI.SetRaceStartable(clientIDList.Count > 0);
     }
 
 
@@ -60,6 +67,8 @@ public class LobbyController : NetworkBehaviour
 
     public void LoadLevel()
     {
+        NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnectedCallback;
+        NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnectCallback;
         NetworkManager.Singleton.SceneManager.LoadScene(level[selectedMap].sceneName,LoadSceneMode.Single);
     }
 

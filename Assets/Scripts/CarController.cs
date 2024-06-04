@@ -94,7 +94,8 @@ public class CarController : NetworkBehaviour
     [Header("Needed Components")]
     [SerializeField] private CharacterController characterController;
     [SerializeField] private Transform cameraParent;
-    [SerializeField] private GameObject camera;
+    [SerializeField] private ClientCameraInformation clientCameraInformation;
+
 
     [Header("RaycastPoints")]
     [SerializeField] private GameObject RightFrontTurbineRaycastPoint;
@@ -106,7 +107,7 @@ public class CarController : NetworkBehaviour
     private float timer;
     private int currentTick;
     private float minTimeBetweenTicks;
-    private const float SERVER_TICK_RATE = 30f; //30 FPS
+    private const float SERVER_TICK_RATE = 60f; //60 FPS
     private const int BUFFER_SIZE = 1024;
 
     private StatePayload[] stateBuffer;
@@ -132,10 +133,6 @@ public class CarController : NetworkBehaviour
 
     private void Start()
     { 
-        if(!IsOwner)
-        {
-            camera.SetActive(false);
-        }
         normGravity = gravity.normalized;
     }
 
@@ -386,4 +383,20 @@ public class CarController : NetworkBehaviour
                 cameraParent.rotation = Quaternion.LookRotation(transform.forward);
         }
     }
+
+    protected override void OnOwnershipChanged(ulong previous, ulong current)
+    {
+        base.OnOwnershipChanged(previous, current);
+        if (IsOwner)
+        {
+            ClientCameraScript.activeCamera.SetClientCameraInformation(clientCameraInformation);
+        }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    public void ActivateDrivingRpc()
+    {
+        carForewardIsActive = true;
+    }
+
 }
