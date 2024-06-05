@@ -69,6 +69,11 @@ public class CarController : NetworkBehaviour
     [SerializeField] private bool carForewardIsActive = true;
     [SerializeField] private float flyingHeight = 2;
     [SerializeField] private float turbineStrength = 10;
+    [SerializeField] private float maxSpeed = 10;
+    [SerializeField] private float driftDamping;
+    [SerializeField] private float angularDamping;
+  
+
     [SerializeField] private Vector3 gravity = Vector3.down;
     private Vector3 normGravity = Vector3.down;
     [SerializeField] private LayerMask groundLayer;
@@ -76,10 +81,6 @@ public class CarController : NetworkBehaviour
     [SerializeField] private float rotationAccelerationY;
     [SerializeField] private float rotationAccelerationXZ;
 
-    [Tooltip("angularVelocity -= angularVelocity * angularDamping * minTimeBetweenTicks")]
-    [SerializeField] private float angularDamping;
-    [Tooltip("velocity -= velocity * damping * minTimeBetweenTicks")]
-    [SerializeField] private float damping;
 
 
     [Header ("CarPart")]
@@ -97,7 +98,6 @@ public class CarController : NetworkBehaviour
     [Header("Needed Components")]
     [SerializeField] private CharacterController characterController;
     [SerializeField] private Transform cameraParent;
-    [SerializeField] private ClientCameraInformation clientCameraInformation;
 
 
     [Header("RaycastPoints")]
@@ -156,9 +156,12 @@ public class CarController : NetworkBehaviour
 
     private void HandleClientTick()
     {
-        if (!IsClient || !IsOwner) return;
+        if (!IsClient || !IsOwner) {
+            cameraParent.gameObject.SetActive(false);
+            return;
+        }
 
-        if(!lastServerState.Equals(default(StatePayload)) && 
+        if (!lastServerState.Equals(default(StatePayload)) && 
             lastProcessedState.Equals(default(StatePayload)) || 
             !lastServerState.Equals(lastProcessedState))
         {
@@ -175,7 +178,7 @@ public class CarController : NetworkBehaviour
         InputPayload inputPayload = new InputPayload()
         {
             tick = currentTick,
-            angle = Input.GetAxis("Horizontal")
+            angle = Input.GetAxis("Horizontal") * 180
         };
 
         inputBuffer[bufferIndex] = inputPayload;
@@ -219,7 +222,8 @@ public class CarController : NetworkBehaviour
     {
 
         float upwards = 0;
-        Vector3 acceleration;
+
+        Vector3 acceleration = Vector3.zero;
         Vector3 angularAcceleration;
 
 
@@ -280,31 +284,28 @@ public class CarController : NetworkBehaviour
             turnRight = Vector3.Dot(normGravity, transform.right) * rotationAccelerationXZ;
         }
 
-        angularAcceleration = new Vector3(turnForward, input.angle * rotationAccelerationY, turnRight);
+        angularAcceleration = new Vector3(turnForward, Angle(input.angle) * rotationAccelerationY, turnRight);
 
         float forward = 1 - upwards;
-        if (!carForewardIsActive)
+
+        Vector3 parallelVector = (Vector3.Dot(transform.forward, velocity)) * transform.forward;
+        Vector3 orthogonalVector = velocity - parallelVector;
+
+        if (carForewardIsActive)
         {
-            acceleration = (upwards * turbineStrength * -normGravity) + gravity;
-            forward = 0;
+            if (parallelVector.sqrMagnitude < maxSpeed * maxSpeed || Math.Sign(velocity.x) != Math.Sign(transform.forward.x))
+            {
+                acceleration = forward * turbineStrength * transform.forward;
+            }
         }
-        else
-            acceleration = (upwards * turbineStrength * transform.up) + (forward * turbineStrength * transform.forward) + gravity;
+        acceleration += (upwards * turbineStrength * transform.up) + gravity;
+        acceleration -= orthogonalVector * driftDamping;
 
-        //Debug.Log(upwards);
-        //  positionV = transform.position;
-        //  upwardsV = positionV + (upwards * turbineStrength * transform.up * 0.1f);
-        //forewardV = upwardsV + (forward * turbineStrength * transform.forward * 0.1f);
-        //gravityV = forewardV + gravity * 0.1f;
-
-
-
-        RotateTurbines(input.angle, forward);
+        RotateTurbines(Angle(input.angle), forward);
 
 
         //damping
         angularVelocity -= angularDamping * minTimeBetweenTicks * angularVelocity;
-        velocity -= damping * minTimeBetweenTicks * velocity;
 
         //adding acceleration
         angularVelocity += angularAcceleration * minTimeBetweenTicks;
@@ -325,27 +326,6 @@ public class CarController : NetworkBehaviour
             rotation = transform.rotation,
             velocity = velocity
         };
-    }
-
-    Vector3 positionV = Vector3.zero;
-    Vector3 upwardsV = Vector3.zero;
-    Vector3 forewardV = Vector3.zero;
-    Vector3 gravityV = Vector3.zero;
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(positionV, upwardsV); // foreward
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(upwardsV, forewardV); // foreward
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawLine(forewardV, gravityV); // gravity
-        Gizmos.color = Color.white;
-        Gizmos.DrawLine(positionV, gravityV); // gravity
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(positionV, positionV + velocity * 0.1f); // gravity
-
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
@@ -416,19 +396,12 @@ public class CarController : NetworkBehaviour
     {
         if (IsOwner)
         {
+            Vector3 upVector = (Vector3.Dot(transform.up, velocity)) * transform.up;
+
             if (velocity.magnitude > 0.1f && carForewardIsActive)
-                cameraParent.rotation = Quaternion.LookRotation(velocity, transform.up);
+                cameraParent.rotation = Quaternion.LookRotation(velocity-upVector, transform.up);
             else
                 cameraParent.rotation = Quaternion.LookRotation(transform.forward, transform.up);
-        }
-    }
-
-    protected override void OnOwnershipChanged(ulong previous, ulong current)
-    {
-        base.OnOwnershipChanged(previous, current);
-        if (IsOwner)
-        {
-            ClientCameraScript.activeCamera.SetClientCameraInformation(clientCameraInformation);
         }
     }
 
@@ -442,5 +415,10 @@ public class CarController : NetworkBehaviour
     {
         this.gravity = gravity;
         this.normGravity = gravity.normalized;
+    }
+
+    private float Angle(float orientation)
+    {
+        return -Mathf.Sign(orientation) / (Mathf.Abs(orientation) / 20 + 1) + Mathf.Sign(orientation);
     }
 }
