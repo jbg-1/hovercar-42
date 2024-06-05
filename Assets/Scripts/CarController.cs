@@ -6,6 +6,7 @@ using UnityEngine;
 public struct StatePayload : INetworkSerializable
 {
     public int tick;
+    public Vector3 gravity;
     public Vector3 position;
     public Quaternion rotation;
     public Vector3 velocity;
@@ -14,6 +15,7 @@ public struct StatePayload : INetworkSerializable
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref tick);
+        serializer.SerializeValue(ref gravity);
         serializer.SerializeValue(ref position);
         serializer.SerializeValue(ref rotation);
         serializer.SerializeValue(ref velocity);
@@ -24,6 +26,7 @@ public struct StatePayload : INetworkSerializable
     {
         return "StatePayload(" +
                "tick: " + tick +
+               "gravity: " + gravity +
                " position: " + position +
                " rotation: " + rotation +
                " velocity: " + velocity +
@@ -211,14 +214,13 @@ public class CarController : NetworkBehaviour
         inputQueue.Enqueue(input);
     }
 
-    private float test = -1;
     //ProcessMovement muss deterministisch sein
     private StatePayload ProcessMovement(InputPayload input)
     {
 
         float upwards = 0;
-        Vector3 acceleration = Vector3.zero;
-        Vector3 angularAcceleration = Vector3.zero;
+        Vector3 acceleration;
+        Vector3 angularAcceleration;
 
 
         //Detect floor distance
@@ -282,11 +284,23 @@ public class CarController : NetworkBehaviour
 
         float forward = 1 - upwards;
         if (!carForewardIsActive)
+        {
+            acceleration = (upwards * turbineStrength * -normGravity) + gravity;
             forward = 0;
+        }
+        else
+            acceleration = (upwards * turbineStrength * transform.up) + (forward * turbineStrength * transform.forward) + gravity;
+
+        //Debug.Log(upwards);
+        //  positionV = transform.position;
+        //  upwardsV = positionV + (upwards * turbineStrength * transform.up * 0.1f);
+        //forewardV = upwardsV + (forward * turbineStrength * transform.forward * 0.1f);
+        //gravityV = forewardV + gravity * 0.1f;
+
+
 
         RotateTurbines(input.angle, forward);
 
-        acceleration = upwards * turbineStrength * transform.up + forward * turbineStrength * transform.forward + gravity;
 
         //damping
         angularVelocity -= angularDamping * minTimeBetweenTicks * angularVelocity;
@@ -294,20 +308,44 @@ public class CarController : NetworkBehaviour
 
         //adding acceleration
         angularVelocity += angularAcceleration * minTimeBetweenTicks;
-        velocity += acceleration * minTimeBetweenTicks;     
+        velocity += acceleration * minTimeBetweenTicks;
+
 
         //Transform
         characterController.Move(velocity * minTimeBetweenTicks);
+
         transform.Rotate(minTimeBetweenTicks * angularVelocity);
         
         return new StatePayload
         {
             tick = input.tick,
+            gravity = gravity,
             angularVelocity = angularVelocity,
             position = transform.position ,
             rotation = transform.rotation,
             velocity = velocity
         };
+    }
+
+    Vector3 positionV = Vector3.zero;
+    Vector3 upwardsV = Vector3.zero;
+    Vector3 forewardV = Vector3.zero;
+    Vector3 gravityV = Vector3.zero;
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(positionV, upwardsV); // foreward
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(upwardsV, forewardV); // foreward
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawLine(forewardV, gravityV); // gravity
+        Gizmos.color = Color.white;
+        Gizmos.DrawLine(positionV, gravityV); // gravity
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(positionV, positionV + velocity * 0.1f); // gravity
+
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
@@ -331,6 +369,7 @@ public class CarController : NetworkBehaviour
             transform.rotation = lastServerState.rotation;
             velocity = lastServerState.velocity;
             angularVelocity = lastServerState.angularVelocity;
+            gravity = lastServerState.gravity;
 
             stateBuffer[serverStateBufferIndex] = lastServerState;
 
@@ -349,7 +388,7 @@ public class CarController : NetworkBehaviour
             }
         }
     }
-
+    
     private void RotateTurbines(float rotationStrength, float forwardStrength)
     {
         if (rotationStrength < 0)
@@ -377,10 +416,10 @@ public class CarController : NetworkBehaviour
     {
         if (IsOwner)
         {
-            if (velocity.magnitude > 0.1f && !velocity.normalized.Equals(Vector3.up))
-                cameraParent.rotation = Quaternion.LookRotation(velocity);
+            if (velocity.magnitude > 0.1f && carForewardIsActive)
+                cameraParent.rotation = Quaternion.LookRotation(velocity, transform.up);
             else
-                cameraParent.rotation = Quaternion.LookRotation(transform.forward);
+                cameraParent.rotation = Quaternion.LookRotation(transform.forward, transform.up);
         }
     }
 
@@ -399,4 +438,9 @@ public class CarController : NetworkBehaviour
         carForewardIsActive = true;
     }
 
+    public void ChangeGravityDirectionTo(Vector3 gravity)
+    {
+        this.gravity = gravity;
+        this.normGravity = gravity.normalized;
+    }
 }

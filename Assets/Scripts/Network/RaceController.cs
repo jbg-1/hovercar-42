@@ -49,6 +49,9 @@ public class RaceController : NetworkBehaviour
 
     void Update()
     {
+        if (!IsServer)
+            return;
+        
         if (timeRemaining < 0 && !started)
         {
             StartRace();

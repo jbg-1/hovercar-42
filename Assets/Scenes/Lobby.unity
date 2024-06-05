@@ -791,14 +791,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e10c0bee422952341b11d40bf814229d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clientOrServer: 1
+  clientOrServer: 0
   level:
-  - levelName: Box
-    sceneName: TestBox
-    thumbnail: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  - levelName: The Track
+    sceneName: Track1
+    thumbnail: {fileID: 21300000, guid: 191102b4f19bf704e96629cdadfc70e9, type: 3}
   - levelName: Road
     sceneName: TestTrackRoad
     thumbnail: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  - levelName: Box
+    sceneName: TestBox
+    thumbnail: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
   - levelName: Looping
     sceneName: TestTrackLooping
     thumbnail: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}

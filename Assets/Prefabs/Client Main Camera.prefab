@@ -105,7 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb349910bedbce4680aebbb0d9d76bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  speed: 3
   clientCameraInformation:
     cameraPositionAim: {fileID: 0}
     lookAt: {fileID: 0}

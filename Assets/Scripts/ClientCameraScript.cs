@@ -24,7 +24,7 @@ public class ClientCameraScript : MonoBehaviour
         if(clientCameraInformation.cameraPositionAim != null)
             transform.Translate(speed * Time.deltaTime * (clientCameraInformation.cameraPositionAim.transform.position - transform.position), Space.World);
         if (clientCameraInformation.lookAt != null)
-            transform.LookAt(clientCameraInformation.lookAt.transform.position);
+            transform.LookAt(clientCameraInformation.lookAt.transform.position, clientCameraInformation.lookAt.transform.up);
     }
 
     public void SetClientCameraInformation(ClientCameraInformation clientCameraInformation)
