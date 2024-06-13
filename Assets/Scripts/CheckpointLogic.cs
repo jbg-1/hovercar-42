@@ -8,11 +8,14 @@ public class Checkpoint : Collide
 
     public override void action(CarController car)
     {
+        Debug.Log("Checkpoint");
         // Check if this is the next checkpoint in the order
         if (checkpointOrder == CarController.LastCheckpointCollected + 1)
         {
             CarController.LastCheckpointCollected = checkpointOrder;
             car.SetLastCheckpoint(transform.position, transform.rotation);
+            Debug.Log("Checkpoint gesetzt");
+
         }
 
         // Check if this is the last checkpoint in the round

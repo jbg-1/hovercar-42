@@ -107,7 +107,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0f09a24437d6ce4dbf4be33b09bb8c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
+  colliderLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  debugMode: 0
   isActive: 0
   flyingHeight: 3
   turbineStrength: 30

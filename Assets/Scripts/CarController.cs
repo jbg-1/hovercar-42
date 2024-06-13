@@ -65,7 +65,7 @@ public class CarController : NetworkBehaviour
     private Vector3 lastCheckpointPosition;
     private Quaternion lastCheckpointRotation;
 
-
+    [SerializeField]private LayerMask colliderLayer;
 
 
     //CartStateValues
@@ -193,7 +193,8 @@ public class CarController : NetworkBehaviour
         InputPayload inputPayload = new InputPayload()
         {
             tick = currentTick,
-            angle = Input.GetAxis("Horizontal") * 180
+            angle = debugMode ? Input.GetAxis("Horizontal") * 180 : AppInputController.Orientation
+
         };
 
         inputBuffer[bufferIndex] = inputPayload;
@@ -324,11 +325,23 @@ public class CarController : NetworkBehaviour
         velocity += acceleration * minTimeBetweenTicks;
 
 
-        //Transform
+        Vector3 movement = velocity * minTimeBetweenTicks;
 
-        characterController.Move(velocity * minTimeBetweenTicks);
+        //Transform
+        if (Physics.SphereCast(transform.position, 0.8f, movement, out RaycastHit hit, movement.magnitude, colliderLayer))
+        {
+            Debug.Log("Trigger");
+            if (hit.collider.gameObject.TryGetComponent<Collide>(out Collide collide))
+            {
+                collide.action(this);
+            }
+        }
+
+        characterController.Move(movement);
 
         transform.Rotate(minTimeBetweenTicks * angularVelocity);
+
+
 
         return new StatePayload
         {

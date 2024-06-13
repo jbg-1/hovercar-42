@@ -5,7 +5,9 @@ using UnityEngine;
 public class DeathTrigger : Collide
 {
     public override void action(CarController car)
-    {      
-         car.RespawnplayerAtLastCheckpoint();
+    {
+        Debug.Log("Death");
+
+        car.RespawnplayerAtLastCheckpoint();
     }
 }
