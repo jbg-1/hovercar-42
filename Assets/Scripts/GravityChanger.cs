@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class GravityChanger : MonoBehaviour {
+public class GravityChanger : Collide {
 
     public bool useGravityTransformDown = true;
     public float gravityStrength = 10;
@@ -19,14 +19,11 @@ public class GravityChanger : MonoBehaviour {
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    public override void action(CarController car)
     {
-        CarController carControllerVar;
-        if(other.TryGetComponent<CarController>(out carControllerVar))
-        {
-            carControllerVar.ChangeGravityDirectionTo(gravityDirection);
-        }
+        car.ChangeGravityDirectionTo(gravityDirection);
     }
+
 
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()

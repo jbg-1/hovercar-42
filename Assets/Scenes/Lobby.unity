@@ -791,7 +791,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e10c0bee422952341b11d40bf814229d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clientOrServer: 1
+  clientOrServer: 0
   level:
   - levelName: The Track
     sceneName: Track1
@@ -1324,7 +1324,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 1112311063}
-    PlayerPrefab: {fileID: 1287143002465991674, guid: 25f3b29f1cb3a2a4db26011842f28a3d, type: 3}
+    PlayerPrefab: {fileID: 2734202038680684456, guid: 25f3b29f1cb3a2a4db26011842f28a3d, type: 3}
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 45e87e88bd14281458428b242b5ff90b, type: 2}

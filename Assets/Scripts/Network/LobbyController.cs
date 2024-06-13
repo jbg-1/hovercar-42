@@ -43,6 +43,11 @@ public class LobbyController : NetworkBehaviour
         }
     }
 
+    private void Update()
+    {
+        Cursor.visible = clientOrServer == ClientServer.Server;
+    }
+
     private void OnClientConnectedCallback(ulong clientId)
     {
         clientIDList.Add(clientId);

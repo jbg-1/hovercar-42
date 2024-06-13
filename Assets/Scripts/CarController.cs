@@ -11,6 +11,7 @@ public struct StatePayload : INetworkSerializable
     public Quaternion rotation;
     public Vector3 velocity;
     public Vector3 angularVelocity;
+    public bool useItem;
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
@@ -20,6 +21,7 @@ public struct StatePayload : INetworkSerializable
         serializer.SerializeValue(ref rotation);
         serializer.SerializeValue(ref velocity);
         serializer.SerializeValue(ref angularVelocity);
+        serializer.SerializeValue(ref useItem);
     }
 
     public override String ToString()
@@ -58,15 +60,23 @@ public struct InputPayload : INetworkSerializable
 
 public class CarController : NetworkBehaviour
 {
+    public static int LastCheckpointCollected = 0;
+    public static int RoundsCompleted = 0;
+    private Vector3 lastCheckpointPosition;
+    private Quaternion lastCheckpointRotation;
 
-    //MovementValues
+
+
+
+    //CartStateValues
+    //Movement
     private Vector3 velocity;
     private Vector3 angularVelocity;
 
     [SerializeField] bool debugMode = true;
 
     [Header("CarSettings")]
-    [SerializeField] private bool carForewardIsActive = true;
+    [SerializeField] private bool isActive = true;
     [SerializeField] private float flyingHeight = 2;
     [SerializeField] private float turbineStrength = 10;
     [SerializeField] private float maxSpeed = 10;
@@ -79,24 +89,17 @@ public class CarController : NetworkBehaviour
     [SerializeField] private LayerMask groundLayer;
 
     [SerializeField] private float rotationAccelerationY;
-    [SerializeField] private float rotationAccelerationXZ;
 
+    [SerializeField] private float rotationAccelerationX;
+    [SerializeField] private float rotationAccelerationZ;
 
-
-    [Header ("CarPart")]
-    [Header("Y")]
-    [SerializeField] private GameObject RightFrontTurbineY;
-    [SerializeField] private GameObject LeftFrontTurbineY;
-    [SerializeField] private GameObject RightBackTurbineY;
-    [SerializeField] private GameObject LeftBackTurbineY;
-    [Header("X")]
-    [SerializeField] private GameObject RightFrontTurbineX;
-    [SerializeField] private GameObject LeftFrontTurbineX;
-    [SerializeField] private GameObject RightBackTurbineX;
-    [SerializeField] private GameObject LeftBackTurbineX;
 
     [Header("Needed Components")]
-    [SerializeField] private CharacterController characterController;
+    private CharacterController characterController;
+
+    [Header("Camera")]
+    [SerializeField] private Transform cameraLookAt;
+    [SerializeField] private Transform cameraTarget;
     [SerializeField] private Transform cameraParent;
 
 
@@ -110,7 +113,7 @@ public class CarController : NetworkBehaviour
     private float timer;
     private int currentTick;
     private float minTimeBetweenTicks;
-    private const float SERVER_TICK_RATE = 60f; //60 FPS
+    private const float SERVER_TICK_RATE = 50; //50 FPS
     private const int BUFFER_SIZE = 1024;
 
     private StatePayload[] stateBuffer;
@@ -123,6 +126,9 @@ public class CarController : NetworkBehaviour
     private StatePayload lastServerState;
     private StatePayload lastProcessedState;
     private ClientRpcParams aimedClient;
+
+    [Header("INFO")]
+    [SerializeField] private float magnitude;
      
     private void Awake()
     {       
@@ -137,13 +143,22 @@ public class CarController : NetworkBehaviour
     private void Start()
     { 
         normGravity = gravity.normalized;
+        characterController = GetComponent<CharacterController>();
     }
 
-    void Update()
+    protected override void OnOwnershipChanged(ulong previous, ulong current)
+    {
+        if (IsOwner)
+        {
+            CarCameraScript.instance.Setup(cameraTarget, cameraLookAt);
+        }
+    }
+
+    void FixedUpdate()
     {
         if (!IsOwner && !IsServer) return;
 
-        timer += Time.deltaTime;
+        timer += Time.fixedDeltaTime;
 
         while (timer >= minTimeBetweenTicks)
         {
@@ -223,38 +238,40 @@ public class CarController : NetworkBehaviour
 
         float upwards = 0;
 
+        Vector3 parallelVector = (Vector3.Dot(transform.forward, velocity)) * transform.forward;
+        Vector3 orthogonalVector = velocity - parallelVector;
+        magnitude = parallelVector.magnitude;
+
+
         Vector3 acceleration = Vector3.zero;
-        Vector3 angularAcceleration;
 
 
         //Detect floor distance
-        RaycastHit hit;
         float leftFrontHeight = flyingHeight * 2;
         float rightFrontHeight = flyingHeight * 2;
         float leftBackHeight = flyingHeight * 2;
         float rightBackHeight = flyingHeight * 2;
-        if (Physics.Raycast(LeftFrontTurbineRaycastPoint.transform.position, -transform.up, out hit, flyingHeight * 2, groundLayer))
+        if (Physics.Raycast(LeftFrontTurbineRaycastPoint.transform.position, -transform.up, out RaycastHit hit1, flyingHeight * 2, groundLayer))
         {
-            leftFrontHeight = hit.distance;
+            leftFrontHeight = hit1.distance - 0.7f;
         }
-        if (Physics.Raycast(RightFrontTurbineRaycastPoint.transform.position, -transform.up, out hit, flyingHeight * 2, groundLayer))
+        if (Physics.Raycast(RightFrontTurbineRaycastPoint.transform.position, -transform.up, out RaycastHit hit2, flyingHeight * 2, groundLayer))
         {
-            rightFrontHeight = hit.distance;
+            rightFrontHeight = hit2.distance - 0.7f;
         }
-        if (Physics.Raycast(LeftBackTurbineRaycastPoint.transform.position, -transform.up, out hit, flyingHeight * 2, groundLayer))
+        if (Physics.Raycast(LeftBackTurbineRaycastPoint.transform.position, -transform.up, out RaycastHit hit3, flyingHeight * 2, groundLayer))
         {
-            leftBackHeight = hit.distance;
+            leftBackHeight = hit3.distance - 0.7f;
         }
-        if (Physics.Raycast(RightBackTurbineRaycastPoint.transform.position, -transform.up, out hit, flyingHeight * 2, groundLayer))
+        if (Physics.Raycast(RightBackTurbineRaycastPoint.transform.position, -transform.up, out RaycastHit hit4, flyingHeight * 2, groundLayer))
         {
-            rightBackHeight = hit.distance;
+            rightBackHeight = hit4.distance - 0.7f;
         }
         float total = (leftFrontHeight + rightFrontHeight + leftBackHeight + rightBackHeight) / 4;
 
         if (total < flyingHeight)
         {
             upwards = (1 - total / flyingHeight);
-            upwards *= upwards;
         }
         float turnRight;
         float turnForward;
@@ -262,47 +279,42 @@ public class CarController : NetworkBehaviour
         {
             if ((leftFrontHeight + leftBackHeight) / 2 > (rightBackHeight + rightFrontHeight) / 2)
             {
-                turnRight = rotationAccelerationXZ;
+                turnRight = rotationAccelerationZ;
             }
             else
             {
-                turnRight = -rotationAccelerationXZ;
+                turnRight = -rotationAccelerationZ;
             }
 
             if ((leftFrontHeight + rightFrontHeight) / 2 > (leftBackHeight + rightBackHeight) / 2)
             {
-                turnForward = rotationAccelerationXZ;
+                turnForward = rotationAccelerationX;
             }
             else
             {
-                turnForward = -rotationAccelerationXZ;
+                turnForward = -rotationAccelerationX;
             }
         }
         else
         {
-            turnForward = -Vector3.Dot(normGravity, transform.forward) * rotationAccelerationXZ;
-            turnRight = Vector3.Dot(normGravity, transform.right) * rotationAccelerationXZ;
+            turnForward = -Vector3.Dot(normGravity, transform.forward) * rotationAccelerationX;
+            turnRight = Vector3.Dot(normGravity, transform.right) * rotationAccelerationZ;
         }
 
-        angularAcceleration = new Vector3(turnForward, Angle(input.angle) * rotationAccelerationY, turnRight);
+        Vector3 angularAcceleration = new Vector3(turnForward, isActive ? Angle(input.angle) * rotationAccelerationY * (magnitude / maxSpeed) : 0, turnRight);
 
         float forward = 1 - upwards;
 
-        Vector3 parallelVector = (Vector3.Dot(transform.forward, velocity)) * transform.forward;
-        Vector3 orthogonalVector = velocity - parallelVector;
-
-        if (carForewardIsActive)
+        if (isActive)
         {
-            if (parallelVector.sqrMagnitude < maxSpeed * maxSpeed || Math.Sign(velocity.x) != Math.Sign(transform.forward.x))
+            if (magnitude < maxSpeed || Math.Sign(velocity.x) != Math.Sign(transform.forward.x))
             {
                 acceleration = forward * turbineStrength * transform.forward;
             }
         }
         acceleration += (upwards * turbineStrength * transform.up) + gravity;
-        acceleration -= orthogonalVector * driftDamping;
-
-        RotateTurbines(Angle(input.angle), forward);
-
+        Vector3 orthogonalVectorNotGravity = orthogonalVector-(Vector3.Dot(normGravity, orthogonalVector)) * normGravity;
+        acceleration -= orthogonalVectorNotGravity * driftDamping;
 
         //damping
         angularVelocity -= angularDamping * minTimeBetweenTicks * angularVelocity;
@@ -313,10 +325,11 @@ public class CarController : NetworkBehaviour
 
 
         //Transform
+
         characterController.Move(velocity * minTimeBetweenTicks);
 
         transform.Rotate(minTimeBetweenTicks * angularVelocity);
-        
+
         return new StatePayload
         {
             tick = input.tick,
@@ -330,7 +343,10 @@ public class CarController : NetworkBehaviour
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        velocity -= hit.normal * Vector3.Dot(velocity, hit.normal);
+        if (hit.controller == characterController)
+        {  
+            velocity -= hit.normal * Vector3.Dot(velocity, hit.normal);
+        }
     }
 
     private void HandleServerReconciliation()
@@ -369,36 +385,13 @@ public class CarController : NetworkBehaviour
         }
     }
     
-    private void RotateTurbines(float rotationStrength, float forwardStrength)
-    {
-        if (rotationStrength < 0)
-        {
-            LeftFrontTurbineY.transform.localEulerAngles = new Vector3(-90 + 20 * rotationStrength, 0, 0);
-            LeftBackTurbineY.transform.localEulerAngles = new Vector3(90 + 40 * rotationStrength, 180, 0);
-            RightBackTurbineY.transform.localEulerAngles = new Vector3(-90 + 20 * rotationStrength, 0, 0);
-            RightFrontTurbineY.transform.localEulerAngles = new Vector3(-90 - 40 * rotationStrength, 0, 0);
-        }
-        else
-        {
-            LeftFrontTurbineY.transform.localEulerAngles = new Vector3(-90 + 40 * rotationStrength, 0, 0);
-            LeftBackTurbineY.transform.localEulerAngles = new Vector3(90 + 20 * rotationStrength, 180, 0);
-            RightBackTurbineY.transform.localEulerAngles = new Vector3(-90 + 40 * rotationStrength, 0, 0);
-            RightFrontTurbineY.transform.localEulerAngles = new Vector3(-90 - 20 * rotationStrength, 0, 0);
-        }
-
-        LeftFrontTurbineX.transform.localEulerAngles = new Vector3(0,-forwardStrength * 90, 0);
-        LeftBackTurbineX.transform.localEulerAngles = new Vector3(0, -forwardStrength * 90, 0);
-        RightBackTurbineX.transform.localEulerAngles = new Vector3(0, forwardStrength * 90, 0);
-        RightFrontTurbineX.transform.localEulerAngles = new Vector3(0, forwardStrength * 90, 0);
-    }
-
     private void LateUpdate()
     {
         if (IsOwner)
         {
             Vector3 upVector = (Vector3.Dot(transform.up, velocity)) * transform.up;
 
-            if (velocity.magnitude > 0.1f && carForewardIsActive)
+            if (velocity.magnitude > 0.1f && isActive)
                 cameraParent.rotation = Quaternion.LookRotation(velocity-upVector, transform.up);
             else
                 cameraParent.rotation = Quaternion.LookRotation(transform.forward, transform.up);
@@ -408,7 +401,7 @@ public class CarController : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     public void ActivateDrivingRpc()
     {
-        carForewardIsActive = true;
+        isActive = true;
     }
 
     public void ChangeGravityDirectionTo(Vector3 gravity)
@@ -420,5 +413,19 @@ public class CarController : NetworkBehaviour
     private float Angle(float orientation)
     {
         return -Mathf.Sign(orientation) / (Mathf.Abs(orientation) / 20 + 1) + Mathf.Sign(orientation);
+    }
+
+    public void RespawnplayerAtLastCheckpoint()
+    {
+        velocity = Vector3.zero;
+        angularVelocity = Vector3.zero;
+        transform.position = lastCheckpointPosition;
+        transform.rotation = lastCheckpointRotation;
+    }
+
+    public void SetLastCheckpoint(Vector3 checkpointPosition, Quaternion checkpointRotation)
+    {
+        lastCheckpointPosition = checkpointPosition;
+        lastCheckpointRotation = checkpointRotation;
     }
 }
