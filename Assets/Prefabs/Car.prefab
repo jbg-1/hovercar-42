@@ -52,7 +52,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 528598495421748030}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.0001
   m_Drag: 0
   m_AngularDrag: 1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -105,14 +105,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugMode: 1
-  horizontalForwardAcceleration: 300
+  maxSpeed: 100
+  horizontalForwardAcceleration: 100
   horizontalDriftDamping: 100
   verticalRotationSpeed: -7
   rotationSpeedCarVelocityInfluence: 0.3
   rotationSpeed: 50
-  gravityDirection: {x: 0, y: -1, z: 0}
-  gravityStrength: 2000
-  upwardsAcceleration: 2000
+  gravity: {x: 0, y: -10, z: 0}
+  upwardsAcceleration: 30
   flyingHeight: 2
   groundMask:
     serializedVersion: 2

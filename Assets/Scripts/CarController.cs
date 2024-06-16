@@ -9,7 +9,10 @@ public class CarController : NetworkBehaviour
     private Vector3 lastCheckpointRotation;
     [SerializeField] bool debugMode = true;
 
+
+    [Header("CarSettings")]
     [Header("Speed")]
+    [SerializeField] private float maxSpeed = 100f;
     [SerializeField] private float horizontalForwardAcceleration = 10;
     [SerializeField] private float horizontalDriftDamping = 10;
     [Tooltip("The accerleration")]
@@ -18,8 +21,7 @@ public class CarController : NetworkBehaviour
     [SerializeField] private float rotationSpeed = 15;
 
     [Header("Flying")]
-    [SerializeField] private Vector3 gravityDirection = Vector3.down;
-    [SerializeField] private float gravityStrength = 10;
+    [SerializeField] private Vector3 gravity;
     [SerializeField] private float upwardsAcceleration = 20;
     [SerializeField] private float flyingHeight = 2f;
     [SerializeField] private LayerMask groundMask;
@@ -62,7 +64,13 @@ public class CarController : NetworkBehaviour
             }
             Vector3 parallelVector = (Vector3.Dot(transform.forward, carRigidbody.velocity)) * transform.forward;
             Vector3 orthogonalVector = carRigidbody.velocity - parallelVector;
-            accelerationMovement += (-orthogonalVector * horizontalDriftDamping + transform.forward * horizontalForwardAcceleration) * Time.deltaTime;
+            
+            accelerationMovement -=  horizontalDriftDamping * Time.deltaTime * orthogonalVector;
+            //forewardAcceleration
+            if (parallelVector.sqrMagnitude < maxSpeed * maxSpeed)
+            {
+                accelerationMovement += horizontalForwardAcceleration * Time.deltaTime * transform.forward;
+            }
         }
     }
 
@@ -70,36 +78,35 @@ public class CarController : NetworkBehaviour
     {
         if (IsOwner)
         {
-            RaycastHit hit;
             float leftFrontHeight = flyingHeight * 2;
             float rightFrontHeight = flyingHeight * 2;
             float leftBackHeight = flyingHeight * 2;
             float rightBackHeight = flyingHeight * 2;
-            if (Physics.Raycast(LeftFrontTurbine.transform.position, gravityDirection, out hit, flyingHeight * 2, groundMask))
+            if (Physics.Raycast(LeftFrontTurbine.transform.position, gravity, out RaycastHit hitLF, flyingHeight * 2, groundMask))
             {
-                leftFrontHeight = hit.distance;
+                leftFrontHeight = hitLF.distance;
             }
-            if (Physics.Raycast(RightFrontTurbine.transform.position, gravityDirection, out hit, flyingHeight * 2, groundMask))
+            if (Physics.Raycast(RightFrontTurbine.transform.position, gravity, out RaycastHit hitRF, flyingHeight * 2, groundMask))
             {
-                rightFrontHeight = hit.distance;
+                rightFrontHeight = hitRF.distance;
             }
-            if (Physics.Raycast(LeftBackTurbine.transform.position, gravityDirection, out hit, flyingHeight * 2, groundMask))
+            if (Physics.Raycast(LeftBackTurbine.transform.position, gravity, out RaycastHit hitLB, flyingHeight * 2, groundMask))
             {
-                leftBackHeight = hit.distance;
+                leftBackHeight = hitLB.distance;
             }
-            if (Physics.Raycast(RightBackTurbine.transform.position, gravityDirection, out hit, flyingHeight * 2, groundMask))
+            if (Physics.Raycast(RightBackTurbine.transform.position, gravity, out RaycastHit hitRB, flyingHeight * 2, groundMask))
             {
-                rightBackHeight = hit.distance;
+                rightBackHeight = hitRB.distance;
             }
             float total = (leftFrontHeight + rightFrontHeight + leftBackHeight + rightBackHeight) / 4;
             Vector3 gravityToAdd; 
             if (total < flyingHeight)
             {
-                gravityToAdd = -upwardsAcceleration * (1 - total / flyingHeight) * gravityDirection;
+                gravityToAdd = -upwardsAcceleration * (1 - total / flyingHeight) * gravity;
             }
             else
             {
-                gravityToAdd = gravityDirection * gravityStrength;
+                gravityToAdd = gravity;
             }
             float turnRight;
             float turnForward;
@@ -125,8 +132,8 @@ public class CarController : NetworkBehaviour
             }
             else
             {
-                turnForward = -Vector3.Dot(gravityDirection, transform.forward) * Time.fixedDeltaTime * rotationSpeed;
-                turnRight = Vector3.Dot(gravityDirection, transform.right) * Time.fixedDeltaTime * rotationSpeed;
+                turnForward = -Vector3.Dot(gravity, transform.forward) * Time.fixedDeltaTime * rotationSpeed;
+                turnRight = Vector3.Dot(gravity, transform.right) * Time.fixedDeltaTime * rotationSpeed;
             }
             carRigidbody.AddRelativeTorque(new Vector3(turnForward, accelerationRotation, turnRight), ForceMode.Acceleration);
             accelerationRotation = 0;
@@ -165,7 +172,7 @@ public class CarController : NetworkBehaviour
 
     public void ChangeGravityDirectionTo(Vector3 newGravityDirection)
     {
-        gravityDirection = newGravityDirection.normalized;
+        gravity = newGravityDirection;
     }
 
     // Checkpoint Logic
