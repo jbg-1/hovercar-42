@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3083587652464786982}
   - component: {fileID: 1204701178504809845}
+  - component: {fileID: 1167683794303109056}
   - component: {fileID: 4422478382746698628}
   - component: {fileID: 409883570070344538}
-  - component: {fileID: 69724395390018772}
   - component: {fileID: 4246866200816361627}
   - component: {fileID: 3072062855007368488}
   m_Layer: 0
@@ -52,8 +52,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 528598495421748030}
   serializedVersion: 4
-  m_Mass: 0.0001
-  m_Drag: 0
+  m_Mass: 800
+  m_Drag: 0.1
   m_AngularDrag: 1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -70,7 +70,30 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
+--- !u!136 &1167683794303109056
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528598495421748030}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.8
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.2, z: 0}
 --- !u!114 &4422478382746698628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -105,15 +128,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugMode: 1
-  maxSpeed: 100
-  horizontalForwardAcceleration: 100
-  horizontalDriftDamping: 100
-  verticalRotationSpeed: -7
-  rotationSpeedCarVelocityInfluence: 0.3
-  rotationSpeed: 50
+  carSettings:
+    forewardTurbineStrength: 15
+    upwardTurbineStrength: 20
+    maxSpeed: 80
+    rotationSpeedCarVelocityInfluence: 0.2
+    airStabilisationRotationStrength: 0.2
+    groundStabilisationRotationStrength: 10
   gravity: {x: 0, y: -10, z: 0}
-  upwardsAcceleration: 30
-  flyingHeight: 2
+  flyingHeight: 3
   groundMask:
     serializedVersion: 2
     m_Bits: 64
@@ -124,29 +147,6 @@ MonoBehaviour:
   LeftFrontTurbine: {fileID: 8939063287214039177}
   RightBackTurbine: {fileID: 7594664244091242849}
   LeftBackTurbine: {fileID: 3582148278432951305}
---- !u!136 &69724395390018772
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 528598495421748030}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.89315945
-  m_Height: 1.786319
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.8441373, z: 0}
 --- !u!114 &4246866200816361627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,7 +215,7 @@ Transform:
   m_GameObject: {fileID: 3582148278432951305}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.67, y: 0.36, z: -0.55}
+  m_LocalPosition: {x: -0.67, y: 0.261, z: -0.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -246,7 +246,7 @@ Transform:
   m_GameObject: {fileID: 3848962993222288025}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.67, y: 0.36, z: 0.55}
+  m_LocalPosition: {x: 0.67, y: 0.261, z: 0.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -417,7 +417,7 @@ Transform:
   m_GameObject: {fileID: 7594664244091242849}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.67, y: 0.36, z: -0.55}
+  m_LocalPosition: {x: 0.67, y: 0.261, z: -0.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -479,7 +479,7 @@ Transform:
   m_GameObject: {fileID: 8939063287214039177}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.67, y: 0.36, z: 0.55}
+  m_LocalPosition: {x: -0.67, y: 0.261, z: 0.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -511,7 +511,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9b3f6159c98c8d747bb95f7a8548dc12, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9b3f6159c98c8d747bb95f7a8548dc12, type: 3}
       propertyPath: m_LocalPosition.z
