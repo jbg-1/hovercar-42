@@ -28,7 +28,7 @@ public class Checkpoint : MonoBehaviour
             }
 
             // Check if this is the last checkpoint in the round
-            if (checkpointOrder == 1 && CarController.LastCheckpointCollected == 9)
+            if (checkpointOrder == 1 && CarController.LastCheckpointCollected == 6)
             {
                 CarController.RoundsCompleted++;
                 CarController.LastCheckpointCollected = checkpointOrder;
