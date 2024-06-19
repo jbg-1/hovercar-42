@@ -15,11 +15,13 @@ public struct CarSettings
 
 public class CarController : NetworkBehaviour
 {
-    public static int LastCheckpointCollected = 0;
-    public static int RoundsCompleted = 0;
-    private Vector3 lastCheckpointPosition;
-    private Vector3 lastCheckpointRotation;
-    [SerializeField] bool debugMode = true;
+    public NetworkVariable<int> LastCheckpointCollected = new NetworkVariable<int>();
+    public NetworkVariable<int> RoundsCompleted = new NetworkVariable<int>();
+    public NetworkVariable<Vector3> LastCheckpointPosition = new NetworkVariable<Vector3>();
+    public NetworkVariable<Vector3> LastCheckpointRotation = new NetworkVariable<Vector3>();
+    public NetworkVariable<int> Rank = new NetworkVariable<int>();
+    private HUD hud;  
+    [SerializeField] bool debugMode = false;
 
     [SerializeField] private CarSettings carSettings;
 
@@ -47,6 +49,14 @@ public class CarController : NetworkBehaviour
         {
             camera.SetActive(false);
             SetLastCheckpoint(transform.position, transform.eulerAngles);
+        }
+        else 
+        {
+            hud = FindObjectOfType<HUD>(); 
+            if (hud != null)
+            {
+                hud.SetCarController(this);
+            }
         }
     }
 
@@ -169,15 +179,26 @@ public class CarController : NetworkBehaviour
     public void SetLastCheckpoint(Vector3 checkpointPosition, Vector3 checkpointRotation)
     {
         Vector3 offset = new Vector3(0, 5, 0);
-        lastCheckpointPosition = checkpointPosition;
-        lastCheckpointRotation = checkpointRotation; 
+        LastCheckpointPosition.Value = checkpointPosition + offset;
+        LastCheckpointRotation.Value = checkpointRotation; 
     }
 
     public void ReturnToLastCheckpoint()
     {
         carRigidbody.velocity = Vector3.zero; 
         carRigidbody.angularVelocity = Vector3.zero; 
-        transform.position = lastCheckpointPosition;
-        transform.eulerAngles = lastCheckpointRotation; 
+        transform.position = LastCheckpointPosition.Value;
+        transform.eulerAngles = LastCheckpointRotation.Value; 
+    }
+
+    [ClientRpc]
+    public void SetRankClientRpc(int rank)
+    {
+        Rank.Value = rank;
+        Debug.Log("Rank updated to " + rank);
+        if (hud != null)
+        {
+            hud.UpdateRank(rank);
+        }
     }
 }
