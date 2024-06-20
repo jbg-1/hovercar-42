@@ -34,6 +34,12 @@ public class NetworkManagerUI : MonoBehaviour
         });
     }
 
+    private void Start()
+    {
+        //NetworkManager.Singleton.StartClient();
+        //SwitchCanvas();
+    }
+
     private void SwitchCanvas()
     {
         menuCanvas.SetActive(false);

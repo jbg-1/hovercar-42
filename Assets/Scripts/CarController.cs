@@ -54,6 +54,8 @@ public class CarController : NetworkBehaviour
 
     private float rotationInput;
 
+    private float startOrientation;
+
     [ReadOnlyField]
    public Vector3 velocity;
 
@@ -186,7 +188,7 @@ public class CarController : NetworkBehaviour
 
     private float Angle(float orientation)
     {
-        return -Mathf.Sign(orientation) / (Mathf.Abs(orientation) / 20 + 1) + Mathf.Sign(orientation);
+        return Mathf.Sign(orientation) / (Mathf.Abs(orientation) / 50 + 1) - Mathf.Sign(orientation);
     }
 
     private void OnCollisionEnter(Collision collision)

@@ -5,6 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/TrackThemePark.unity
+    guid: 42fbbd73eaefd8b43a50fe9207e0783d
   - enabled: 0
     path: Assets/Scenes/TestTrackRoad.unity
     guid: 0643e5cd562dfce4b832071446271145
@@ -20,7 +23,4 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Multiplayer/MarioKart.unity
     guid: a174e5520853cbf47a55a843e5ec74d0
-  - enabled: 1
-    path: Assets/Scenes/TrackThemePark.unity
-    guid: 42fbbd73eaefd8b43a50fe9207e0783d
   m_configObjects: {}
