@@ -18,12 +18,17 @@ public struct CarSettings
 
 public class CarController : NetworkBehaviour
 {
-    public static int LastCheckpointCollected = 0;
-    public static int RoundsCompleted = 0;
-    private Vector3 lastCheckpointPosition;
-    private Vector3 lastCheckpointRotation;
-    private Vector3 lastCheckpointGravity;
-    [SerializeField] bool debugMode = true;
+
+    public NetworkVariable<int> LastCheckpointCollected = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<int> RoundsCompleted = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<Vector3> LastCheckpointPosition = new NetworkVariable<Vector3>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<Vector3> LastCheckpointRotation = new NetworkVariable<Vector3>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<int> Rank = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<Vector3> LastCheckpointGravity = new NetworkVariable<Vector3>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+
+    private HUD hud;  
+    [SerializeField] bool debugMode = false;
 
     [SerializeField] private CarSettings carSettings;
     [SerializeField] private float rotationSpeed = 2;
@@ -59,6 +64,14 @@ public class CarController : NetworkBehaviour
         if(!IsOwner)
         {
             camera.SetActive(false);
+        }
+        else 
+        {
+            hud = FindObjectOfType<HUD>(); 
+            if (hud != null)
+            {
+                hud.SetCarController(this);
+            }
         }
     }
 
@@ -199,17 +212,35 @@ public class CarController : NetworkBehaviour
     // Checkpoint Logic
     public void SetLastCheckpoint(Vector3 checkpointPosition, Vector3 checkpointRotation)
     {
-        lastCheckpointGravity = gravity;
-        lastCheckpointPosition = checkpointPosition;
-        lastCheckpointRotation = checkpointRotation; 
+        Vector3 offset = new Vector3(0, 5, 0);
+        LastCheckpointPosition.Value = checkpointPosition + offset;
+        LastCheckpointRotation.Value = checkpointRotation; 
+        LastCheckpointGravity.Value = gravity;
     }
 
     public void ReturnToLastCheckpoint()
     {
-        gravity = lastCheckpointGravity;
+        gravity = LastCheckpointGravity.Value;
         carRigidbody.velocity = Vector3.zero; 
         carRigidbody.angularVelocity = Vector3.zero; 
-        transform.position = lastCheckpointPosition;
-        transform.eulerAngles = lastCheckpointRotation; 
+        transform.position = LastCheckpointPosition.Value;
+        transform.eulerAngles = LastCheckpointRotation.Value; 
+    }
+
+    [ClientRpc]
+    public void SetRankClientRpc(int rank)
+    {
+        // Client requests the server to set the rank
+        RequestSetRankServerRpc(rank);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestSetRankServerRpc(int rank, ServerRpcParams rpcParams = default)
+    {
+        Rank.Value = rank;
+        if (IsOwner && hud != null)
+        {
+            hud.UpdateRank(rank);
+        }
     }
 }
