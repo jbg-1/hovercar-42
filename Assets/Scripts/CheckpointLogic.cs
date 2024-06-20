@@ -1,24 +1,26 @@
 using UnityEngine;
 using Unity.Netcode;
 
-public class Checkpoint : MonoBehaviour
+public class Checkpoint : NetworkBehaviour
 {
     [SerializeField]
     private int checkpointOrder = 0;
 
-   private void OnTriggerEnter(Collider other)
+    public int CheckpointOrder => checkpointOrder;
+
+    private void OnTriggerEnter(Collider other)
     {
         Debug.Log("OnTriggerEnter called");
 
         CarController car = other.gameObject.GetComponent<CarController>();
-        if (car != null && car.IsLocalPlayer)
+        if (car != null && car.IsOwner)
         {
             Debug.Log("Collided with local player");
 
             // Check if this is the next checkpoint in the order
-            if (checkpointOrder == CarController.LastCheckpointCollected + 1)
+            if (checkpointOrder == car.LastCheckpointCollected.Value + 1)
             {
-                CarController.LastCheckpointCollected = checkpointOrder;
+                car.LastCheckpointCollected.Value = checkpointOrder;
 
                 Vector3 checkpointPosition = GetComponent<Collider>().bounds.center;
                 Vector3 checkpointRotation = transform.eulerAngles;
@@ -28,13 +30,13 @@ public class Checkpoint : MonoBehaviour
             }
 
             // Check if this is the last checkpoint in the round
-            if (checkpointOrder == 1 && CarController.LastCheckpointCollected == 6)
+            if (checkpointOrder == 1 && car.LastCheckpointCollected.Value == 6)
             {
-                CarController.RoundsCompleted++;
-                CarController.LastCheckpointCollected = checkpointOrder;
+                car.RoundsCompleted.Value++;
+                car.LastCheckpointCollected.Value = checkpointOrder;
 
                 // Check if the player has completed 3 rounds
-                if (CarController.RoundsCompleted == 3)
+                if (car.RoundsCompleted.Value == 3)
                 {
                     Debug.Log("Finished");
                 }
