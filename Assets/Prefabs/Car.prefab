@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0f09a24437d6ce4dbf4be33b09bb8c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
+  debugMode: 1
   carSettings:
     forewardTurbineStrength: 15
     upwardTurbineStrength: 25
