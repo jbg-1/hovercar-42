@@ -8,8 +8,11 @@ public struct CarSettings
     public float upwardTurbineStrength;
     public float maxSpeed; //The maximum Speed the foreward acceleration is working
     public float rotationSpeedCarVelocityInfluence;
-    public float airStabilisationRotationStrength;
-    public float groundStabilisationRotationStrength;
+    public float groundStabilisationRotationStrengthForeward;
+    public float groundStabilisationRotationStrengthSide;
+    public float airStabilisationRotationStrengthForeward;
+    public float airStabilisationRotationStrengthSide;
+
 }
 
 
@@ -19,12 +22,17 @@ public class CarController : NetworkBehaviour
     public static int RoundsCompleted = 0;
     private Vector3 lastCheckpointPosition;
     private Vector3 lastCheckpointRotation;
+    private Vector3 lastCheckpointGravity;
     [SerializeField] bool debugMode = true;
 
     [SerializeField] private CarSettings carSettings;
+    [SerializeField] private float rotationSpeed = 2;
+
 
     [SerializeField] private Vector3 gravity;
     [SerializeField] private float flyingHeight = 2f;
+    [SerializeField] private float flyingBuffer = 1f;
+
     [SerializeField] private LayerMask groundMask;
 
 
@@ -40,6 +48,9 @@ public class CarController : NetworkBehaviour
 
 
     private float rotationInput;
+
+    [ReadOnlyField]
+   public Vector3 velocity;
 
     private void Start()
     { 
@@ -82,26 +93,27 @@ public class CarController : NetworkBehaviour
             }
 
             //Steereing
-            float rotationAcceleration = rotationInput * 1;
+            float rotationAcceleration = rotationInput * rotationSpeed;
 
 
-            float leftFrontHeight = flyingHeight * 4;
-            float rightFrontHeight = flyingHeight * 4;
-            float leftBackHeight = flyingHeight * 4;
-            float rightBackHeight = flyingHeight * 4;
-            if (Physics.Raycast(LeftFrontTurbine.transform.position, -transform.up, out RaycastHit hitLF, flyingHeight * 2, groundMask))
+            float leftFrontHeight = flyingHeight * 2;
+            float rightFrontHeight = flyingHeight * 2;
+            float leftBackHeight = flyingHeight * 2;
+            float rightBackHeight = flyingHeight * 2;
+            Vector3 raycastDirection = gravity;
+            if (Physics.Raycast(LeftFrontTurbine.transform.position, raycastDirection, out RaycastHit hitLF, flyingHeight * 2, groundMask))
             {
                 leftFrontHeight = hitLF.distance;
             }
-            if (Physics.Raycast(RightFrontTurbine.transform.position, -transform.up, out RaycastHit hitRF, flyingHeight * 2, groundMask))
+            if (Physics.Raycast(RightFrontTurbine.transform.position, raycastDirection, out RaycastHit hitRF, flyingHeight * 2, groundMask))
             {
                 rightFrontHeight = hitRF.distance;
             } 
-            if (Physics.Raycast(LeftBackTurbine.transform.position, -transform.up, out RaycastHit hitLB, flyingHeight * 2, groundMask))
+            if (Physics.Raycast(LeftBackTurbine.transform.position, raycastDirection, out RaycastHit hitLB, flyingHeight * 2, groundMask))
             {
                 leftBackHeight = hitLB.distance;
             }
-            if (Physics.Raycast(RightBackTurbine.transform.position, -transform.up, out RaycastHit hitRB, flyingHeight * 2, groundMask))
+            if (Physics.Raycast(RightBackTurbine.transform.position, raycastDirection, out RaycastHit hitRB, flyingHeight * 2, groundMask))
             {
                 rightBackHeight = hitRB.distance;
             }     
@@ -109,26 +121,46 @@ public class CarController : NetworkBehaviour
 
             if(total < flyingHeight)
             {
-                acceleration += (1 - total / flyingHeight) * carSettings.upwardTurbineStrength * transform.up;
+                acceleration += carSettings.upwardTurbineStrength * transform.up;
+            }
+            else
+            {
+                acceleration += (1 - (total-flyingHeight) / flyingBuffer) * carSettings.upwardTurbineStrength * transform.up;
             }
             acceleration += gravity;
 
 
             float turnRight;
             float turnForward;
-            if (total < flyingHeight * 1.5)
+            if (total < flyingHeight * 2)
             {
-                turnRight = carSettings.groundStabilisationRotationStrength * ((leftFrontHeight + leftBackHeight) - (rightBackHeight + rightFrontHeight));
-                turnForward = carSettings.groundStabilisationRotationStrength * ((leftFrontHeight + rightFrontHeight) - (leftBackHeight + rightBackHeight));
+                if((leftFrontHeight + leftBackHeight) - (rightBackHeight + rightFrontHeight) > 0)
+                {
+                    turnRight = carSettings.groundStabilisationRotationStrengthSide;
+                }
+                else
+                {
+                    turnRight = -carSettings.groundStabilisationRotationStrengthSide;
+                }
+                if ((leftFrontHeight + rightFrontHeight) - (leftBackHeight + rightBackHeight) > 0)
+                {
+                    turnForward = carSettings.groundStabilisationRotationStrengthForeward;
+                }
+                else
+                {
+                    turnForward = -carSettings.groundStabilisationRotationStrengthForeward;
+                }
             }
             else
             {
-                turnForward = -Vector3.Dot(gravity, transform.forward) * carSettings.airStabilisationRotationStrength;
-                turnRight = Vector3.Dot(gravity, transform.right)  * carSettings.airStabilisationRotationStrength;
+                turnForward = -Vector3.Dot(gravity, transform.forward) * carSettings.airStabilisationRotationStrengthForeward;
+                turnRight = Vector3.Dot(gravity, transform.right)  * carSettings.airStabilisationRotationStrengthSide;
             }
       
             carRigidbody.AddRelativeTorque(new Vector3(turnForward, rotationAcceleration, turnRight), ForceMode.Acceleration);
             carRigidbody.AddForce(acceleration, ForceMode.Acceleration);
+
+            velocity = carRigidbody.velocity;
         }    
     }
 
@@ -147,10 +179,8 @@ public class CarController : NetworkBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Bouncer collisionBouncer;
-        if(collision.gameObject.TryGetComponent<Bouncer>(out collisionBouncer))
+        if(collision.gameObject.TryGetComponent<Bouncer>(out Bouncer collisionBouncer))
         {
-
             carRigidbody.AddForce(collision.impulse * collisionBouncer.BounceRate(), ForceMode.Impulse);
         }
 
@@ -168,13 +198,14 @@ public class CarController : NetworkBehaviour
     // Checkpoint Logic
     public void SetLastCheckpoint(Vector3 checkpointPosition, Vector3 checkpointRotation)
     {
-        Vector3 offset = new Vector3(0, 5, 0);
+        lastCheckpointGravity = gravity;
         lastCheckpointPosition = checkpointPosition;
         lastCheckpointRotation = checkpointRotation; 
     }
 
     public void ReturnToLastCheckpoint()
     {
+        gravity = lastCheckpointGravity;
         carRigidbody.velocity = Vector3.zero; 
         carRigidbody.angularVelocity = Vector3.zero; 
         transform.position = lastCheckpointPosition;

@@ -6,10 +6,12 @@ using UnityEngine;
 
 public class AppInputController : AppController
 {
-    public static float Orientation { get; private set; } = 0;
+    [SerializeField] public static float Orientation { get; private set; } = 0;
 
     public void HandleCubeControl(CubeControl cubeControl)
     {
-        Orientation = cubeControl.Orientation.Value;
+        Orientation = (float)cubeControl.Orientation;
+        Debug.Log(Orientation);
+
     }
 }
