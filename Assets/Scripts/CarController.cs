@@ -62,7 +62,6 @@ public class CarController : NetworkBehaviour
         if(!IsOwner)
         {
             camera.SetActive(false);
-            SetLastCheckpoint(transform.position, transform.eulerAngles);
         }
         else 
         {
@@ -229,11 +228,15 @@ public class CarController : NetworkBehaviour
     [ClientRpc]
     public void SetRankClientRpc(int rank)
     {
-        Rank.Value = rank;
-        //Debug.Log("Rank updated to " + rank);
-        if (hud != null)
+        if(IsOwner)
         {
-            hud.UpdateRank(rank);
+            Rank.Value = rank;
+            //Debug.Log("Rank updated to " + rank);
+            if (hud != null)
+            {
+                hud.UpdateRank(rank);
+            }
         }
+        
     }
 }
