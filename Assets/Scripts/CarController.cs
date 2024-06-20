@@ -228,15 +228,17 @@ public class CarController : NetworkBehaviour
     [ClientRpc]
     public void SetRankClientRpc(int rank)
     {
-        if(IsOwner)
+        // Client requests the server to set the rank
+        RequestSetRankServerRpc(rank);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestSetRankServerRpc(int rank, ServerRpcParams rpcParams = default)
+    {
+        Rank.Value = rank;
+        if (IsOwner && hud != null)
         {
-            Rank.Value = rank;
-            //Debug.Log("Rank updated to " + rank);
-            if (hud != null)
-            {
-                hud.UpdateRank(rank);
-            }
+            hud.UpdateRank(rank);
         }
-        
     }
 }
