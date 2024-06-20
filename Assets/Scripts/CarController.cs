@@ -15,11 +15,12 @@ public struct CarSettings
 
 public class CarController : NetworkBehaviour
 {
-    public NetworkVariable<int> LastCheckpointCollected = new NetworkVariable<int>();
-    public NetworkVariable<int> RoundsCompleted = new NetworkVariable<int>();
-    public NetworkVariable<Vector3> LastCheckpointPosition = new NetworkVariable<Vector3>();
-    public NetworkVariable<Vector3> LastCheckpointRotation = new NetworkVariable<Vector3>();
-    public NetworkVariable<int> Rank = new NetworkVariable<int>();
+    public NetworkVariable<int> LastCheckpointCollected = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<int> RoundsCompleted = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<Vector3> LastCheckpointPosition = new NetworkVariable<Vector3>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<Vector3> LastCheckpointRotation = new NetworkVariable<Vector3>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<int> Rank = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
     private HUD hud;  
     [SerializeField] bool debugMode = false;
 
@@ -195,7 +196,7 @@ public class CarController : NetworkBehaviour
     public void SetRankClientRpc(int rank)
     {
         Rank.Value = rank;
-        Debug.Log("Rank updated to " + rank);
+        //Debug.Log("Rank updated to " + rank);
         if (hud != null)
         {
             hud.UpdateRank(rank);
