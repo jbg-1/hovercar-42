@@ -24,6 +24,8 @@ public class CarController : NetworkBehaviour
     public NetworkVariable<Vector3> LastCheckpointPosition = new NetworkVariable<Vector3>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<Vector3> LastCheckpointRotation = new NetworkVariable<Vector3>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<int> Rank = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<Vector3> LastCheckpointGravity = new NetworkVariable<Vector3>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
 
     private HUD hud;  
     [SerializeField] bool debugMode = false;
@@ -212,11 +214,12 @@ public class CarController : NetworkBehaviour
         Vector3 offset = new Vector3(0, 5, 0);
         LastCheckpointPosition.Value = checkpointPosition + offset;
         LastCheckpointRotation.Value = checkpointRotation; 
+        LastCheckpointGravity.Value = gravity;
     }
 
     public void ReturnToLastCheckpoint()
     {
-        gravity = lastCheckpointGravity;
+        gravity = LastCheckpointGravity.Value;
         carRigidbody.velocity = Vector3.zero; 
         carRigidbody.angularVelocity = Vector3.zero; 
         transform.position = LastCheckpointPosition.Value;
