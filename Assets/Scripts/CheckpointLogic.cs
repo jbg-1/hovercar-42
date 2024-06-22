@@ -30,10 +30,14 @@ public class Checkpoint : NetworkBehaviour
             }
 
             // Check if this is the last checkpoint in the round
-            if (checkpointOrder == 1 && car.LastCheckpointCollected.Value == 6)
+            if (checkpointOrder == 1 && car.LastCheckpointCollected.Value == 28)
             {
                 car.RoundsCompleted.Value++;
                 car.LastCheckpointCollected.Value = checkpointOrder;
+
+                Vector3 checkpointPosition = GetComponent<Collider>().bounds.center;
+                Vector3 checkpointRotation = transform.eulerAngles;
+                car.SetLastCheckpoint(checkpointPosition, checkpointRotation);
 
                 // Check if the player has completed 3 rounds
                 if (car.RoundsCompleted.Value == 3)
