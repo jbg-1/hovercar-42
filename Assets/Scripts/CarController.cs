@@ -14,8 +14,6 @@ public struct CarSettings
     public float airStabilisationRotationStrengthSide;
 
 }
-
-
 public class CarController : NetworkBehaviour
 {
 
@@ -32,6 +30,8 @@ public class CarController : NetworkBehaviour
 
     [SerializeField] private CarSettings carSettings;
     [SerializeField] private float rotationSpeed = 2;
+    [SerializeField] private bool isDriving = false;
+
 
 
     [SerializeField] private Vector3 gravity;
@@ -43,31 +43,28 @@ public class CarController : NetworkBehaviour
 
     [Header("Needed Components")]
     [SerializeField] private Rigidbody carRigidbody;
-    [SerializeField] private Transform cameraParent;
-    [SerializeField] private GameObject camera;
 
     [SerializeField] private GameObject RightFrontTurbine;
     [SerializeField] private GameObject LeftFrontTurbine;
     [SerializeField] private GameObject RightBackTurbine;
     [SerializeField] private GameObject LeftBackTurbine;
 
+    [Header("Camera")]
+    [SerializeField] private Transform cameraLookAt;
+    [SerializeField] private Transform cameraTarget;
+    [SerializeField] private Transform cameraParent;
 
     private float rotationInput;
-
-    private float startOrientation;
 
     [ReadOnlyField]
    public Vector3 velocity;
 
     private void Start()
     { 
-        if(!IsOwner)
+        if(IsOwner)
         {
-            camera.SetActive(false);
-        }
-        else 
-        {
-            hud = FindObjectOfType<HUD>(); 
+            CarCameraScript.instance.Setup(cameraTarget, cameraLookAt);
+            hud = FindObjectOfType<HUD>();
             if (hud != null)
             {
                 hud.SetCarController(this);
@@ -101,7 +98,7 @@ public class CarController : NetworkBehaviour
 
             Vector3 acceleration = -sideDriftVector;
 
-            if(forewardvelocity < carSettings.maxSpeed)
+            if(isDriving && forewardvelocity < carSettings.maxSpeed)
             {
                 acceleration += carSettings.forewardTurbineStrength * transform.forward;
             }
@@ -170,8 +167,11 @@ public class CarController : NetworkBehaviour
                 turnForward = -Vector3.Dot(gravity, transform.forward) * carSettings.airStabilisationRotationStrengthForeward;
                 turnRight = Vector3.Dot(gravity, transform.right)  * carSettings.airStabilisationRotationStrengthSide;
             }
-      
-            carRigidbody.AddRelativeTorque(new Vector3(turnForward, rotationAcceleration, turnRight), ForceMode.Acceleration);
+
+            if (isDriving)
+            {
+                carRigidbody.AddRelativeTorque(new Vector3(turnForward, rotationAcceleration, turnRight), ForceMode.Acceleration);
+            }
             carRigidbody.AddForce(acceleration, ForceMode.Acceleration);
 
             velocity = carRigidbody.velocity;
@@ -182,7 +182,10 @@ public class CarController : NetworkBehaviour
     {
         if (IsOwner)
         {
-            cameraParent.rotation = Quaternion.LookRotation(carRigidbody.velocity);
+            if(!isDriving)
+                cameraParent.rotation = Quaternion.LookRotation(transform.forward);
+            else
+                cameraParent.rotation = Quaternion.LookRotation(carRigidbody.velocity);
         }
     }
 
@@ -241,6 +244,14 @@ public class CarController : NetworkBehaviour
         if (IsOwner && hud != null)
         {
             hud.UpdateRank(rank);
+        }
+    }
+
+    protected override void OnOwnershipChanged(ulong previous, ulong current)
+    {
+        if (IsOwner)
+        {
+            CarCameraScript.instance.Setup(cameraTarget, cameraLookAt);
         }
     }
 }
