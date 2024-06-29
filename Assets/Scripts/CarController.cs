@@ -1,22 +1,25 @@
-using Unity.Netcode;
 using UnityEngine;
+using System.Collections;
+using System.Linq;
+using System;
+using System.Collections.Generic;
+using Unity.Netcode;
 
-[System.Serializable]
+[Serializable]
 public struct CarSettings
 {
     public float forewardTurbineStrength;
     public float upwardTurbineStrength;
-    public float maxSpeed; //The maximum Speed the foreward acceleration is working
+    public float maxSpeed; // The maximum Speed the foreward acceleration is working
     public float rotationSpeedCarVelocityInfluence;
     public float groundStabilisationRotationStrengthForeward;
     public float groundStabilisationRotationStrengthSide;
     public float airStabilisationRotationStrengthForeward;
     public float airStabilisationRotationStrengthSide;
-
 }
+
 public class CarController : NetworkBehaviour
 {
-
     public NetworkVariable<int> LastCheckpointCollected = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<int> RoundsCompleted = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<Vector3> LastCheckpointPosition = new NetworkVariable<Vector3>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -24,22 +27,23 @@ public class CarController : NetworkBehaviour
     public NetworkVariable<int> Rank = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<Vector3> LastCheckpointGravity = new NetworkVariable<Vector3>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
+    private static List<ulong> finishedPlayers = new List<ulong>();
 
-    private HUD hud;  
+    private HUD hud;
+    public String TimerString;
+    private bool isTimerRunning;
+    private float finishTimerDuration = 30f;
     [SerializeField] bool debugMode = false;
 
     [SerializeField] private CarSettings carSettings;
     [SerializeField] private float rotationSpeed = 2;
     [SerializeField] private bool isDriving = false;
 
-
-
     [SerializeField] private Vector3 gravity;
     [SerializeField] private float flyingHeight = 2f;
     [SerializeField] private float flyingBuffer = 1f;
 
     [SerializeField] private LayerMask groundMask;
-
 
     [Header("Needed Components")]
     [SerializeField] private Rigidbody carRigidbody;
@@ -57,11 +61,11 @@ public class CarController : NetworkBehaviour
     private float rotationInput;
 
     [ReadOnlyField]
-   public Vector3 velocity;
+    public Vector3 velocity;
 
     private void Start()
-    { 
-        if(IsOwner)
+    {
+        if (IsOwner)
         {
             CarCameraScript.instance.Setup(cameraTarget, cameraLookAt);
             hud = FindObjectOfType<HUD>();
@@ -98,14 +102,13 @@ public class CarController : NetworkBehaviour
 
             Vector3 acceleration = -sideDriftVector;
 
-            if(isDriving && forewardvelocity < carSettings.maxSpeed)
+            if (isDriving && forewardvelocity < carSettings.maxSpeed)
             {
                 acceleration += carSettings.forewardTurbineStrength * transform.forward;
             }
 
-            //Steereing
+            // Steering
             float rotationAcceleration = rotationInput * rotationSpeed;
-
 
             float leftFrontHeight = flyingHeight * 2;
             float rightFrontHeight = flyingHeight * 2;
@@ -119,7 +122,7 @@ public class CarController : NetworkBehaviour
             if (Physics.Raycast(RightFrontTurbine.transform.position, raycastDirection, out RaycastHit hitRF, flyingHeight * 2, groundMask))
             {
                 rightFrontHeight = hitRF.distance;
-            } 
+            }
             if (Physics.Raycast(LeftBackTurbine.transform.position, raycastDirection, out RaycastHit hitLB, flyingHeight * 2, groundMask))
             {
                 leftBackHeight = hitLB.distance;
@@ -127,25 +130,24 @@ public class CarController : NetworkBehaviour
             if (Physics.Raycast(RightBackTurbine.transform.position, raycastDirection, out RaycastHit hitRB, flyingHeight * 2, groundMask))
             {
                 rightBackHeight = hitRB.distance;
-            }     
+            }
             float total = (leftFrontHeight + rightFrontHeight + leftBackHeight + rightBackHeight) / 4;
 
-            if(total < flyingHeight)
+            if (total < flyingHeight)
             {
                 acceleration += carSettings.upwardTurbineStrength * transform.up;
             }
             else
             {
-                acceleration += (1 - (total-flyingHeight) / flyingBuffer) * carSettings.upwardTurbineStrength * transform.up;
+                acceleration += (1 - (total - flyingHeight) / flyingBuffer) * carSettings.upwardTurbineStrength * transform.up;
             }
             acceleration += gravity;
-
 
             float turnRight;
             float turnForward;
             if (total < flyingHeight * 2)
             {
-                if((leftFrontHeight + leftBackHeight) - (rightBackHeight + rightFrontHeight) > 0)
+                if ((leftFrontHeight + leftBackHeight) - (rightBackHeight + rightFrontHeight) > 0)
                 {
                     turnRight = carSettings.groundStabilisationRotationStrengthSide;
                 }
@@ -165,7 +167,7 @@ public class CarController : NetworkBehaviour
             else
             {
                 turnForward = -Vector3.Dot(gravity, transform.forward) * carSettings.airStabilisationRotationStrengthForeward;
-                turnRight = Vector3.Dot(gravity, transform.right)  * carSettings.airStabilisationRotationStrengthSide;
+                turnRight = Vector3.Dot(gravity, transform.right) * carSettings.airStabilisationRotationStrengthSide;
             }
 
             if (isDriving)
@@ -175,14 +177,14 @@ public class CarController : NetworkBehaviour
             carRigidbody.AddForce(acceleration, ForceMode.Acceleration);
 
             velocity = carRigidbody.velocity;
-        }    
+        }
     }
 
     private void LateUpdate()
     {
         if (IsOwner)
         {
-            if(!isDriving)
+            if (!isDriving)
                 cameraParent.rotation = Quaternion.LookRotation(transform.forward);
             else
                 cameraParent.rotation = Quaternion.LookRotation(carRigidbody.velocity);
@@ -196,7 +198,7 @@ public class CarController : NetworkBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.TryGetComponent<Bouncer>(out Bouncer collisionBouncer))
+        if (collision.gameObject.TryGetComponent<Bouncer>(out Bouncer collisionBouncer))
         {
             carRigidbody.AddForce(collision.impulse * collisionBouncer.BounceRate(), ForceMode.Impulse);
         }
@@ -217,17 +219,17 @@ public class CarController : NetworkBehaviour
     {
         Vector3 offset = new Vector3(0, 5, 0);
         LastCheckpointPosition.Value = checkpointPosition + offset;
-        LastCheckpointRotation.Value = checkpointRotation; 
+        LastCheckpointRotation.Value = checkpointRotation;
         LastCheckpointGravity.Value = gravity;
     }
 
     public void ReturnToLastCheckpoint()
     {
         gravity = LastCheckpointGravity.Value;
-        carRigidbody.velocity = Vector3.zero; 
-        carRigidbody.angularVelocity = Vector3.zero; 
+        carRigidbody.velocity = Vector3.zero;
+        carRigidbody.angularVelocity = Vector3.zero;
         transform.position = LastCheckpointPosition.Value;
-        transform.eulerAngles = LastCheckpointRotation.Value; 
+        transform.eulerAngles = LastCheckpointRotation.Value;
     }
 
     [ClientRpc]
@@ -252,6 +254,129 @@ public class CarController : NetworkBehaviour
         if (IsOwner)
         {
             CarCameraScript.instance.Setup(cameraTarget, cameraLookAt);
+        }
+    }
+
+    public void removeObject()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public void stopDriving()
+    {
+        isDriving = false;
+    }
+
+    public void NotifyFinish()
+    {
+        if (IsOwner)
+        {
+            NotifyFinishServerRpc(OwnerClientId);
+            stopDriving();
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void NotifyFinishServerRpc(ulong clientId)
+    {
+        if (finishedPlayers == null)
+        {
+            Debug.LogError("finishedPlayers list is null.");
+            return;
+        }
+
+        if (finishedPlayers.Count == 0)
+        {
+            StartTimerClientRpc();
+        }
+
+        if (!finishedPlayers.Contains(clientId))
+        {
+            finishedPlayers.Add(clientId);
+        }
+
+        if (finishedPlayers.Count == NetworkManager.Singleton.ConnectedClientsList.Count)
+        {
+            StopTimerClientRpc();
+            EndGameClientRpc();
+        }
+    }
+
+    [ClientRpc]
+    private void StartTimerClientRpc()
+    {
+        Debug.Log("Timer started");
+        //StartCoroutine(EndGameTimer(30));
+        isTimerRunning = true;
+        StartCoroutine(UpdateFinishTimer());
+    }
+
+    [ClientRpc]
+    private void StopTimerClientRpc()
+    {
+        Debug.Log("Timer should stop running since all players finished.");
+        StopCoroutine(UpdateFinishTimer());
+        TimerString = ""; 
+        isTimerRunning = false;
+        EndGameClientRpc();
+    }
+
+    private IEnumerator UpdateFinishTimer()
+    {
+        float timer = finishTimerDuration;
+
+        while (timer > 0 && isTimerRunning)
+        {
+            TimerString = FormatTimer(timer); // Update TimerString
+            
+            if (hud == null) {
+                hud = FindObjectOfType<HUD>();
+            }
+          
+            hud.UpdateTimer(TimerString); // Update HUD
+
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+
+        TimerString = ""; 
+        isTimerRunning = false;
+        EndGameClientRpc();
+    }
+
+    private string FormatTimer(float timer)
+    {
+        int seconds = Mathf.FloorToInt(timer % 60);
+        return string.Format("{0:00}", seconds);
+    }
+
+    [ClientRpc]
+    private void EndGameClientRpc()
+    {
+        if (IsServer)
+        {
+            Debug.Log("Ending the game...");
+
+            CarController[] cars = FindObjectsOfType<CarController>();
+
+            CarController[] sortedCars = cars.OrderBy(car => car.Rank.Value).ToArray();
+
+            foreach (var car in sortedCars)
+            {
+                if (!finishedPlayers.Contains(car.OwnerClientId))
+                {
+                    finishedPlayers.Add(car.OwnerClientId);
+                    Debug.Log("Player " + car.OwnerClientId + " did not finish in time and has been added to the finished list.");
+                    car.stopDriving();
+                }
+            }
+        }
+
+        Debug.Log("Game ended.");
+        Debug.Log("All players have finished");
+        for (int i = 0; i < finishedPlayers.Count; i++)
+        {
+            Debug.Log("Player " + finishedPlayers[i] + " finished in position " + (i + 1));
         }
     }
 }

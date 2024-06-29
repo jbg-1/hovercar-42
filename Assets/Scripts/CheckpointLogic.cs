@@ -1,7 +1,6 @@
 using UnityEngine;
-using Unity.Netcode;
 
-public class Checkpoint : NetworkBehaviour
+public class Checkpoint : MonoBehaviour
 {
     [SerializeField]
     private int checkpointOrder = 0;
@@ -29,6 +28,11 @@ public class Checkpoint : NetworkBehaviour
                 Debug.Log("Checkpoint set to: " + checkpointPosition);
             }
 
+            if (car.LastCheckpointCollected.Value == 4)
+            {
+                car.NotifyFinish();
+            }
+
             // Check if this is the last checkpoint in the round
             if (checkpointOrder == 1 && car.LastCheckpointCollected.Value == 28)
             {
@@ -43,6 +47,7 @@ public class Checkpoint : NetworkBehaviour
                 if (car.RoundsCompleted.Value == 3)
                 {
                     Debug.Log("Finished");
+                    car.NotifyFinish();
                 }
             }
         }

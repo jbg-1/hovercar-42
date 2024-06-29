@@ -13,7 +13,7 @@ public class AppInputController : AppController
 
     public void HandleCubeControl(CubeControl cubeControl)
     {
-        Debug.Log("Raw orientation " + cubeControl.Orientation);
+        //Debug.Log("Raw orientation " + cubeControl.Orientation);
         if (!firstDataLoaded)
         {
             firstDataLoaded = true;
@@ -21,7 +21,7 @@ public class AppInputController : AppController
         }
         float input = (float)(cubeControl.Orientation + 540 - startOrientation);
         Orientation = input % 360 - 180;
-        Debug.Log("calculated orientation " + Orientation);
+        //Debug.Log("calculated orientation " + Orientation);
 
     }
 }
