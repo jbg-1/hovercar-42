@@ -12,8 +12,9 @@ public struct CarSettings
     public float groundStabilisationRotationStrengthSide;
     public float airStabilisationRotationStrengthForeward;
     public float airStabilisationRotationStrengthSide;
-
+    public string playerColor;
 }
+
 public class CarController : NetworkBehaviour
 {
 
@@ -28,7 +29,7 @@ public class CarController : NetworkBehaviour
     private HUD hud;  
     [SerializeField] bool debugMode = false;
 
-    [SerializeField] private CarSettings carSettings;
+    [SerializeField] public CarSettings carSettings;
     [SerializeField] private float rotationSpeed = 2;
     [SerializeField] private bool isDriving = false;
 
@@ -69,6 +70,8 @@ public class CarController : NetworkBehaviour
             {
                 hud.SetCarController(this);
             }
+
+            carSettings.playerColor = "blue";
         }
     }
 
