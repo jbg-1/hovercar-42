@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public Text checkpointText;
+    public Text timerText;
     public Text roundsText;
     public Text rankText;
 
@@ -18,7 +18,6 @@ public class HUD : MonoBehaviour
     {
         if (carController != null)
         {
-            checkpointText.text = "Last Checkpoint: " + carController.LastCheckpointCollected.Value;
             roundsText.text = "Round " + (carController.RoundsCompleted.Value + 1) + "/3";
             rankText.text = "" + carController.Rank.Value;
         }
@@ -27,5 +26,10 @@ public class HUD : MonoBehaviour
     public void UpdateRank(int rank)
     {
         rankText.text = "" + rank;
+    }
+
+    public void UpdateTimer(string time)
+    {
+        timerText.text = time;
     }
 }
