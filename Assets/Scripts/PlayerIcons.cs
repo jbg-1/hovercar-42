@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerIcons : MonoBehaviour
 {
   public Sprite playerIconSprite;
-  public int playerIconWidth = 150;
-  public int playerIconHeight = 150;
+  public int playerIconWidth = 300;
+  public int playerIconHeight = 300;
   private CarController[] cars;
   private int updateCounter = 0;
 
@@ -22,6 +22,7 @@ public class PlayerIcons : MonoBehaviour
         foreach (CarController car in cars)
         {
           CreatePlayerIconForCar(car);
+          DeleteEmptyPlayerIconForCar(car); // fix because the first player icon is empty but not skippable
         }
       }
 
@@ -62,6 +63,11 @@ public class PlayerIcons : MonoBehaviour
     playerIcon.transform.rotation = Quaternion.Euler(90, 0, 0);
   }
 
+  private void DeleteEmptyPlayerIconForCar(CarController car)
+  {
+    GameObject playerIcon = transform.Find("PlayerIcon_").gameObject;
+    Destroy(playerIcon);
+  }
   private Color ToColor(string color)
   {
     return (Color)typeof(Color).GetProperty(color.ToLowerInvariant()).GetValue(null, null);
