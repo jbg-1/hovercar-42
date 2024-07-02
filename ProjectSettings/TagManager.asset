@@ -42,3 +42,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: PlayerIcons
+    uniqueID: 1181999493
+    locked: 0
+  - name: MiniMap
+    uniqueID: 2486571189
+    locked: 0

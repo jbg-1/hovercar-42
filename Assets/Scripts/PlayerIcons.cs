@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerIcons : MonoBehaviour
 {
   public Sprite playerIconSprite;
+  public int playerIconWidth = 150;
+  public int playerIconHeight = 150;
   private CarController[] cars;
   private int updateCounter = 0;
 
@@ -45,7 +47,7 @@ public class PlayerIcons : MonoBehaviour
 
     playerIcon.transform.position = car.transform.position;
     playerIcon.transform.rotation = Quaternion.Euler(90, 0, 0);
-    playerIcon.transform.localScale = new Vector3(150, 150, 150);
+    playerIcon.transform.localScale = new Vector3(playerIconWidth, playerIconHeight, 0);
     playerIcon.transform.parent = transform;
 
     playerIcon.AddComponent<SpriteRenderer>().sprite = playerIconSprite;
