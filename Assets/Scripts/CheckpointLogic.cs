@@ -7,6 +7,13 @@ public class Checkpoint : MonoBehaviour
 
     public int CheckpointOrder => checkpointOrder;
 
+    public static int TotalCheckpointsInScene;
+
+    void Start()
+    {
+        TotalCheckpointsInScene = FindObjectsOfType<Checkpoint>().Length;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("OnTriggerEnter called");
@@ -34,7 +41,7 @@ public class Checkpoint : MonoBehaviour
             }
 
             // Check if this is the last checkpoint in the round
-            if (checkpointOrder == 1 && car.LastCheckpointCollected.Value == 28)
+            if (checkpointOrder == 1 && car.LastCheckpointCollected.Value == TotalCheckpointsInScene)
             {
                 car.RoundsCompleted.Value++;
                 car.LastCheckpointCollected.Value = checkpointOrder;

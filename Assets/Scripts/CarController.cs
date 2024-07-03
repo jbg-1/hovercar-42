@@ -31,6 +31,7 @@ public class CarController : NetworkBehaviour
     private static List<ulong> finishedPlayers = new List<ulong>();
 
     private HUD hud;
+    private EOGUI eogui;
     public String TimerString;
     private bool isTimerRunning;
     private float finishTimerDuration = 30f;
@@ -74,6 +75,9 @@ public class CarController : NetworkBehaviour
             {
                 hud.SetCarController(this);
             }
+
+            eogui = FindObjectOfType<EOGUI>();
+            eogui.gameObject.SetActive(false);
 
             carSettings.playerColor = "blue";
         }
@@ -375,11 +379,9 @@ public class CarController : NetworkBehaviour
             }
         }
 
-        Debug.Log("Game ended.");
         Debug.Log("All players have finished");
-        for (int i = 0; i < finishedPlayers.Count; i++)
-        {
-            Debug.Log("Player " + finishedPlayers[i] + " finished in position " + (i + 1));
-        }
+        string finalRankings = string.Join("\n", finishedPlayers.Select((player, index) => $"Player {player} finished in position {index + 1}"));
+        eogui.gameObject.SetActive(true);
+        eogui.ShowEndOfGameUIAndSetRankingsServerRpc(finalRankings);
     }
 }
