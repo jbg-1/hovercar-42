@@ -21,7 +21,6 @@ public class NetworkManagerUI : MonoBehaviour
     {
       NetworkManager.Singleton.StartHost();
       SwitchCanvas();
-      playerIcons.AddCarToCarsServerRpc();
     });
     serverButton.onClick.AddListener(() =>
     {
@@ -33,7 +32,6 @@ public class NetworkManagerUI : MonoBehaviour
     {
       NetworkManager.Singleton.StartClient();
       SwitchCanvas();
-      playerIcons.AddCarToCarsServerRpc();
     });
   }
 

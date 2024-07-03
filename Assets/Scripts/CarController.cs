@@ -76,8 +76,6 @@ public class CarController : NetworkBehaviour
 
   private void Start()
   {
-    Debug.Log("CAR CONTROLLER: " + this.gameObject.name);
-
     if (IsOwner)
     {
       CarCameraScript.instance.Setup(cameraTarget, cameraLookAt);
@@ -95,7 +93,7 @@ public class CarController : NetworkBehaviour
       hasPlayerIcon = false;
 
       playerIcons = FindObjectOfType<PlayerIcons>();
-      playerIcons.AddCarToCars(this);
+      playerIcons.AddCarToCarsServerRpc(this);
     }
   }
 
