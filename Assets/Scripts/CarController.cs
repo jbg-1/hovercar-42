@@ -65,6 +65,8 @@ public class CarController : NetworkBehaviour
     [ReadOnlyField]
     public Vector3 velocity;
 
+    public bool hasPlayerIcon;
+
     private void Start()
     {
         if (IsOwner)
@@ -80,6 +82,7 @@ public class CarController : NetworkBehaviour
             eogui.gameObject.SetActive(false);
 
             carSettings.playerColor = "blue";
+            hasPlayerIcon = false;
         }
     }
 

@@ -11,6 +11,7 @@ public class NetworkManagerUI : MonoBehaviour
     [SerializeField] private Button serverButton;
     [SerializeField] private GameObject menuCanvas; 
     [SerializeField] private GameObject hudCanvas; 
+    [SerializeField] private PlayerIcons playerIcons;
 
     private void Awake()
     {
@@ -20,6 +21,7 @@ public class NetworkManagerUI : MonoBehaviour
         {
             NetworkManager.Singleton.StartHost();
             SwitchCanvas();
+            playerIcons.NotifyJoinServerRpc();
         });
         serverButton.onClick.AddListener(() =>
         {
@@ -31,6 +33,7 @@ public class NetworkManagerUI : MonoBehaviour
         {
             NetworkManager.Singleton.StartClient();
             SwitchCanvas();
+            playerIcons.NotifyJoinServerRpc();
         });
     }
 
