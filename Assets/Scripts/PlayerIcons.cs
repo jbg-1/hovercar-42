@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class PlayerIcons : MonoBehaviour
@@ -7,43 +8,46 @@ public class PlayerIcons : MonoBehaviour
   public Sprite playerIconSprite;
   public int playerIconWidth = 300;
   public int playerIconHeight = 300;
-  private CarController[] cars;
-  private int updateCounter = 0;
+  private CarController[] carsList;
 
   void Update()
   {
-
-    cars = FindObjectsOfType<CarController>();
-
-    if (cars.Length > 0)
+    if (carsList != null)
     {
-      if (updateCounter < 1)
-      {
-        foreach (CarController car in cars)
-        {
-          CreatePlayerIconForCar(car);
-          DeleteEmptyPlayerIconForCar(car); // fix because the first player icon is empty but not skippable
-        }
-      }
+      carsList = FindObjectsOfType<CarController>();
 
-      if (updateCounter > 1)
+      foreach (CarController car in carsList)
       {
-        foreach (CarController car in cars)
-        {
-          UpdatePlayerIcon(car);
-        }
+        UpdatePlayerIcon(car);
       }
-
-      updateCounter++;
     }
-
   }
 
-  private void CreatePlayerIconForCar(CarController car)
+  public void Init()
   {
-    GameObject playerIcon = new GameObject();
+    carsList = FindObjectsOfType<CarController>();
 
-    playerIcon.name = "PlayerIcon_" + car.carSettings.playerColor.ToString();
+    foreach (CarController car in carsList)
+    {
+      CreatePlayerIconForCar(car);
+    }
+  }
+
+  private GameObject CreatePlayerIconForCar(CarController car)
+  {
+    Color iconColor;
+
+    try
+    {
+      iconColor = ToColor(car.playerColor.Value.ToString());
+    }
+    catch
+    {
+      Debug.LogWarning("Invalid or missing color for car: " + car.OwnerClientId.ToString() + ". Skipping icon creation.");
+      return null;
+    }
+
+    GameObject playerIcon = new GameObject("PlayerIcon_" + car.playerColor.Value + "_" + car.OwnerClientId.ToString());
     playerIcon.layer = LayerMask.NameToLayer("PlayerIcons");
 
     playerIcon.transform.position = car.transform.position;
@@ -51,23 +55,29 @@ public class PlayerIcons : MonoBehaviour
     playerIcon.transform.localScale = new Vector3(playerIconWidth, playerIconHeight, 0);
     playerIcon.transform.parent = transform;
 
-    playerIcon.AddComponent<SpriteRenderer>().sprite = playerIconSprite;
-    playerIcon.GetComponent<SpriteRenderer>().color = ToColor(car.carSettings.playerColor);
+    var spriteRenderer = playerIcon.AddComponent<SpriteRenderer>();
+    spriteRenderer.sprite = playerIconSprite;
+    spriteRenderer.color = iconColor;
+
+    car.hasPlayerIcon = true;
+
+    return playerIcon;
   }
 
   private void UpdatePlayerIcon(CarController car)
   {
-    GameObject playerIcon = transform.Find("PlayerIcon_" + car.carSettings.playerColor.ToString()).gameObject;
+    if (!car.hasPlayerIcon)
+    {
+      CreatePlayerIconForCar(car);
+      return;
+    }
+
+    GameObject playerIcon = transform.Find("PlayerIcon_" + car.playerColor.Value + "_" + car.OwnerClientId.ToString()).gameObject;
 
     playerIcon.transform.position = car.transform.position;
     playerIcon.transform.rotation = Quaternion.Euler(90, 0, 0);
   }
 
-  private void DeleteEmptyPlayerIconForCar(CarController car)
-  {
-    GameObject playerIcon = transform.Find("PlayerIcon_").gameObject;
-    Destroy(playerIcon);
-  }
   private Color ToColor(string color)
   {
     return (Color)typeof(Color).GetProperty(color.ToLowerInvariant()).GetValue(null, null);

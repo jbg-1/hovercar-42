@@ -39,7 +39,7 @@ public class RankingManager : NetworkBehaviour
 
     private Vector3 GetNextCheckpointPosition(int nextCheckpointOrder)
     {
-        if (nextCheckpointOrder > 28)
+        if (nextCheckpointOrder > checkpoints.Length)
         {
             nextCheckpointOrder = 1;
         }
