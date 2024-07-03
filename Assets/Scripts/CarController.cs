@@ -4,6 +4,7 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Collections;
 
 [Serializable]
 public struct CarSettings
@@ -16,7 +17,6 @@ public struct CarSettings
   public float groundStabilisationRotationStrengthSide;
   public float airStabilisationRotationStrengthForeward;
   public float airStabilisationRotationStrengthSide;
-  public string playerColor;
 }
 
 public class CarController : NetworkBehaviour
@@ -66,13 +66,8 @@ public class CarController : NetworkBehaviour
   public Vector3 velocity;
 
   private PlayerIcons playerIcons;
-  public bool hasPlayerIcon;
-
-  public string getRandColor()
-  {
-    string[] colors = { "blue", "green", "red", "yellow" };
-    return colors[UnityEngine.Random.Range(0, colors.Length)];
-  }
+  public bool hasPlayerIcon = false;
+  public NetworkVariable<FixedString32Bytes> playerColor = new NetworkVariable<FixedString32Bytes>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
   private void Start()
   {
@@ -88,12 +83,10 @@ public class CarController : NetworkBehaviour
       eogui = FindObjectOfType<EOGUI>();
       eogui.gameObject.SetActive(false);
 
-
-      carSettings.playerColor = "blue";
-      hasPlayerIcon = false;
+      playerColor.Value = "blue"; // TODO: CHANGE THIS TO THE SELECTED COLOR FROM THE MENU LATER
 
       playerIcons = FindObjectOfType<PlayerIcons>();
-      playerIcons.AddCarToCarsServerRpc(this);
+      playerIcons.Init();
     }
   }
 
