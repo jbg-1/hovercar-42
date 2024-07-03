@@ -54,8 +54,10 @@ public class PlayerIcons : MonoBehaviour
   {
     GameObject playerIcon = new GameObject();
 
-    playerIcon.name = "PlayerIcon_" + car.carSettings.playerColor.ToString();
+    playerIcon.name = "PlayerIcon_" + car.carSettings.playerColor + "_" + car.OwnerClientId.ToString();
     playerIcon.layer = LayerMask.NameToLayer("PlayerIcons");
+
+    Debug.Log("Name: " + playerIcon.name);
 
     playerIcon.transform.position = car.transform.position;
     playerIcon.transform.rotation = Quaternion.Euler(90, 0, 0);
@@ -70,7 +72,7 @@ public class PlayerIcons : MonoBehaviour
 
   private void UpdatePlayerIcon(CarController car)
   {
-    GameObject playerIcon = transform.Find("PlayerIcon_" + car.carSettings.playerColor.ToString()).gameObject;
+    GameObject playerIcon = transform.Find("PlayerIcon_" + car.carSettings.playerColor + "_" + car.OwnerClientId.ToString()).gameObject;
 
     playerIcon.transform.position = car.transform.position;
     playerIcon.transform.rotation = Quaternion.Euler(90, 0, 0);
@@ -81,6 +83,7 @@ public class PlayerIcons : MonoBehaviour
     GameObject playerIcon = transform.Find("PlayerIcon_" + car.carSettings.playerColor.ToString()).gameObject;
     Destroy(playerIcon);
   }
+
   private Color ToColor(string color)
   {
     return (Color)typeof(Color).GetProperty(color.ToLowerInvariant()).GetValue(null, null);
@@ -98,6 +101,7 @@ public class PlayerIcons : MonoBehaviour
     if (cars == null)
     {
       cars = FindObjectsOfType<CarController>();
+
       foreach (CarController car in cars)
       {
         CreatePlayerIconForCar(car);
@@ -105,16 +109,55 @@ public class PlayerIcons : MonoBehaviour
     }
     else
     {
+      Debug.Log("Else Statement" + cars.Length);
       foreach (CarController car in cars)
       {
+        Debug.Log("Else Statement", car);
         DeleteEmptyPlayerIconForCar(car);
       }
+
       cars = null;
       cars = FindObjectsOfType<CarController>();
+
       foreach (CarController car in cars)
       {
         CreatePlayerIconForCar(car);
       }
+    }
+  }
+
+  [ServerRpc(RequireOwnership = false)]
+  public void AddCarToCarsServerRpc(CarController car)
+  {
+    if (cars == null)
+    {
+      cars = new CarController[1];
+      cars[0] = car;
+    }
+    else
+    {
+      CarController[] tempCars = new CarController[cars.Length + 1];
+
+      for (int i = 0; i < cars.Length; i++)
+      {
+        tempCars[i] = cars[i];
+      }
+
+      tempCars[tempCars.Length - 1] = car;
+      cars = tempCars;
+    }
+
+    AddCarToCarsClientRpc(cars);
+  }
+
+  [ClientRpc]
+  private void AddCarToCarsClientRpc(CarController[] cars)
+  {
+    this.cars = cars;
+
+    foreach (CarController car in cars)
+    {
+      CreatePlayerIconForCar(car);
     }
   }
 }
