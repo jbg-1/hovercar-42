@@ -4,11 +4,11 @@ using UnityEngine.UI;
 
 public class EOGUI : NetworkBehaviour
 {
-    public Text rankingText;
+  public Text rankingText;
 
-    public void ShowAndSetRankingsClientRpc(string rankings)
-    {
-        rankingText.text = rankings;
-    }
-
+  [ClientRpc]
+  public void ShowAndSetRankingsClientRpc(string rankings)
+  {
+    rankingText.text = rankings;
+  }
 }
