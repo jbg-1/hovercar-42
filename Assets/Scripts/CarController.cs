@@ -33,7 +33,6 @@ public class CarController : NetworkBehaviour
   private HUD hud;
   private EOGUI eogui;
   public String TimerString;
-  private bool isTimerRunning;
   private float finishTimerDuration = 30f;
   [SerializeField] bool debugMode = false;
 
@@ -80,10 +79,10 @@ public class CarController : NetworkBehaviour
         hud.SetCarController(this);
       }
 
+      playerColor.Value = "blue"; // TODO: CHANGE THIS TO THE SELECTED COLOR FROM THE MENU LATER
+
       eogui = FindObjectOfType<EOGUI>();
       eogui.gameObject.SetActive(false);
-
-      playerColor.Value = "blue"; // TODO: CHANGE THIS TO THE SELECTED COLOR FROM THE MENU LATER
 
       playerIcons = FindObjectOfType<PlayerIcons>();
       playerIcons.Init();
@@ -312,7 +311,7 @@ public class CarController : NetworkBehaviour
     if (finishedPlayers.Count == NetworkManager.Singleton.ConnectedClientsList.Count)
     {
       StopTimerClientRpc();
-      EndGameClientRpc();
+      EndGameServerRpc();
     }
   }
 
@@ -320,8 +319,6 @@ public class CarController : NetworkBehaviour
   private void StartTimerClientRpc()
   {
     Debug.Log("Timer started");
-    //StartCoroutine(EndGameTimer(30));
-    isTimerRunning = true;
     StartCoroutine(UpdateFinishTimer());
   }
 
@@ -331,15 +328,13 @@ public class CarController : NetworkBehaviour
     Debug.Log("Timer should stop running since all players finished.");
     StopCoroutine(UpdateFinishTimer());
     TimerString = "";
-    isTimerRunning = false;
-    EndGameClientRpc();
   }
 
   private IEnumerator UpdateFinishTimer()
   {
     float timer = finishTimerDuration;
 
-    while (timer > 0 && isTimerRunning)
+    while (timer > 0)
     {
       TimerString = FormatTimer(timer); // Update TimerString
 
@@ -355,8 +350,11 @@ public class CarController : NetworkBehaviour
     }
 
     TimerString = "";
-    isTimerRunning = false;
-    EndGameClientRpc();
+
+    if (IsServer)
+    {
+      EndGameServerRpc();
+    }
   }
 
   private string FormatTimer(float timer)
@@ -365,31 +363,29 @@ public class CarController : NetworkBehaviour
     return string.Format("{0:00}", seconds);
   }
 
-  [ClientRpc]
-  private void EndGameClientRpc()
+  [ServerRpc(RequireOwnership = false)]
+  public void EndGameServerRpc()
   {
-    if (IsServer)
+
+    Debug.Log("Ending the game...");
+
+    CarController[] cars = FindObjectsOfType<CarController>();
+
+    CarController[] sortedCars = cars.OrderBy(car => car.Rank.Value).ToArray();
+
+    foreach (var car in sortedCars)
     {
-      Debug.Log("Ending the game...");
-
-      CarController[] cars = FindObjectsOfType<CarController>();
-
-      CarController[] sortedCars = cars.OrderBy(car => car.Rank.Value).ToArray();
-
-      foreach (var car in sortedCars)
+      if (!finishedPlayers.Contains(car.OwnerClientId))
       {
-        if (!finishedPlayers.Contains(car.OwnerClientId))
-        {
-          finishedPlayers.Add(car.OwnerClientId);
-          Debug.Log("Player " + car.OwnerClientId + " did not finish in time and has been added to the finished list.");
-          car.stopDriving();
-        }
+        finishedPlayers.Add(car.OwnerClientId);
+        Debug.Log("Player " + car.OwnerClientId + " did not finish in time and has been added to the finished list.");
+        car.stopDriving();
       }
     }
 
     Debug.Log("All players have finished");
     string finalRankings = string.Join("\n", finishedPlayers.Select((player, index) => $"Player {player} finished in position {index + 1}"));
-    eogui.gameObject.SetActive(true);
-    eogui.ShowEndOfGameUIAndSetRankingsServerRpc(finalRankings);
+    eogui.ActivateEndOfGameUIClientRpc();
+    eogui.ShowAndSetRankingsClientRpc(finalRankings);
   }
 }

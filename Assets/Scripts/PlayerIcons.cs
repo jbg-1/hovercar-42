@@ -43,7 +43,7 @@ public class PlayerIcons : MonoBehaviour
     }
     catch
     {
-      Debug.LogWarning("Invalid or missing color for car: " + car.OwnerClientId.ToString() + ". Skipping icon creation.");
+      //Debug.LogWarning("Invalid or missing color for car: " + car.OwnerClientId.ToString() + ". Skipping icon creation.");
       return null;
     }
 

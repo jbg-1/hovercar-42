@@ -18,17 +18,16 @@ public class EOGUI : NetworkBehaviour
         });
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void ShowEndOfGameUIAndSetRankingsServerRpc(string rankings)
-    {
-        ShowEndOfGameUIAndSetRankingsClientRpc(rankings);
-    }
-
     [ClientRpc]
-    private void ShowEndOfGameUIAndSetRankingsClientRpc(string rankings)
+    public void ActivateEndOfGameUIClientRpc()
     {
         hudCanvas.SetActive(false);
         eogCanvas.SetActive(true);
+    }
+
+    [ClientRpc]
+    public void ShowAndSetRankingsClientRpc(string rankings)
+    {
         rankingText.text = rankings;
     }
 
