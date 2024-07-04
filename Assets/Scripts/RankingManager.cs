@@ -1,57 +1,28 @@
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
+using static RaceController;
 
-public class RankingManager : NetworkBehaviour
+public class RankingManager : MonoBehaviour
 {
-    private CarController[] cars;
-    private Checkpoint[] checkpoints;
+    public RaceController.PlayerInformation[] playerInformation;
 
-    private void Start()
+    [SerializeField] private CheckpointLogic checkpointLogic;
+
+    public List<int> CalculateRankingsServerRpc()
     {
-        cars = FindObjectsOfType<CarController>();
-        checkpoints = FindObjectsOfType<Checkpoint>();
-    }
+        List<KeyValuePair<int,int>> ranking = checkpointLogic.checkPointCount.ToList()
+            .OrderBy(x => x.Value)
+            .ThenBy(x => Vector3.Distance(playerInformation[x.Key].carGameObject.transform.position, checkpointLogic.getCheckpoint(x.Value+1).transform.position))
+            .ToList();
 
-    private void Update()
-    {
-        if (IsServer)
+        List<int> rank = new List<int>();
+
+        foreach(KeyValuePair<int, int> x in ranking)
         {
-            CalculateRankingsServerRpc();
+            rank.Add(x.Key);
         }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void CalculateRankingsServerRpc()
-    {
-
-        cars = FindObjectsOfType<CarController>(); // Ensure we always have the latest list of cars
-        var rankedCars = cars.OrderByDescending(car => car.RoundsCompleted.Value)
-                            .ThenByDescending(car => car.LastCheckpointCollected.Value)
-                            .ThenBy(car => Vector3.Distance(car.transform.position, GetNextCheckpointPosition(car.LastCheckpointCollected.Value + 1)))
-                            .ToList();
-
-        for (int i = 0; i < rankedCars.Count; i++)
-        {
-            rankedCars[i].SetRankClientRpc(i + 1);
-        }
-    }
-
-    private Vector3 GetNextCheckpointPosition(int nextCheckpointOrder)
-    {
-        if (nextCheckpointOrder > checkpoints.Length)
-        {
-            nextCheckpointOrder = 1;
-        }
-
-        foreach (var checkpoint in checkpoints)
-        {
-            if (checkpoint.CheckpointOrder == nextCheckpointOrder)
-            {
-                return checkpoint.transform.position;
-            }
-        }
-
-        return Vector3.zero;
+        return rank;
     }
 }

@@ -1,62 +1,60 @@
+using System.Collections.Generic;
 using UnityEngine;
+using static FinishTimer;
 
-public class Checkpoint : MonoBehaviour
+[System.Serializable]
+public class CheckpointLogic : MonoBehaviour
 {
-    [SerializeField]
-    private int checkpointOrder = 0;
+    [SerializeField] GameObject checkPointParent;
 
-    public int CheckpointOrder => checkpointOrder;
+    public Checkpoint[] checkpoints;
 
-    public static int TotalCheckpointsInScene;
+    public Dictionary<int,int> checkPointCount = new Dictionary<int, int>();
 
-    void Start()
+    public event OnFinished onFinish;
+
+
+    private void Start()
     {
-        TotalCheckpointsInScene = FindObjectsOfType<Checkpoint>().Length;
-    }
+        checkpoints = checkPointParent.GetComponentsInChildren<Checkpoint>();
 
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("OnTriggerEnter called");
-
-        CarController car = other.gameObject.GetComponent<CarController>();
-        if (car != null && car.IsOwner)
-        {
-            Debug.Log("Collided with local player");
-
-            // Check if this is the next checkpoint in the order
-            if (checkpointOrder == car.LastCheckpointCollected.Value + 1)
-            {
-                car.LastCheckpointCollected.Value = checkpointOrder;
-
-                Vector3 checkpointPosition = GetComponent<Collider>().bounds.center;
-                Vector3 checkpointRotation = transform.eulerAngles;
-                car.SetLastCheckpoint(checkpointPosition, checkpointRotation);
-
-                Debug.Log("Checkpoint set to: " + checkpointPosition);
-            }
-
-            if (car.LastCheckpointCollected.Value == 4)
-            {
-                car.NotifyFinish();
-            }
-
-            // Check if this is the last checkpoint in the round
-            if (checkpointOrder == 1 && car.LastCheckpointCollected.Value == TotalCheckpointsInScene)
-            {
-                car.RoundsCompleted.Value++;
-                car.LastCheckpointCollected.Value = checkpointOrder;
-
-                Vector3 checkpointPosition = GetComponent<Collider>().bounds.center;
-                Vector3 checkpointRotation = transform.eulerAngles;
-                car.SetLastCheckpoint(checkpointPosition, checkpointRotation);
-
-                // Check if the player has completed 3 rounds
-                if (car.RoundsCompleted.Value == 3)
-                {
-                    Debug.Log("Finished");
-                    car.NotifyFinish();
-                }
-            }
+        for (int i = 0; i < checkpoints.Length; i++) { 
+            checkpoints[i].SetID(i);
+            checkpoints[i].SetCheckpointLogic(this);
         }
     }
+
+    public void NotifyTrigger(int checkPointId, CarController carController)
+    {
+        if (!checkPointCount.ContainsKey(carController.carId))
+        {
+            checkPointCount.Add(carController.carId, 0);
+            carController.SetLastCheckpoint(checkpoints[checkPointId].transform.position, checkpoints[checkPointId].transform.rotation.eulerAngles);
+        }
+        else
+        {
+            if (checkPointId == (checkPointCount[carController.carId] + 1) % checkpoints.Length)
+            {
+                checkPointCount[carController.carId] = checkPointCount[carController.carId] + 1;
+
+                carController.SetLastCheckpoint(checkpoints[checkPointId].transform.position + new Vector3(0, 5, 0), checkpoints[checkPointId].transform.rotation.eulerAngles);
+                Debug.Log("Checkpoint " + checkPointId + " collected; count " + checkPointCount[carController.carId]);
+            }
+
+            if (checkPointCount[carController.carId]/checkpoints.Length == 1)
+            {
+                onFinish(carController.carId);
+            }
+
+        }
+        
+    }
+
+    public GameObject getCheckpoint(int checkpointCount)
+    {
+        return checkpoints[checkpointCount % checkpoints.Length].gameObject;
+    }
+
+    public delegate void OnFinished(int carId);
+
 }

@@ -21,19 +21,12 @@ public struct CarSettings
 
 public class CarController : NetworkBehaviour
 {
-  public NetworkVariable<int> LastCheckpointCollected = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-  public NetworkVariable<int> RoundsCompleted = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-  public NetworkVariable<Vector3> LastCheckpointPosition = new NetworkVariable<Vector3>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-  public NetworkVariable<Vector3> LastCheckpointRotation = new NetworkVariable<Vector3>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-  public NetworkVariable<int> Rank = new NetworkVariable<int>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-  public NetworkVariable<Vector3> LastCheckpointGravity = new NetworkVariable<Vector3>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public int carId;
 
-  private static List<ulong> finishedPlayers = new List<ulong>();
+    public Vector3 LastCheckpointPosition;
+    public Vector3 LastCheckpointRotation;
+    public Vector3 LastCheckpointGravity;
 
-  private HUD hud;
-  private EOGUI eogui;
-  public String TimerString;
-  private float finishTimerDuration = 30f;
   [SerializeField] bool debugMode = false;
 
   [SerializeField] public CarSettings carSettings;
@@ -73,16 +66,8 @@ public class CarController : NetworkBehaviour
     if (IsOwner)
     {
       CarCameraScript.instance.Setup(cameraTarget, cameraLookAt);
-      hud = FindObjectOfType<HUD>();
-      if (hud != null)
-      {
-        hud.SetCarController(this);
-      }
 
       playerColor.Value = "blue"; // TODO: CHANGE THIS TO THE SELECTED COLOR FROM THE MENU LATER
-
-      eogui = FindObjectOfType<EOGUI>();
-      eogui.gameObject.SetActive(false);
 
       playerIcons = FindObjectOfType<PlayerIcons>();
       playerIcons.Init();
@@ -91,6 +76,7 @@ public class CarController : NetworkBehaviour
 
   private void Update()
   {
+
     if (IsOwner)
     {
       if (debugMode)
@@ -231,37 +217,19 @@ public class CarController : NetworkBehaviour
   public void SetLastCheckpoint(Vector3 checkpointPosition, Vector3 checkpointRotation)
   {
     Vector3 offset = new Vector3(0, 5, 0);
-    LastCheckpointPosition.Value = checkpointPosition + offset;
-    LastCheckpointRotation.Value = checkpointRotation;
-    LastCheckpointGravity.Value = gravity;
+    LastCheckpointPosition = checkpointPosition + offset;
+    LastCheckpointRotation = checkpointRotation;
+    LastCheckpointGravity = gravity;
   }
 
   public void ReturnToLastCheckpoint()
   {
-    gravity = LastCheckpointGravity.Value;
+    gravity = LastCheckpointGravity;
     carRigidbody.velocity = Vector3.zero;
     carRigidbody.angularVelocity = Vector3.zero;
-    transform.position = LastCheckpointPosition.Value;
-    transform.eulerAngles = LastCheckpointRotation.Value;
+    transform.position = LastCheckpointPosition;
+    transform.eulerAngles = LastCheckpointRotation;
   }
-
-  [ClientRpc]
-  public void SetRankClientRpc(int rank)
-  {
-    // Client requests the server to set the rank
-    RequestSetRankServerRpc(rank);
-  }
-
-  [ServerRpc(RequireOwnership = false)]
-  private void RequestSetRankServerRpc(int rank, ServerRpcParams rpcParams = default)
-  {
-    Rank.Value = rank;
-    if (IsOwner && hud != null)
-    {
-      hud.UpdateRank(rank);
-    }
-  }
-
   protected override void OnOwnershipChanged(ulong previous, ulong current)
   {
     if (IsOwner)
@@ -270,122 +238,9 @@ public class CarController : NetworkBehaviour
     }
   }
 
-  public void removeObject()
-  {
-    gameObject.SetActive(false);
-  }
-
-  public void stopDriving()
+  [ClientRpc]
+  public void StopDrivingClientRpc()
   {
     isDriving = false;
-  }
-
-  public void NotifyFinish()
-  {
-    if (IsOwner)
-    {
-      NotifyFinishServerRpc(OwnerClientId);
-      stopDriving();
-    }
-  }
-
-  [ServerRpc(RequireOwnership = false)]
-  public void NotifyFinishServerRpc(ulong clientId)
-  {
-    if (finishedPlayers == null)
-    {
-      Debug.LogError("finishedPlayers list is null.");
-      return;
-    }
-
-    if (finishedPlayers.Count == 0)
-    {
-      StartTimerClientRpc();
-    }
-
-    if (!finishedPlayers.Contains(clientId))
-    {
-      finishedPlayers.Add(clientId);
-    }
-
-    if (finishedPlayers.Count == NetworkManager.Singleton.ConnectedClientsList.Count)
-    {
-      StopTimerClientRpc();
-      EndGameServerRpc();
-    }
-  }
-
-  [ClientRpc]
-  private void StartTimerClientRpc()
-  {
-    Debug.Log("Timer started");
-    StartCoroutine(UpdateFinishTimer());
-  }
-
-  [ClientRpc]
-  private void StopTimerClientRpc()
-  {
-    Debug.Log("Timer should stop running since all players finished.");
-    StopCoroutine(UpdateFinishTimer());
-    TimerString = "";
-  }
-
-  private IEnumerator UpdateFinishTimer()
-  {
-    float timer = finishTimerDuration;
-
-    while (timer > 0)
-    {
-      TimerString = FormatTimer(timer); // Update TimerString
-
-      if (hud == null)
-      {
-        hud = FindObjectOfType<HUD>();
-      }
-
-      hud.UpdateTimer(TimerString); // Update HUD
-
-      timer -= Time.deltaTime;
-      yield return null;
-    }
-
-    TimerString = "";
-
-    if (IsServer)
-    {
-      EndGameServerRpc();
-    }
-  }
-
-  private string FormatTimer(float timer)
-  {
-    int seconds = Mathf.FloorToInt(timer % 60);
-    return string.Format("{0:00}", seconds);
-  }
-
-  [ServerRpc(RequireOwnership = false)]
-  public void EndGameServerRpc()
-  {
-
-    Debug.Log("Ending the game...");
-
-    CarController[] cars = FindObjectsOfType<CarController>();
-
-    CarController[] sortedCars = cars.OrderBy(car => car.Rank.Value).ToArray();
-
-    foreach (var car in sortedCars)
-    {
-      if (!finishedPlayers.Contains(car.OwnerClientId))
-      {
-        finishedPlayers.Add(car.OwnerClientId);
-        Debug.Log("Player " + car.OwnerClientId + " did not finish in time and has been added to the finished list.");
-        car.stopDriving();
-      }
-    }
-
-    Debug.Log("All players have finished");
-    string finalRankings = string.Join("\n", finishedPlayers.Select((player, index) => $"Player {player} finished in position {index + 1}"));
-    eogui.ActivateEndOfGameUIClientRpc();
-    eogui.ShowAndSetRankingsClientRpc(finalRankings);
   }
 }
