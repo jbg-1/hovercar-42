@@ -6,8 +6,7 @@ public class EOGUI : NetworkBehaviour
 {
   public Text rankingText;
 
-  [ClientRpc]
-  public void ShowAndSetRankingsClientRpc(string rankings)
+  public void ShowAndSetRankings(string rankings)
   {
     rankingText.text = rankings;
   }

@@ -52,7 +52,7 @@ public class RaceController : NetworkBehaviour
 
     private void Update()
     {
-        List<int> rank = rankingManager.CalculateRankingsServerRpc();
+        List<int> rank = rankingManager.CalculateRankings();
         int ranking = 1;
         foreach (int x in rank) {
             if (playerInformation[x].carController.IsOwner)
@@ -103,10 +103,7 @@ public class RaceController : NetworkBehaviour
     [ServerRpc]
     public void RaceFinishedServerRpc()
     {
-        eogui.gameObject.SetActive(true);
-        hud.gameObject.SetActive(false);
-
-        List<int> rank = rankingManager.CalculateRankingsServerRpc();
+        List<int> rank = rankingManager.CalculateRankings();
 
         foreach (int x in rank)
         {
@@ -122,9 +119,11 @@ public class RaceController : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void ShowFinalRankClientRpc(string result) {
+    private void ShowFinalRankClientRpc(string result)
+    {
         eogui.gameObject.SetActive(true);
-        eogui.ShowAndSetRankingsClientRpc(result);
+        hud.gameObject.SetActive(false);
+        eogui.ShowAndSetRankings(result);
     }
 
     

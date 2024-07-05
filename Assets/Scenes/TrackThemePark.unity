@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -251,9 +251,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rankingText: {fileID: 596302337}
-  restartButton: {fileID: 1247835134}
-  eogCanvas: {fileID: 47024330}
-  hudCanvas: {fileID: 672952545}
 --- !u!114 &47024333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2386,9 +2383,9 @@ RectTransform:
   - {fileID: 1659483210}
   m_Father: {fileID: 1560803851}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -460, y: -525}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 80, y: 15}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &403516977

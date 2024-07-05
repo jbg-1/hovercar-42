@@ -10,7 +10,7 @@ public class RankingManager : MonoBehaviour
 
     [SerializeField] private CheckpointLogic checkpointLogic;
 
-    public List<int> CalculateRankingsServerRpc()
+    public List<int> CalculateRankings()
     {
         List<KeyValuePair<int,int>> ranking = checkpointLogic.checkPointCount.ToList()
             .OrderBy(x => x.Value)
