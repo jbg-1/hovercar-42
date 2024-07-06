@@ -10,11 +10,9 @@ public class CheckpointLogic : MonoBehaviour
   public Checkpoint[] checkpoints;
 
   public Dictionary<int, int> checkPointCount = new Dictionary<int, int>();
-
+  public HUD hud;
   public delegate void OnFinished(int carId);
   public event OnFinished onFinish;
-  public delegate void OnWrongDirection(int carId);
-  public event OnWrongDirection onWrongDirection;
 
 
   private void Start()
@@ -32,7 +30,11 @@ public class CheckpointLogic : MonoBehaviour
   {
     if (IsDrivinWrongDirection(checkPointId, carController))
     {
-      onWrongDirection?.Invoke(carController.carId);
+      hud.ToggleWrongDirectionText(true);
+    }
+    else
+    {
+      hud.ToggleWrongDirectionText(false);
     }
 
     if (!checkPointCount.ContainsKey(carController.carId))
@@ -63,16 +65,15 @@ public class CheckpointLogic : MonoBehaviour
   }
 
 
+  // TODO: funktioniert einwandfrei, einziges Problem ist, dass es dadurch dass es nur bei trigger eines checkpoints aufgrufen wird, verzögert ist
+  // TODO: möglicher anderer Ansatz: object/camera welches IMMER vor dem auto fliegt und dieses faced, wenn kart dann nicht mehr faced -> falsche Richtung
   private bool IsDrivinWrongDirection(int checkPointId, CarController carController)
   {
-    if (checkPointCount.ContainsKey(carController.carId))
-    {
-      if (checkPointId != (checkPointCount[carController.carId] + 1) % checkpoints.Length)
-      {
-        return true;
-      }
-    }
+    Vector3 checkPointForward = checkpoints[checkPointId].transform.forward;
+    Vector3 carForward = carController.transform.forward;
 
-    return false;
+    float angle = Vector3.Angle(checkPointForward, carForward);
+
+    return angle > 90;
   }
 }
