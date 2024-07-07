@@ -6,7 +6,7 @@ public class HUD : MonoBehaviour
   public TextMeshProUGUI timerText;
   public TextMeshProUGUI roundsText;
   public TextMeshProUGUI rankText;
-  public Text wrongDirectionText;
+  public TextMeshProUGUI wrongDirectionText;
 
   public void UpdateRank(int rank)
   {
