@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.010331852, g: 0.009989354, b: 0.018089699, a: 1}
+  m_IndirectSpecularColor: {r: 0.010340692, g: 0.010002876, b: 0.018099057, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -140,7 +140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!222 &15200599
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5677,6 +5677,7 @@ MonoBehaviour:
   roundsText: {fileID: 1233191049}
   rankText: {fileID: 1745659630}
   wrongDirectionText: {fileID: 15200601}
+  fadeSpeed: 1
 --- !u!210 &672952551
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -10659,7 +10660,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Runde 0/0
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1995458381b15bc4f801ad03ea3e9bd1, type: 2}
   m_sharedMaterial: {fileID: -3137948196254888247, guid: 1995458381b15bc4f801ad03ea3e9bd1, type: 2}
@@ -15807,7 +15808,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 2.
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1995458381b15bc4f801ad03ea3e9bd1, type: 2}
   m_sharedMaterial: {fileID: -3137948196254888247, guid: 1995458381b15bc4f801ad03ea3e9bd1, type: 2}

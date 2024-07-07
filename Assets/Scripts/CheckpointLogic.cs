@@ -14,11 +14,17 @@ public class CheckpointLogic : MonoBehaviour
   public delegate void OnFinished(int carId);
   public event OnFinished onFinish;
   public HUD hud;
+  private int totalCheckpointAmount;
+
+  //only for wrong direction detection
   private List<int> collectedCheckpoints = new List<int>();
 
-  private void Start()
+    private void Start()
   {
     checkpoints = checkPointParent.GetComponentsInChildren<Checkpoint>();
+    totalCheckpointAmount = checkpoints.Length;
+
+    hud.UpdateRounds(1);
 
     for (int i = 0; i < checkpoints.Length; i++)
     {
@@ -32,6 +38,11 @@ public class CheckpointLogic : MonoBehaviour
     collectedCheckpoints.Add(checkPointId);
 
     hud.ToggleWrongDirectionText(IsDrivinWrongDirection(checkPointId, carController));
+
+    if (collectedCheckpoints.Count == totalCheckpointAmount - 1)
+    {
+      collectedCheckpoints.Clear();
+    }
 
     if (!checkPointCount.ContainsKey(carController.carId))
     {
@@ -48,7 +59,13 @@ public class CheckpointLogic : MonoBehaviour
         Debug.Log("Checkpoint " + checkPointId + " collected; count " + checkPointCount[carController.carId]);
       }
 
-      if (checkPointCount[carController.carId] / checkpoints.Length == 1)
+      if (checkPointCount[carController.carId] == totalCheckpointAmount)
+      {
+        hud.UpdateRounds(2);
+      } else if (checkPointCount[carController.carId] == totalCheckpointAmount * 2)
+      {
+        hud.UpdateRounds(3);
+      } else if (checkPointCount[carController.carId] == totalCheckpointAmount * 3)
       {
         onFinish(carController.carId);
       }
