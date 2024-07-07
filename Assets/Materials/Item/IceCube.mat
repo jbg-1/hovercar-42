@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Tunel1
+  m_Name: IceCube
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_Parent: {fileID: 2100000, guid: ea6d650db9446fd44978f0f7f4d52611, type: 2}
   m_ModifiedSerializedProperties: 0
@@ -42,8 +42,8 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Metallic: 0
+    - _Metallic: 0.489
     m_Colors:
-    - _BaseColor: {r: 0.25013348, g: 0.6886792, b: 0.6276894, a: 0}
-    - _Color: {r: 0.25013345, g: 0.6886792, b: 0.62768936, a: 0}
+    - _BaseColor: {r: 0.6662958, g: 0.8773585, b: 0.8476778, a: 0.6745098}
+    - _Color: {r: 0.6662958, g: 0.8773585, b: 0.8476778, a: 0.6745098}
   m_BuildTextureStacks: []
