@@ -21,11 +21,11 @@ public struct CarSettings
 
 public class CarController : NetworkBehaviour
 {
-    public int carId;
+  public int carId;
 
-    public Vector3 LastCheckpointPosition;
-    public Vector3 LastCheckpointRotation;
-    public Vector3 LastCheckpointGravity;
+  public Vector3 LastCheckpointPosition;
+  public Vector3 LastCheckpointRotation;
+  public Vector3 LastCheckpointGravity;
 
   [SerializeField] bool debugMode = false;
 
@@ -60,6 +60,7 @@ public class CarController : NetworkBehaviour
   private PlayerIcons playerIcons;
   public bool hasPlayerIcon = false;
   public NetworkVariable<FixedString32Bytes> playerColor = new NetworkVariable<FixedString32Bytes>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+  private HUD hud;
 
   private void Start()
   {
@@ -71,6 +72,8 @@ public class CarController : NetworkBehaviour
 
       playerIcons = FindObjectOfType<PlayerIcons>();
       playerIcons.Init();
+
+      hud = FindObjectOfType<HUD>();
     }
   }
 
@@ -205,6 +208,7 @@ public class CarController : NetworkBehaviour
     if (collision.gameObject.CompareTag("DeathBarrier"))
     {
       ReturnToLastCheckpoint();
+      hud.ToggleWrongDirectionText(false);
     }
   }
 
