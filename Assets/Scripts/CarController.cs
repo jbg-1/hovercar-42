@@ -21,11 +21,11 @@ public struct CarSettings
 
 public class CarController : NetworkBehaviour
 {
-    public int carId;
+  public int carId;
 
-    public Vector3 LastCheckpointPosition;
-    public Vector3 LastCheckpointRotation;
-    public Vector3 LastCheckpointGravity;
+  public Vector3 LastCheckpointPosition;
+  public Vector3 LastCheckpointRotation;
+  public Vector3 LastCheckpointGravity;
 
   [SerializeField] bool debugMode = false;
 
