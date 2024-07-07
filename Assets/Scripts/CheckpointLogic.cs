@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static FinishTimer;
 
@@ -13,7 +14,7 @@ public class CheckpointLogic : MonoBehaviour
   public delegate void OnFinished(int carId);
   public event OnFinished onFinish;
   public HUD hud;
-
+  private List<int> collectedCheckpoints = new List<int>();
 
   private void Start()
   {
@@ -28,6 +29,8 @@ public class CheckpointLogic : MonoBehaviour
 
   public void NotifyTrigger(int checkPointId, CarController carController)
   {
+    collectedCheckpoints.Add(checkPointId);
+
     hud.ToggleWrongDirectionText(IsDrivinWrongDirection(checkPointId, carController));
 
     if (!checkPointCount.ContainsKey(carController.carId))
@@ -61,7 +64,9 @@ public class CheckpointLogic : MonoBehaviour
   {
     if (checkPointCount.ContainsKey(carController.carId))
     {
-      if (checkPointId != (checkPointCount[carController.carId] + 1) % checkpoints.Length)
+      int checkPointCountInCollectedCheckpoints = collectedCheckpoints.Count(x => x == checkPointId);
+
+      if (checkPointCountInCollectedCheckpoints % 2 == 0 && checkPointCountInCollectedCheckpoints != 0)
       {
         return true;
       }
