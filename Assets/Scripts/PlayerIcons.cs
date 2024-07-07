@@ -50,7 +50,7 @@ public class PlayerIcons : MonoBehaviour
     GameObject playerIcon = new GameObject("PlayerIcon_" + car.playerColor.Value + "_" + car.OwnerClientId.ToString());
     playerIcon.layer = LayerMask.NameToLayer("PlayerIcons");
 
-    playerIcon.transform.position = car.transform.position;
+    playerIcon.transform.position = new Vector3(car.transform.position.x, car.transform.position.y + 500, car.transform.position.z);
     playerIcon.transform.rotation = Quaternion.Euler(90, 0, 0);
     playerIcon.transform.localScale = new Vector3(playerIconWidth, playerIconHeight, 0);
     playerIcon.transform.parent = transform;
@@ -73,8 +73,7 @@ public class PlayerIcons : MonoBehaviour
     }
 
     GameObject playerIcon = transform.Find("PlayerIcon_" + car.playerColor.Value + "_" + car.OwnerClientId.ToString()).gameObject;
-
-    playerIcon.transform.position = car.transform.position;
+    playerIcon.transform.position = new Vector3(car.transform.position.x, car.transform.position.y + 500, car.transform.position.z);
     playerIcon.transform.rotation = Quaternion.Euler(90, 0, 0);
   }
 
