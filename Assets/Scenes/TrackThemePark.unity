@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.010340692, g: 0.010002876, b: 0.018099057, a: 1}
+  m_IndirectSpecularColor: {r: 0.010331852, g: 0.009989354, b: 0.018089699, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -330,6 +330,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
+--- !u!1 &21029345 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2734154402682584971, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+  m_PrefabInstance: {fileID: 1680742364677125822}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &38775577
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4983,6 +4988,11 @@ PrefabInstance:
       addedObject: {fileID: 406710719}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 906f8737de3944b4b9e2cbe90e418a84, type: 3}
+--- !u!1 &590162063 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5396825718052816341, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+  m_PrefabInstance: {fileID: 1680742364677125822}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &596302335
 GameObject:
   m_ObjectHideFlags: 0
@@ -5676,6 +5686,7 @@ MonoBehaviour:
   timerText: {fileID: 260044505}
   roundsText: {fileID: 1233191049}
   rankText: {fileID: 1745659630}
+  steeringWheelIndicator: {fileID: 1438172749}
   wrongDirectionText: {fileID: 15200601}
   fadeSpeed: 1
 --- !u!210 &672952551
@@ -7997,6 +8008,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpointLogic: {fileID: 972308775}
+--- !u!114 &972308780 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4486350453419376104, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+  m_PrefabInstance: {fileID: 1680742364677125822}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 972308769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d06ba10a40f989541a8cf5ee3f649514, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &975966592 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2796530633637705440, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
@@ -11693,7 +11715,7 @@ MonoBehaviour:
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
-    Address: 192.168.2.50
+    Address: 192.168.33.103
     Port: 7777
     ServerListenAddress: 0.0.0.0
   DebugSimulator:
@@ -13142,6 +13164,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 15ab7e4c3df49bc439419966dfa40845, type: 3}
+--- !u!1 &1445694815 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5726879488202543717, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+  m_PrefabInstance: {fileID: 1680742364677125822}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1458214024 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2092091902862784411, guid: 906f8737de3944b4b9e2cbe90e418a84, type: 3}
@@ -13808,6 +13835,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da4d124d9213bb642be8b88a5ecf354e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1545591321 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 807194150317410932, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+  m_PrefabInstance: {fileID: 1680742364677125822}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1555709828
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17732,6 +17764,11 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -6940246184706110475, guid: a4decbbadb6a04048bf9f3d4ba929351, type: 3}
+--- !u!1 &2134155048 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8775019274446407369, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+  m_PrefabInstance: {fileID: 1680742364677125822}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2136035346
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18008,6 +18045,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 972308774}
     - target: {fileID: 103157756940610999, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+      propertyPath: playerColors
+      value: 
+      objectReference: {fileID: 972308780}
+    - target: {fileID: 103157756940610999, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
       propertyPath: rankingManager
       value: 
       objectReference: {fileID: 972308776}
@@ -18015,6 +18056,30 @@ PrefabInstance:
       propertyPath: checkpointLogic
       value: 
       objectReference: {fileID: 972308775}
+    - target: {fileID: 103157756940610999, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+      propertyPath: spawnPoints.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 103157756940610999, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+      propertyPath: spawnPoints.Array.data[3]
+      value: 
+      objectReference: {fileID: 21029345}
+    - target: {fileID: 103157756940610999, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+      propertyPath: spawnPoints.Array.data[4]
+      value: 
+      objectReference: {fileID: 590162063}
+    - target: {fileID: 103157756940610999, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+      propertyPath: spawnPoints.Array.data[5]
+      value: 
+      objectReference: {fileID: 2134155048}
+    - target: {fileID: 103157756940610999, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+      propertyPath: spawnPoints.Array.data[6]
+      value: 
+      objectReference: {fileID: 1445694815}
+    - target: {fileID: 103157756940610999, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+      propertyPath: spawnPoints.Array.data[7]
+      value: 
+      objectReference: {fileID: 1545591321}
     - target: {fileID: 2210904463257407177, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
       propertyPath: m_Name
       value: RaceController
@@ -18059,6 +18124,42 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4486350453419376104, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+      propertyPath: redMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: abcd5d7bcdd76e2488fd09496d969f21, type: 2}
+    - target: {fileID: 4486350453419376104, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+      propertyPath: blueMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: ee567576bd5937849ad34a04450b9185, type: 2}
+    - target: {fileID: 4486350453419376104, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+      propertyPath: cyanMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: ab6f616675b14724da27adad2f9e37b9, type: 2}
+    - target: {fileID: 4486350453419376104, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+      propertyPath: pinkMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: ed528200a6da25d4980f16ef5c027d67, type: 2}
+    - target: {fileID: 4486350453419376104, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+      propertyPath: greenMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 9d2a6a5e3e1a46c43bdccbf1e3404079, type: 2}
+    - target: {fileID: 4486350453419376104, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+      propertyPath: orangeMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 1614945c973e61744ae2e139bdb954f4, type: 2}
+    - target: {fileID: 4486350453419376104, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+      propertyPath: purpleMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 2230d8a6fdace3d44bea3080e8b9024a, type: 2}
+    - target: {fileID: 4486350453419376104, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+      propertyPath: yellowMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 4e07fe2b0e2d10245a711b4808ab831d, type: 2}
+    - target: {fileID: 4486350453419376104, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+      propertyPath: magentaMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 2230d8a6fdace3d44bea3080e8b9024a, type: 2}
     - target: {fileID: 8212234238283600310, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 2062513132

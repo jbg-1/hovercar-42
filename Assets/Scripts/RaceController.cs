@@ -10,16 +10,15 @@ public class RaceController : NetworkBehaviour
 {
     [SerializeField] GameObject carPrefab;
     [SerializeField] GameObject[] spawnPoints;
-
     [SerializeField] RankingManager rankingManager;
     [SerializeField] CheckpointLogic checkpointLogic;
-
 
     public struct PlayerInformation
     {
         public CarController carController;
         public GameObject carGameObject;
         public int id;
+        //public PlayerColors.PlayerColor playerColor;
     }
 
     public PlayerInformation[] playerInformation;
@@ -33,7 +32,9 @@ public class RaceController : NetworkBehaviour
 
     [SerializeField] private FinishTimer finishTimer;
 
+    [SerializeField] private PlayerColors playerColors;
 
+    private PlayerColors.PlayerColor[] colors;
 
 
     // Start is called before the first frame update
@@ -48,13 +49,15 @@ public class RaceController : NetworkBehaviour
         });
 
         checkpointLogic.onFinish += CarFinishedServerRpc;
+        colors = playerColors.GetAllColors().ToArray();
     }
 
     private void Update()
     {
         List<int> rank = rankingManager.CalculateRankings();
         int ranking = 1;
-        foreach (int x in rank) {
+        foreach (int x in rank)
+        {
             if (playerInformation[x].carController.IsOwner)
             {
                 hud.UpdateRank(ranking);
@@ -114,9 +117,11 @@ public class RaceController : NetworkBehaviour
             }
         }
 
-        string finalRankings = string.Join("\n", finishedPlayers.Select((player, index) => $"Player {player} finished in position {index + 1}"));
+        string finalRankings = string.Join("\n", finishedPlayers.Select((playerIndex, index) => $"{index + 1}. {playerInformation[playerIndex].carController.playerColor.name}"));
         ShowFinalRankClientRpc(finalRankings);
     }
+
+    
 
     [ClientRpc]
     private void ShowFinalRankClientRpc(string result)
@@ -126,35 +131,58 @@ public class RaceController : NetworkBehaviour
         eogui.ShowAndSetRankings(result);
     }
 
-    
+
     private void SpawnCars()
     {
         int i = 0;
         playerInformation = new PlayerInformation[NetworkManager.Singleton.ConnectedClientsList.Count];
-        foreach (NetworkClient x in NetworkManager.Singleton.ConnectedClientsList) { 
+
+        foreach (NetworkClient x in NetworkManager.Singleton.ConnectedClientsList)
+        {
             GameObject newCar = Instantiate(carPrefab, spawnPoints[i].transform.position, spawnPoints[i].transform.rotation);
+            PlayerColors.PlayerColor color = colors[i];
+
             PlayerInformation newPlayerInformation = new PlayerInformation()
             {
                 carGameObject = newCar,
                 carController = newCar.GetComponent<CarController>(),
                 id = i
             };
+
             newPlayerInformation.carController.carId = i;
+            //newPlayerInformation.playerColor = color;
+            newPlayerInformation.carController.SetColor(color);
             playerInformation[i] = newPlayerInformation;
+
+            Transform kartTransform = newCar.transform.Find("Kart");
+            if (kartTransform != null)
+            {
+                Transform helmTransform = kartTransform.Find("Helm");
+                if (helmTransform != null)
+                {
+                    Material helmMaterial = color.material;                          
+                    Renderer helmRenderer = helmTransform.GetComponent<Renderer>();
+                    if (helmRenderer != null)
+                    {
+                        helmRenderer.material = helmMaterial;
+                    }
+                }
+            }
+
             newCar.GetComponent<NetworkObject>().Spawn();
             newCar.GetComponent<NetworkObject>().ChangeOwnership(x.ClientId);
             i++;
         }
 
         rankingManager.playerInformation = playerInformation;
-
     }
 
     [ClientRpc]
     private void StartTimerClientRpc()
     {
         finishTimer.StartTimer();
-        if (IsServer) {
+        if (IsServer)
+        {
             finishTimer.onFinish += RaceFinishedServerRpc;
         }
     }
