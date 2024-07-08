@@ -90,6 +90,8 @@ public class CarController : NetworkBehaviour
       {
         rotationInput = Angle(AppInputController.Orientation);
       }
+
+      hud.RotateSteeringWheelIndicator(rotationInput);
     }
   }
 
