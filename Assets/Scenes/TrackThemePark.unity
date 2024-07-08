@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.010340692, g: 0.010002876, b: 0.018099057, a: 1}
+  m_IndirectSpecularColor: {r: 0.010331852, g: 0.009989354, b: 0.018089699, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5686,6 +5686,7 @@ MonoBehaviour:
   timerText: {fileID: 260044505}
   roundsText: {fileID: 1233191049}
   rankText: {fileID: 1745659630}
+  steeringWheelIndicator: {fileID: 1438172749}
   wrongDirectionText: {fileID: 15200601}
   fadeSpeed: 1
 --- !u!210 &672952551
