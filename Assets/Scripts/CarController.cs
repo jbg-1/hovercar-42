@@ -59,8 +59,8 @@ public class CarController : NetworkBehaviour
 
   private PlayerIcons playerIcons;
   public bool hasPlayerIcon = false;
-  public NetworkVariable<FixedString32Bytes> playerColor = new NetworkVariable<FixedString32Bytes>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
-  private HUD hud;
+  public PlayerColors.PlayerColor playerColor;
+  public HUD hud;
 
   private void Start()
   {
@@ -68,12 +68,12 @@ public class CarController : NetworkBehaviour
     {
       CarCameraScript.instance.Setup(cameraTarget, cameraLookAt);
 
-      playerColor.Value = "blue"; // TODO: CHANGE THIS TO THE SELECTED COLOR FROM THE MENU LATER
-
       playerIcons = FindObjectOfType<PlayerIcons>();
       playerIcons.Init();
 
       hud = FindObjectOfType<HUD>();
+
+      hud.ChangeColors(playerColor.color, playerColor.gradientColors);
     }
   }
 
@@ -247,4 +247,9 @@ public class CarController : NetworkBehaviour
   {
     isDriving = false;
   }
+
+    public void SetColor(PlayerColors.PlayerColor color)
+    {
+        playerColor = color;
+    }
 }

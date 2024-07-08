@@ -13,6 +13,7 @@ public class HUD : MonoBehaviour
   
   void Start()
     {
+        wrongDirectionText.gameObject.SetActive(false);
         SetTextAlpha(0f);
     }
 
@@ -31,14 +32,26 @@ public class HUD : MonoBehaviour
     roundsText.text = "Runde " + round + "/3";
   }
 
+  public void ChangeColors(Color vertexColor, Color[] gradientColors)
+  {
+    rankText.color = vertexColor;
+    wrongDirectionText.color = vertexColor;
+
+    VertexGradient gradient = new VertexGradient(gradientColors[0], gradientColors[1], gradientColors[2], gradientColors[3]);
+    rankText.colorGradient = gradient;
+    wrongDirectionText.colorGradient = gradient;
+  }
+
   public void ToggleWrongDirectionText(bool show)
   {
     if (show)
     {
+      wrongDirectionText.gameObject.SetActive(true);
       StartFading();
     }
     else
     {
+      wrongDirectionText.gameObject.SetActive(false);
       StopFading();
     }
   }

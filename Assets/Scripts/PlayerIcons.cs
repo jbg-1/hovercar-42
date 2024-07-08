@@ -37,17 +37,9 @@ public class PlayerIcons : MonoBehaviour
   {
     Color iconColor;
 
-    try
-    {
-      iconColor = ToColor(car.playerColor.Value.ToString());
-    }
-    catch
-    {
-      //Debug.LogWarning("Invalid or missing color for car: " + car.OwnerClientId.ToString() + ". Skipping icon creation.");
-      return null;
-    }
+    iconColor = car.playerColor.color;
 
-    GameObject playerIcon = new GameObject("PlayerIcon_" + car.playerColor.Value + "_" + car.OwnerClientId.ToString());
+    GameObject playerIcon = new GameObject("PlayerIcon_" + car.playerColor.name + "_" + car.OwnerClientId.ToString());
     playerIcon.layer = LayerMask.NameToLayer("PlayerIcons");
 
     playerIcon.transform.position = new Vector3(car.transform.position.x, car.transform.position.y + 500, car.transform.position.z);
@@ -72,13 +64,9 @@ public class PlayerIcons : MonoBehaviour
       return;
     }
 
-    GameObject playerIcon = transform.Find("PlayerIcon_" + car.playerColor.Value + "_" + car.OwnerClientId.ToString()).gameObject;
+    GameObject playerIcon = transform.Find("PlayerIcon_" + car.playerColor.name + "_" + car.OwnerClientId.ToString()).gameObject;
     playerIcon.transform.position = new Vector3(car.transform.position.x, car.transform.position.y + 500, car.transform.position.z);
     playerIcon.transform.rotation = Quaternion.Euler(90, 0, 0);
   }
 
-  private Color ToColor(string color)
-  {
-    return (Color)typeof(Color).GetProperty(color.ToLowerInvariant()).GetValue(null, null);
-  }
 }

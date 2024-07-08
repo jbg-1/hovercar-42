@@ -76,19 +76,21 @@ public class CheckpointLogic : MonoBehaviour
   {
     return checkpoints[checkpointCount % checkpoints.Length].gameObject;
   }
-
+int count = 0;
   private bool IsDrivinWrongDirection(int checkPointId, CarController carController)
   {
+    count++;
     if (checkPointCount.ContainsKey(carController.carId))
     {
       int checkPointCountInCollectedCheckpoints = collectedCheckpoints.Count(x => x == checkPointId);
 
       if (checkPointCountInCollectedCheckpoints % 2 == 0 && checkPointCountInCollectedCheckpoints != 0)
       {
+        Debug.Log("Wrong Direction, count: " + count);
         return true;
       }
     }
-
+    Debug.Log("Correct Direction, count: " + count);
     return false;
   }
 }
