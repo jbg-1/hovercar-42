@@ -1,6 +1,8 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using System.IO;
 
 public class HUD : MonoBehaviour
 {
@@ -9,12 +11,13 @@ public class HUD : MonoBehaviour
   public TextMeshProUGUI rankText;
   public GameObject steeringWheelIndicator;
   public TextMeshProUGUI wrongDirectionText;
+  public GameObject itemDisplay;
   private Coroutine currentFade;
   public float fadeSpeed = 2.0f;
 
   void Start()
   {
-        wrongDirectionText.gameObject.SetActive(false);
+    wrongDirectionText.gameObject.SetActive(false);
     SetTextAlpha(0f);
   }
 
@@ -46,6 +49,45 @@ public class HUD : MonoBehaviour
   public void RotateSteeringWheelIndicator(float rotation)
   {
     steeringWheelIndicator.transform.rotation = Quaternion.Euler(0, 0, -rotation * 180f / Mathf.PI);
+  }
+
+  public void ToggleItemDisplay(bool show, string itemName = "", string itemFileEnding = "png")
+  {
+    if (!show && itemName == "")
+    {
+      itemDisplay.SetActive(false);
+      return;
+    }
+
+    string pathToItem = $"Assets/Images/Items/{itemName}.{itemFileEnding}";
+    Texture2D texture = LoadTexture(pathToItem);
+
+    if (texture != null)
+    {
+      RawImage rawImage = itemDisplay.GetComponent<RawImage>();
+      if (rawImage != null)
+      {
+        rawImage.texture = texture;
+        itemDisplay.SetActive(true);
+      }
+    }
+  }
+
+  Texture2D LoadTexture(string filePath)
+  {
+    Texture2D tex = null;
+    byte[] fileData;
+
+    if (File.Exists(filePath))
+    {
+      fileData = File.ReadAllBytes(filePath);
+      tex = new Texture2D(2, 2);
+      if (!tex.LoadImage(fileData))
+      {
+        tex = null;
+      }
+    }
+    return tex;
   }
 
   public void ToggleWrongDirectionText(bool show)

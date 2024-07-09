@@ -54,16 +54,18 @@ public class RaceController : NetworkBehaviour
 
     private void Update()
     {
-        List<int> rank = rankingManager.CalculateRankings();
-        int ranking = 1;
-        foreach (int x in rank)
-        {
-            if (playerInformation[x].carController.IsOwner)
+        if (IsHost) { //Since PlayerInformation is not accessible from the clients
+            List<int> rank = rankingManager.CalculateRankings();
+            int ranking = 1;
+            foreach (int x in rank)
             {
-                hud.UpdateRank(ranking);
-                break;
+                if (playerInformation[x].carController.IsOwner)
+                {
+                    hud.UpdateRank(ranking);
+                    break;
+                }
+                ranking++;
             }
-            ranking++;
         }
     }
 
@@ -121,7 +123,7 @@ public class RaceController : NetworkBehaviour
         ShowFinalRankClientRpc(finalRankings);
     }
 
-    
+
 
     [ClientRpc]
     private void ShowFinalRankClientRpc(string result)
@@ -160,7 +162,7 @@ public class RaceController : NetworkBehaviour
                 Transform helmTransform = kartTransform.Find("Helm");
                 if (helmTransform != null)
                 {
-                    Material helmMaterial = color.material;                          
+                    Material helmMaterial = color.material;
                     Renderer helmRenderer = helmTransform.GetComponent<Renderer>();
                     if (helmRenderer != null)
                     {

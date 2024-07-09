@@ -8,23 +8,20 @@ public class CheckpointLogic : MonoBehaviour
 {
   [SerializeField] GameObject checkPointParent;
 
-  public Checkpoint[] checkpoints;
+  private Checkpoint[] checkpoints;
 
   public Dictionary<int, int> checkPointCount = new Dictionary<int, int>();
   public delegate void OnFinished(int carId);
   public event OnFinished onFinish;
-  public HUD hud;
   private int totalCheckpointAmount;
 
   //only for wrong direction detection
   private List<int> collectedCheckpoints = new List<int>();
 
-    private void Start()
+  private void Start()
   {
     checkpoints = checkPointParent.GetComponentsInChildren<Checkpoint>();
     totalCheckpointAmount = checkpoints.Length;
-
-    hud.UpdateRounds(1);
 
     for (int i = 0; i < checkpoints.Length; i++)
     {
@@ -35,9 +32,35 @@ public class CheckpointLogic : MonoBehaviour
 
   public void NotifyTrigger(int checkPointId, CarController carController)
   {
+    if (!carController.IsOwner)
+    {
+      return; 
+    }
+
     collectedCheckpoints.Add(checkPointId);
 
-    hud.ToggleWrongDirectionText(IsDrivinWrongDirection(checkPointId, carController));
+    carController.hud.ToggleWrongDirectionText(IsDrivinWrongDirection(checkPointId, carController));
+
+    if (checkPointId == 2)
+    {
+      carController.hud.ToggleItemDisplay(true, "banana");
+    }
+    else if (checkPointId == 4)
+    {
+      carController.hud.ToggleItemDisplay(true, "bomb");
+    }
+    else if (checkPointId == 6)
+    {
+      carController.hud.ToggleItemDisplay(true, "ice-cube");
+    }
+    else if (checkPointId == 7)
+    {
+      carController.hud.ToggleItemDisplay(true, "thunder");
+    }
+    else
+    {
+      carController.hud.ToggleItemDisplay(false);
+    }
 
     if (collectedCheckpoints.Count == totalCheckpointAmount - 1)
     {
@@ -56,16 +79,18 @@ public class CheckpointLogic : MonoBehaviour
         checkPointCount[carController.carId] = checkPointCount[carController.carId] + 1;
 
         carController.SetLastCheckpoint(checkpoints[checkPointId].transform.position + new Vector3(0, 5, 0), checkpoints[checkPointId].transform.rotation.eulerAngles);
-        Debug.Log("Checkpoint " + checkPointId + " collected; count " + checkPointCount[carController.carId]);
       }
 
       if (checkPointCount[carController.carId] == totalCheckpointAmount)
       {
-        hud.UpdateRounds(2);
+        carController.hud.UpdateRounds(2);
       } else if (checkPointCount[carController.carId] == totalCheckpointAmount * 2)
       {
-        hud.UpdateRounds(3);
+        carController.hud.UpdateRounds(3);
       } else if (checkPointCount[carController.carId] == totalCheckpointAmount * 3)
+      {
+        onFinish(carController.carId);
+      } else if (checkPointCount[carController.carId] == 5)
       {
         onFinish(carController.carId);
       }
@@ -76,21 +101,18 @@ public class CheckpointLogic : MonoBehaviour
   {
     return checkpoints[checkpointCount % checkpoints.Length].gameObject;
   }
-int count = 0;
+
   private bool IsDrivinWrongDirection(int checkPointId, CarController carController)
   {
-    count++;
     if (checkPointCount.ContainsKey(carController.carId))
     {
       int checkPointCountInCollectedCheckpoints = collectedCheckpoints.Count(x => x == checkPointId);
 
       if (checkPointCountInCollectedCheckpoints % 2 == 0 && checkPointCountInCollectedCheckpoints != 0)
       {
-        Debug.Log("Wrong Direction, count: " + count);
         return true;
       }
     }
-    Debug.Log("Correct Direction, count: " + count);
     return false;
   }
 }
