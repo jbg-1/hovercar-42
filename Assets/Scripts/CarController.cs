@@ -72,6 +72,7 @@ public class CarController : NetworkBehaviour
       playerIcons.Init();
 
       hud = FindObjectOfType<HUD>();
+      hud.UpdateRounds(1);
 
       hud.ChangeColors(playerColor.color, playerColor.gradientColors);
     }

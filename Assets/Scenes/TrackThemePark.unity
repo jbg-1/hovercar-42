@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.010331852, g: 0.009989354, b: 0.018089699, a: 1}
+  m_IndirectSpecularColor: {r: 0.010340692, g: 0.010002876, b: 0.018099057, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7993,8 +7993,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkPointParent: {fileID: 422741399}
-  checkpoints: []
-  hud: {fileID: 672952550}
 --- !u!114 &972308776
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11740,7 +11738,7 @@ MonoBehaviour:
     PlayerPrefab: {fileID: 3147342408839658087, guid: df9eca47d685bbb4198f481857c1e6ef, type: 3}
     Prefabs:
       NetworkPrefabsLists:
-      - {fileID: 11400000, guid: 45e87e88bd14281458428b242b5ff90b, type: 2}
+      - {fileID: 11400000, guid: 07475a75b613e8840a702f0735af2338, type: 2}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
