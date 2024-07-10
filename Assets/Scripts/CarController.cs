@@ -263,4 +263,9 @@ public class CarController : NetworkBehaviour
         
     }
 
+    public void Freeze()
+    {
+        //StartCoroutine(FreezeCoroutine());
+    }   
+
 }
