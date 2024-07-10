@@ -188,4 +188,15 @@ public class RaceController : NetworkBehaviour
             finishTimer.onFinish += RaceFinishedServerRpc;
         }
     }
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+
+        foreach(GameObject x in spawnPoints)
+        {
+            Gizmos.DrawCube(x.transform.position,Vector3.one);
+        }
+    }
 }

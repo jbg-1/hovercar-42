@@ -54,7 +54,7 @@ Rigidbody:
   serializedVersion: 4
   m_Mass: 800
   m_Drag: 0.1
-  m_AngularDrag: 2
+  m_AngularDrag: 5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2107724484
+  GlobalObjectIdHash: 2402211658
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -131,17 +131,59 @@ MonoBehaviour:
   LastCheckpointPosition: {x: 0, y: 0, z: 0}
   LastCheckpointRotation: {x: 0, y: 0, z: 0}
   LastCheckpointGravity: {x: 0, y: 0, z: 0}
-  debugMode: 1
+  debugMode: 0
   carSettings:
     forewardTurbineStrength: 15
     upwardTurbineStrength: 25
     maxSpeed: 50
     rotationSpeedCarVelocityInfluence: 0.5
-    groundStabilisationRotationStrengthForeward: 2
-    groundStabilisationRotationStrengthSide: 1
-    airStabilisationRotationStrengthForeward: 1
-    airStabilisationRotationStrengthSide: 1
-  rotationSpeed: 3
+    groundStabilisationRotationStrengthForeward: 4
+    groundStabilisationRotationStrengthSide: 2
+    airStabilisationRotationStrengthForeward: 2
+    airStabilisationRotationStrengthSide: 2
+  rotationSpeed: 5
+  rotationStrength:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.02
+      value: 0
+      inSlope: -0.0032161234
+      outSlope: -0.0032161234
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.36666667
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.8
+      inSlope: 1.0418255
+      outSlope: 1.0418255
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.3025608
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   isDriving: 1
   gravity: {x: 0, y: -20, z: 0}
   flyingHeight: 2
@@ -161,10 +203,12 @@ MonoBehaviour:
   hasPlayerIcon: 0
   playerColor:
     name: 
-    hexValue: 
     material: {fileID: 0}
+    hexValue: 
     gradientHexValues: []
     color: {r: 0, g: 0, b: 0, a: 0}
+    gradientColors: []
+  hud: {fileID: 0}
 --- !u!114 &4246866200816361627
 MonoBehaviour:
   m_ObjectHideFlags: 0

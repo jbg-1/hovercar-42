@@ -3,13 +3,18 @@ using PuzzleCubes.Models;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static FinishTimer;
 
 public class AppInputController : AppController
 {
     [SerializeField] public static float Orientation { get; private set; } = 0;
+    
     private float startOrientation;
 
     private bool firstDataLoaded = false;
+
+    public event OnUseItem onUseItem;
+
 
     public void HandleCubeControl(CubeControl cubeControl)
     {
@@ -23,5 +28,12 @@ public class AppInputController : AppController
         Orientation = input % 360 - 180;
         //Debug.Log("calculated orientation " + Orientation);
 
+        if (cubeControl.TranslationStepForward.GetValueOrDefault(false))
+        {
+            onUseItem();
+        }
     }
+
+    public delegate void OnUseItem();
+
 }
