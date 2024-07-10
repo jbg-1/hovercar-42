@@ -23,5 +23,6 @@ public class AppInputController : AppController
         Orientation = input % 360 - 180;
         //Debug.Log("calculated orientation " + Orientation);
 
+       
     }
 }

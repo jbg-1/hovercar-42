@@ -255,4 +255,12 @@ public class CarController : NetworkBehaviour
     {
         playerColor = color;
     }
+
+    public void Boost(float boostAmount)
+    {
+  
+            carRigidbody.AddForce(transform.forward * boostAmount, ForceMode.VelocityChange);
+        
+    }
+
 }
