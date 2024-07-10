@@ -269,12 +269,15 @@ public class CarController : NetworkBehaviour
         
     }
 
-    public IEnumerator Freeze()
+    public void Freeze()
     {
+        carRigidbody.velocity = Vector3.zero;
+        carRigidbody.isKinematic = true;
+    }
 
-        isDriving = false;
-        yield return new WaitForSeconds(2f);
-        isDriving = true;
-    }   
+    public void Unfreeze()
+    {
+        carRigidbody.isKinematic = false;
+    }
 
 }
