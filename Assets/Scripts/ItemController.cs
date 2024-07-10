@@ -41,13 +41,13 @@ public class ItemController : MonoBehaviour
                     item = new BoostItem();
                     break;
                 case 2:
-                    item = new BoostItem();  
+                    item = new FreezeItem();
                     break;
                 case 3:
-                    item = new BoostItem();
+                    item = new FreezeItem();
                     break;
                 case 4:
-                    item = new BoostItem();
+                    item = new FreezeItem();
                     break;
             }
         }

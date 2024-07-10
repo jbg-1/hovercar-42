@@ -6,10 +6,10 @@ public class FreezeItem : Item
 {
     public override void useItem(ItemController itemController)
     {
-        /**
+        
         Debug.Log("FreezeItem used");
-        itemController.gameObject.GetComponent<CarController>().Freeze(5f);
-        ++/
+        itemController.gameObject.GetComponent<CarController>().Freeze();
+        
     }
  
 

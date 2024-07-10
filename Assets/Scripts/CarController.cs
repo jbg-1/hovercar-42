@@ -263,9 +263,12 @@ public class CarController : NetworkBehaviour
         
     }
 
-    public void Freeze()
+    public IEnumerator Freeze()
     {
-        //StartCoroutine(FreezeCoroutine());
+
+        isDriving = false;
+        yield return new WaitForSeconds(2f);
+        isDriving = true;
     }   
 
 }
