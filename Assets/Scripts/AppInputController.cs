@@ -13,25 +13,26 @@ public class AppInputController : AppController
 
     private bool firstDataLoaded = false;
 
-    public event OnUseItem onUseItem;
+    public static event OnUseItem onUseItem;
 
 
     public void HandleCubeControl(CubeControl cubeControl)
     {
-        //Debug.Log("Raw orientation " + cubeControl.Orientation);
-        if (!firstDataLoaded)
-        {
-            firstDataLoaded = true;
-            startOrientation = (float)cubeControl.Orientation + 180;
-        }
-        float input = (float)(cubeControl.Orientation + 540 - startOrientation);
-        Orientation = input % 360 - 180;
-        //Debug.Log("calculated orientation " + Orientation);
-
         if (cubeControl.TranslationStepForward.GetValueOrDefault(false))
         {
             onUseItem();
         }
+        if(cubeControl.Orientation != 0)
+        {
+            if (!firstDataLoaded)
+            {
+                firstDataLoaded = true;
+                startOrientation = (float)cubeControl.Orientation + 180;
+            }
+
+            float input = (float)(cubeControl.Orientation + 540 - startOrientation);
+            Orientation = input % 360 - 180;
+        }   
     }
 
     public delegate void OnUseItem();

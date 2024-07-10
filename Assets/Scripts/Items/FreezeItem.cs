@@ -9,7 +9,7 @@ public class FreezeItem : Item
         /**
         Debug.Log("FreezeItem used");
         itemController.gameObject.GetComponent<CarController>().Freeze(5f);
-        ++/
+        **/
     }
  
 

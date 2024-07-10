@@ -19,14 +19,9 @@ public class ItemController : MonoBehaviour
         }
     }
 
-    // Call useItem method when the space key is pressed
-    void Update()
+    private void Start()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log("Space key was pressed.");
-            UseItem();
-        }
+        AppInputController.onUseItem += UseItem;
     }
 
     public void collectItem() {

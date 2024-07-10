@@ -134,9 +134,9 @@ MonoBehaviour:
   LastCheckpointGravity: {x: 0, y: 0, z: 0}
   debugMode: 0
   carSettings:
-    forewardTurbineStrength: 15
+    forewardTurbineStrength: 10
     upwardTurbineStrength: 25
-    maxSpeed: 50
+    maxSpeed: 30
     rotationSpeedCarVelocityInfluence: 0.5
     groundStabilisationRotationStrengthForeward: 4
     groundStabilisationRotationStrengthSide: 2
