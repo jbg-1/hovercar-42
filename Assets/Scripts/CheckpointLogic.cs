@@ -32,6 +32,7 @@ public class CheckpointLogic : MonoBehaviour
 
   public void NotifyTrigger(int checkPointId, CarController carController)
   {
+        /**
     if (!carController.IsOwner)
     {
       return; 
@@ -66,7 +67,7 @@ public class CheckpointLogic : MonoBehaviour
     {
       collectedCheckpoints.Clear();
     }
-
+**/
     if (!checkPointCount.ContainsKey(carController.carId))
     {
       checkPointCount.Add(carController.carId, 0);
