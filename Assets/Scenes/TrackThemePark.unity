@@ -323,7 +323,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1378,7 +1378,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1721,7 +1721,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2157,7 +2157,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2669,7 +2669,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3920,7 +3920,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4424,7 +4424,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4620,7 +4620,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7772,7 +7772,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7850,7 +7850,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8306,7 +8306,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9073,7 +9073,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9256,7 +9256,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -10746,7 +10746,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 25
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12195,7 +12195,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityDirection.y
-      value: -20
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: useGravityTransformDown
@@ -12272,7 +12272,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityDirection.y
-      value: -20
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: useGravityTransformDown
@@ -13085,7 +13085,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -15162,7 +15162,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -15859,7 +15859,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 25
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -15932,7 +15932,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16123,7 +16123,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16545,7 +16545,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16886,7 +16886,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -17929,7 +17929,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -18199,7 +18199,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -18272,7 +18272,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7727929160411507572, guid: 9641cfb3ee49fd34e9cf0604c57e8127, type: 3}
       propertyPath: gravityStrength
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

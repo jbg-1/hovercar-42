@@ -149,7 +149,7 @@ public class CarController : NetworkBehaviour
             }
             else
             {
-                acceleration += (1 - (total - flyingHeight) / flyingBuffer) * carSettings.upwardTurbineStrength * transform.up;
+                acceleration += Math.Max((1 - (total - flyingHeight) / flyingBuffer),0) * carSettings.upwardTurbineStrength * transform.up;
             }
             acceleration += gravity;
 
