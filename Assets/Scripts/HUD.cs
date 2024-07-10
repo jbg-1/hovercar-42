@@ -48,7 +48,7 @@ public class HUD : MonoBehaviour
 
   public void RotateSteeringWheelIndicator(float rotation)
   {
-    steeringWheelIndicator.transform.rotation = Quaternion.Euler(0, 0, -rotation * 180f / Mathf.PI);
+    steeringWheelIndicator.transform.rotation = Quaternion.Euler(0, 0, -rotation * 180f);
   }
 
   public void ToggleItemDisplay(bool show, string itemName = "", string itemFileEnding = "png")

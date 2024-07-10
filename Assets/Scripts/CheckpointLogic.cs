@@ -91,10 +91,7 @@ public class CheckpointLogic : MonoBehaviour
       } else if (checkPointCount[carController.carId] == totalCheckpointAmount * 3)
       {
         onFinish(carController.carId);
-      } else if (checkPointCount[carController.carId] == 5)
-      {
-        onFinish(carController.carId);
-      }
+      } 
     }
   }
 

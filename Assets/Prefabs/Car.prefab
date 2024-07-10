@@ -55,7 +55,7 @@ Rigidbody:
   serializedVersion: 4
   m_Mass: 800
   m_Drag: 0.1
-  m_AngularDrag: 2
+  m_AngularDrag: 5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -132,17 +132,59 @@ MonoBehaviour:
   LastCheckpointPosition: {x: 0, y: 0, z: 0}
   LastCheckpointRotation: {x: 0, y: 0, z: 0}
   LastCheckpointGravity: {x: 0, y: 0, z: 0}
-  debugMode: 1
+  debugMode: 0
   carSettings:
-    forewardTurbineStrength: 15
+    forewardTurbineStrength: 10
     upwardTurbineStrength: 25
-    maxSpeed: 50
+    maxSpeed: 30
     rotationSpeedCarVelocityInfluence: 0.5
-    groundStabilisationRotationStrengthForeward: 2
-    groundStabilisationRotationStrengthSide: 1
-    airStabilisationRotationStrengthForeward: 1
-    airStabilisationRotationStrengthSide: 1
-  rotationSpeed: 3
+    groundStabilisationRotationStrengthForeward: 4
+    groundStabilisationRotationStrengthSide: 2
+    airStabilisationRotationStrengthForeward: 2
+    airStabilisationRotationStrengthSide: 2
+  rotationSpeed: 5
+  rotationStrength:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.02
+      value: 0
+      inSlope: -0.0032161234
+      outSlope: -0.0032161234
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.36666667
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.8
+      inSlope: 1.0418255
+      outSlope: 1.0418255
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.3025608
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   isDriving: 1
   gravity: {x: 0, y: -20, z: 0}
   flyingHeight: 2
