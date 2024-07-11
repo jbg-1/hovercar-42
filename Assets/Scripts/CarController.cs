@@ -118,6 +118,7 @@ public class CarController : NetworkBehaviour
             float leftBackHeight = flyingHeight * 2;
             float rightBackHeight = flyingHeight * 2;
             Vector3 raycastDirection = gravity;
+            Vector3 boostAccerleration = Vector3.zero;
             if (Physics.Raycast(LeftFrontTurbine.transform.position, raycastDirection, out RaycastHit hitLF, flyingHeight * 2, groundMask))
             {
                 leftFrontHeight = hitLF.distance;
@@ -204,6 +205,7 @@ public class CarController : NetworkBehaviour
     {
         if (collision.gameObject.TryGetComponent<Bouncer>(out Bouncer collisionBouncer))
         {
+            carRigidbody.AddForce(collision.impulse.normalized * 5, ForceMode.VelocityChange);
             carRigidbody.AddForce(collision.impulse * collisionBouncer.BounceRate(), ForceMode.Impulse);
         }
 
@@ -241,6 +243,9 @@ public class CarController : NetworkBehaviour
         if (IsOwner)
         {
             CarCameraScript.instance.Setup(cameraTarget, cameraLookAt);
+            
+            PlayerColors.PlayerColor color = PlayerColors.instance.GetAllColors()[carId];
+            HUD.instance.ChangeColors(color.color, color.gradientColors);
         }
     }
 

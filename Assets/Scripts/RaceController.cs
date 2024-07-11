@@ -75,7 +75,7 @@ public class RaceController : NetworkBehaviour
         HUD.instance.gameObject.SetActive(true);
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void CarFinishedServerRpc(int id)
     {
         if (finishedPlayers.Count == 0)
@@ -104,7 +104,7 @@ public class RaceController : NetworkBehaviour
         finishTimer.StopTimer();
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void RaceFinishedServerRpc()
     {
         List<int> rank = rankingManager.CalculateRankings();

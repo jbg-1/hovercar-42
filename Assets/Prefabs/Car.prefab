@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3057357318
+  GlobalObjectIdHash: 2402211658
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -135,7 +135,7 @@ MonoBehaviour:
   debugMode: 0
   carSettings:
     forewardTurbineStrength: 10
-    upwardTurbineStrength: 20
+    upwardTurbineStrength: 18
     maxSpeed: 25
     rotationSpeedCarVelocityInfluence: 0.5
     groundStabilisationRotationStrengthForeward: 4
@@ -149,38 +149,38 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 0.84787846
+      outSlope: 0.84787846
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 1
     - serializedVersion: 3
-      time: 0.02
+      time: 0.01
       value: 0
-      inSlope: -0.0032161234
-      outSlope: -0.0032161234
+      inSlope: 0.82100827
+      outSlope: 0.82100827
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.36666667
+      outWeight: 0.43897155
     - serializedVersion: 3
-      time: 0.5
-      value: 0.8
-      inSlope: 1.0418255
-      outSlope: 1.0418255
+      time: 0.49782518
+      value: 0.9293783
+      inSlope: 0.19766879
+      outSlope: 0.19766879
       tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.3025608
+      weightedMode: 3
+      inWeight: 1
+      outWeight: 0.32515755
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: -0.028682668
+      outSlope: -0.028682668
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.2939188
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

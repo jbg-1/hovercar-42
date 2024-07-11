@@ -73,7 +73,7 @@ public class CustomKeyboardController : MonoBehaviour
         /* ORIENTATION */
         axisToEventMap.Add("Horizontal", (value) => {
             // Debug.Log("Horizontal: " + value);
-            orientation += 90 * value * Time.deltaTime;
+            orientation -= 90 * value * Time.deltaTime;
             //  orientation between -180 and 180 degrees
             if (orientation > 180) orientation -= 360;
             else if (orientation < -180) orientation += 360;

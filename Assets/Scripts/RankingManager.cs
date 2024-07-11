@@ -11,7 +11,7 @@ public class RankingManager : MonoBehaviour
     public List<int> CalculateRankings()
     {
         List<KeyValuePair<int,int>> ranking = checkpointLogic.checkPointCount.ToList()
-            .OrderBy(x => x.Value)
+            .OrderBy(x => -x.Value)
             .ThenBy(x => Vector3.Distance(RaceController.instance.carGameobjects[x.Key].transform.position, checkpointLogic.getCheckpoint(x.Value+1).transform.position))
             .ToList();
 

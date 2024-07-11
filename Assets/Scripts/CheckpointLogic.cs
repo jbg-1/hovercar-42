@@ -58,7 +58,7 @@ public class CheckpointLogic : MonoBehaviour
             {
                 HUD.instance.UpdateRounds(3);
             }
-            else if (checkPointCount[carController.carId] == totalCheckpointAmount * 1)
+            else if (checkPointCount[carController.carId] == totalCheckpointAmount * 3)
             {
                 onFinish(carController.carId);
             }

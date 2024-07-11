@@ -27,11 +27,11 @@ public class AppInputController : AppController
             if (!firstDataLoaded)
             {
                 firstDataLoaded = true;
-                startOrientation = (float)cubeControl.Orientation + 180;
+                startOrientation = (float)cubeControl.Orientation;
             }
 
-            float input = (float)(cubeControl.Orientation + 540 - startOrientation);
-            Orientation = input % 360 - 180;
+            float input = (float)(cubeControl.Orientation - startOrientation) + 520;
+            Orientation = -(input % 360 - 180);
         }   
     }
 
