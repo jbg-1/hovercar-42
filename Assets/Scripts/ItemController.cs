@@ -34,19 +34,19 @@ public class ItemController : MonoBehaviour
             switch (random)
             {
                 case 1:
-                    carController.hud.ToggleItemDisplay(true, "banana");
+                    HUD.instance.ToggleItemDisplay(true, "banana");
                     item = new BoostItem();
                     break;
                 case 2:
-                    carController.hud.ToggleItemDisplay(true, "ice-cube");
+                    HUD.instance.ToggleItemDisplay(true, "ice-cube");
                     item = new FreezeItem();
                     break;
                 case 3:
-                    carController.hud.ToggleItemDisplay(true, "thunder");
+                    HUD.instance.ToggleItemDisplay(true, "thunder");
                     item = new LightningItem();
                     break;
                 case 4:
-                    carController.hud.ToggleItemDisplay(true, "bomb");
+                    HUD.instance.ToggleItemDisplay(true, "bomb");
                     item = new SwitchCarItem();
                     break;
             }

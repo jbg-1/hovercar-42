@@ -291,11 +291,11 @@ public class CarController : NetworkBehaviour
         carRigidbody.isKinematic = true;
     }
 
-    public void switchPositionWihtOtherCar(CarController otherCar)
+    public void switchPositionWihtOtherCar()
     {
         //Keine Ahnung ob das Funktioniert das war Copilot
-        Vector3 tempPosition = otherCar.transform.position;
-        otherCar.transform.position = this.transform.position;
+        Vector3 tempPosition = transform.position;
+        transform.position = this.transform.position;
         this.transform.position = tempPosition;
     }
 
