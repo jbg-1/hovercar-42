@@ -32,42 +32,7 @@ public class CheckpointLogic : MonoBehaviour
 
     public void NotifyTrigger(int checkPointId, CarController carController)
     {
-        /**
-    if (!carController.IsOwner)
-    {
-      return; 
-    }
 
-    collectedCheckpoints.Add(checkPointId);
-
-    carController.hud.ToggleWrongDirectionText(IsDrivinWrongDirection(checkPointId, carController));
-
-    if (checkPointId == 2)
-    {
-      carController.hud.ToggleItemDisplay(true, "banana");
-    }
-    else if (checkPointId == 4)
-    {
-      carController.hud.ToggleItemDisplay(true, "bomb");
-    }
-    else if (checkPointId == 6)
-    {
-      carController.hud.ToggleItemDisplay(true, "ice-cube");
-    }
-    else if (checkPointId == 7)
-    {
-      carController.hud.ToggleItemDisplay(true, "thunder");
-    }
-    else
-    {
-      carController.hud.ToggleItemDisplay(false);
-    }
-
-    if (collectedCheckpoints.Count == totalCheckpointAmount - 1)
-    {
-      collectedCheckpoints.Clear();
-    }
-**/
         if (!checkPointCount.ContainsKey(carController.carId))
         {
             checkPointCount.Add(carController.carId, 0);
@@ -81,6 +46,9 @@ public class CheckpointLogic : MonoBehaviour
 
                 carController.SetLastCheckpoint(checkpoints[checkPointId].transform.position + new Vector3(0, 5, 0), checkpoints[checkPointId].transform.rotation.eulerAngles);
             }
+
+            if (!carController.IsOwner)
+                return;
 
             if (checkPointCount[carController.carId] == totalCheckpointAmount)
             {

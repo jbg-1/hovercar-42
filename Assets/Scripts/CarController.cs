@@ -43,6 +43,7 @@ public class CarController : NetworkBehaviour
 
     [Header("Needed Components")]
     [SerializeField] private Rigidbody carRigidbody;
+    [SerializeField] private Renderer helmet;
 
     [SerializeField] private GameObject RightFrontTurbine;
     [SerializeField] private GameObject LeftFrontTurbine;
@@ -63,6 +64,7 @@ public class CarController : NetworkBehaviour
     public bool hasPlayerIcon = false;
     public PlayerColors.PlayerColor playerColor;
 
+
     private void Start()
     {
         if (IsOwner)
@@ -70,9 +72,6 @@ public class CarController : NetworkBehaviour
             CarCameraScript.instance.Setup(cameraTarget, cameraLookAt);
 
             HUD.instance.UpdateRounds(1);
-            HUD.instance.ChangeColors(playerColor.color, playerColor.gradientColors);
-
-            HUD.instance.miniMap.InstantiateMarker(gameObject);
         }
     }
 
@@ -274,6 +273,16 @@ public class CarController : NetworkBehaviour
     public void Unfreeze()
     {
         carRigidbody.isKinematic = false;
+    }
+
+    [ClientRpc]
+    public void setSpawnInformationClientRpc(int id)
+    {
+        this.carId = id;
+        RaceController.instance.registerCar(id,this);
+
+        helmet.SetMaterials(new List<Material>() {PlayerColors.instance.GetAllColors()[id].material});
+        HUD.instance.miniMap.InstantiateMarker(gameObject,id);
     }
 
 }

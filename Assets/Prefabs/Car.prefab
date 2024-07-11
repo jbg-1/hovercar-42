@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2402211658
+  GlobalObjectIdHash: 3057357318
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -193,6 +193,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   carRigidbody: {fileID: 1204701178504809845}
+  helmet: {fileID: 1980167800451406729}
   RightFrontTurbine: {fileID: 3848962993222288025}
   LeftFrontTurbine: {fileID: 8939063287214039177}
   RightBackTurbine: {fileID: 7594664244091242849}
@@ -209,7 +210,6 @@ MonoBehaviour:
     gradientHexValues: []
     color: {r: 0, g: 0, b: 0, a: 0}
     gradientColors: []
-  hud: {fileID: 0}
 --- !u!114 &4246866200816361627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -560,6 +560,11 @@ PrefabInstance:
 --- !u!4 &900082592623024350 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 61498ceb50322da439a7c1481c6ef4ed, type: 3}
+  m_PrefabInstance: {fileID: 862163506369380149}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1980167800451406729 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -8030484128088382276, guid: 61498ceb50322da439a7c1481c6ef4ed, type: 3}
   m_PrefabInstance: {fileID: 862163506369380149}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2372237288196887114
