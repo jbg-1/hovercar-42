@@ -62,6 +62,7 @@ public class CarController : NetworkBehaviour
     private PlayerIcons playerIcons;
     public bool hasPlayerIcon = false;
     public PlayerColors.PlayerColor playerColor;
+    public HUD hud;
 
     private void Start()
     {
@@ -69,10 +70,13 @@ public class CarController : NetworkBehaviour
         {
             CarCameraScript.instance.Setup(cameraTarget, cameraLookAt);
 
-            HUD.instance.UpdateRounds(1);
-            HUD.instance.ChangeColors(playerColor.color, playerColor.gradientColors);
+            playerIcons = FindObjectOfType<PlayerIcons>();
+            playerIcons.Init();
 
-            HUD.instance.miniMap.InstantiateMarker(gameObject);
+            hud = FindObjectOfType<HUD>();
+            hud.UpdateRounds(1);
+
+            hud.ChangeColors(playerColor.color, playerColor.gradientColors);
         }
     }
 
@@ -84,13 +88,13 @@ public class CarController : NetworkBehaviour
             if (debugMode)
             {
                 rotationInput = Input.GetAxis("Horizontal");
-                HUD.instance.RotateSteeringWheelIndicator(rotationInput);
+                hud.RotateSteeringWheelIndicator(rotationInput);
 
             }
             else
             {
                 rotationInput = Angle(AppInputController.Orientation);
-                HUD.instance.RotateSteeringWheelIndicator(AppInputController.Orientation/180);
+                hud.RotateSteeringWheelIndicator(AppInputController.Orientation/180);
 
             }
 
@@ -145,7 +149,7 @@ public class CarController : NetworkBehaviour
             }
             else
             {
-                acceleration += Math.Max((1 - (total - flyingHeight) / flyingBuffer),0) * carSettings.upwardTurbineStrength * transform.up;
+                acceleration += (1 - (total - flyingHeight) / flyingBuffer) * carSettings.upwardTurbineStrength * transform.up;
             }
             acceleration += gravity;
 
@@ -213,7 +217,7 @@ public class CarController : NetworkBehaviour
         if (collision.gameObject.CompareTag("DeathBarrier"))
         {
             ReturnToLastCheckpoint();
-            HUD.instance.ToggleWrongDirectionText(false);
+            hud.ToggleWrongDirectionText(false);
         }
     }
 
@@ -282,12 +286,9 @@ public class CarController : NetworkBehaviour
         carRigidbody.isKinematic = true;
     }
 
-    public void switchPositionWihtOtherCar(CarController otherCar)
+    public void switchPositionWihtOtherCar()
     {
-        //Keine Ahnung ob das Funktioniert das war Copilot
-        Vector3 tempPosition = otherCar.transform.position;
-        otherCar.transform.position = this.transform.position;
-        this.transform.position = tempPosition;
+        //switch position with other car
     }
 
 
