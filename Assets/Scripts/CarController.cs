@@ -63,7 +63,6 @@ public class CarController : NetworkBehaviour
     private PlayerIcons playerIcons;
     public bool hasPlayerIcon = false;
     public PlayerColors.PlayerColor playerColor;
-    public HUD hud;
 
 
     private void Start()
@@ -84,14 +83,12 @@ public class CarController : NetworkBehaviour
             if (debugMode)
             {
                 rotationInput = Input.GetAxis("Horizontal");
-                hud.RotateSteeringWheelIndicator(rotationInput);
-
+                HUD.instance.RotateSteeringWheelIndicator(rotationInput);
             }
             else
             {
                 rotationInput = Angle(AppInputController.Orientation);
-                hud.RotateSteeringWheelIndicator(AppInputController.Orientation/180);
-
+                HUD.instance.RotateSteeringWheelIndicator(AppInputController.Orientation/180);
             }
 
         }
@@ -213,7 +210,7 @@ public class CarController : NetworkBehaviour
         if (collision.gameObject.CompareTag("DeathBarrier"))
         {
             ReturnToLastCheckpoint();
-            hud.ToggleWrongDirectionText(false);
+            HUD.instance.ToggleWrongDirectionText(false);
         }
     }
 
