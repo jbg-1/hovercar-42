@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MiniMapMarker : MonoBehaviour
 {
@@ -9,12 +10,15 @@ public class MiniMapMarker : MonoBehaviour
     private GameObject carGameObject;
 
     [SerializeField] private RectTransform rectTransform;
+    [SerializeField] private Image image;
 
-    public void setValues(Vector3 worldCenter, Vector2 scale, GameObject carGameObject)
+
+    public void setValues(Vector3 worldCenter, Vector2 scale, GameObject carGameObject, int id)
     {
         this.worldCenter = worldCenter;
         this.scale = scale;
         this.carGameObject = carGameObject;
+        image.color = PlayerColors.instance.getColor(id).color;
     }
 
     private void Update()

@@ -8,29 +8,27 @@ using UnityEngine.UI;
 
 public class RaceController : NetworkBehaviour
 {
-    [SerializeField] GameObject carPrefab;
+    public static RaceController instance;
+
+    [SerializeField] GameObject carPrefab; //Car to spawn
     [SerializeField] GameObject[] spawnPoints;
     [SerializeField] RankingManager rankingManager;
     [SerializeField] CheckpointLogic checkpointLogic;
 
-    [SerializeField] MiniMap miniMap;
-
-    public struct PlayerInformation
+    private void Awake()
     {
-        public CarController carController;
-        public GameObject carGameObject;
-        public int id;
-        //public PlayerColors.PlayerColor playerColor;
+        instance = this;
     }
 
-    public PlayerInformation[] playerInformation;
+    public GameObject[] carGameobjects { get; private set; }
+    public CarController[] carController { get; private set; }
+
     private List<int> finishedPlayers = new List<int>();
 
     [SerializeField] private Button spawn;
 
     [Header("UI")]
     [SerializeField] private EOGUI eogui;
-    [SerializeField] private HUD hud;
 
     [SerializeField] private FinishTimer finishTimer;
 
@@ -43,7 +41,7 @@ public class RaceController : NetworkBehaviour
     void Start()
     {
         eogui.gameObject.SetActive(false);
-        hud.gameObject.SetActive(false);
+        HUD.instance.gameObject.SetActive(false);
 
         spawn.onClick.AddListener(() =>
         {
@@ -55,19 +53,17 @@ public class RaceController : NetworkBehaviour
     }
 
     private void Update()
-    {
-        if (IsHost) { //Since PlayerInformation is not accessible from the clients
-            List<int> rank = rankingManager.CalculateRankings();
-            int ranking = 1;
-            foreach (int x in rank)
+{
+        List<int> rank = rankingManager.CalculateRankings();
+        int ranking = 1;
+        foreach (int x in rank)
+        {
+            if (carController[x].IsOwner)
             {
-                if (playerInformation[x].carController.IsOwner)
-                {
-                    hud.UpdateRank(ranking);
-                    break;
-                }
-                ranking++;
+                HUD.instance.UpdateRank(ranking);
+                break;
             }
+            ranking++;
         }
     }
 
@@ -75,7 +71,7 @@ public class RaceController : NetworkBehaviour
 
     public void StartRace()
     {
-        hud.gameObject.SetActive(true);
+        HUD.instance.gameObject.SetActive(true);
     }
 
     [ServerRpc]
@@ -90,11 +86,11 @@ public class RaceController : NetworkBehaviour
         if (!finishedPlayers.Contains(id))
         {
             finishedPlayers.Add(id);
-            playerInformation[id].carController.StopDrivingClientRpc();
+            carController[id].StopDrivingClientRpc();
         }
 
 
-        if (finishedPlayers.Count == playerInformation.Length)
+        if (finishedPlayers.Count == carController.Length)
         {
             RaceFinishedServerRpc();
             StopEarlyClientRpc();
@@ -117,11 +113,11 @@ public class RaceController : NetworkBehaviour
             if (!finishedPlayers.Contains(x))
             {
                 finishedPlayers.Add(x);
-                playerInformation[x].carController.StopDrivingClientRpc();
+                carController[x].StopDrivingClientRpc();
             }
         }
 
-        string finalRankings = string.Join("\n", finishedPlayers.Select((playerIndex, index) => $"{index + 1}. {playerInformation[playerIndex].carController.playerColor.name}"));
+        string finalRankings = string.Join("\n", finishedPlayers.Select((playerIndex, index) => $"{index + 1}. {carController[playerIndex].playerColor.name}"));
         ShowFinalRankClientRpc(finalRankings);
     }
 
@@ -131,54 +127,29 @@ public class RaceController : NetworkBehaviour
     private void ShowFinalRankClientRpc(string result)
     {
         eogui.gameObject.SetActive(true);
-        hud.gameObject.SetActive(false);
+        HUD.instance.gameObject.SetActive(false);
         eogui.ShowAndSetRankings(result);
     }
 
 
+    //only on server
     private void SpawnCars()
     {
-        int i = 0;
-        playerInformation = new PlayerInformation[NetworkManager.Singleton.ConnectedClientsList.Count];
+        if (IsServer) {
+            int i = 0;
+            carGameobjects = new GameObject[NetworkManager.Singleton.ConnectedClientsList.Count];
+            carController = new CarController[NetworkManager.Singleton.ConnectedClientsList.Count];
 
-        foreach (NetworkClient x in NetworkManager.Singleton.ConnectedClientsList)
-        {
-            GameObject newCar = Instantiate(carPrefab, spawnPoints[i].transform.position, spawnPoints[i].transform.rotation);
-            PlayerColors.PlayerColor color = colors[i];
 
-            PlayerInformation newPlayerInformation = new PlayerInformation()
+            foreach (NetworkClient x in NetworkManager.Singleton.ConnectedClientsList)
             {
-                carGameObject = newCar,
-                carController = newCar.GetComponent<CarController>(),
-                id = i
-            };
-
-            newPlayerInformation.carController.carId = i;
-            //newPlayerInformation.playerColor = color;
-            newPlayerInformation.carController.SetColor(color);
-            playerInformation[i] = newPlayerInformation;
-
-            Transform kartTransform = newCar.transform.Find("Kart");
-            if (kartTransform != null)
-            {
-                Transform helmTransform = kartTransform.Find("Helm");
-                if (helmTransform != null)
-                {
-                    Material helmMaterial = color.material;
-                    Renderer helmRenderer = helmTransform.GetComponent<Renderer>();
-                    if (helmRenderer != null)
-                    {
-                        helmRenderer.material = helmMaterial;
-                    }
-                }
+                GameObject newCar = Instantiate(carPrefab, spawnPoints[i].transform.position, spawnPoints[i].transform.rotation);
+                newCar.GetComponent<NetworkObject>().Spawn();
+                newCar.GetComponent<CarController>().setSpawnInformationClientRpc(i);
+                newCar.GetComponent<NetworkObject>().ChangeOwnership(x.ClientId);
+                i++;
             }
-
-            newCar.GetComponent<NetworkObject>().Spawn();
-            newCar.GetComponent<NetworkObject>().ChangeOwnership(x.ClientId);
-            i++;
         }
-
-        rankingManager.playerInformation = playerInformation;
     }
 
     [ClientRpc]
@@ -200,5 +171,11 @@ public class RaceController : NetworkBehaviour
         {
             Gizmos.DrawCube(x.transform.position,Vector3.one);
         }
+    }
+
+    public void registerCar(int id, CarController carController)
+    {
+        this.carController[id] = carController;
+        this.carGameobjects[id] = carController.gameObject;
     }
 }

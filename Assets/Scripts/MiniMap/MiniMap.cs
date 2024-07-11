@@ -17,10 +17,10 @@ public class MiniMap : MonoBehaviour
         scaleChange = new Vector2(rectTransform.rect.width/scale.x, rectTransform.rect.height / scale.y);
     }
 
-    public void InstantiateMarker(GameObject gameObject)
+    public void InstantiateMarker(GameObject gameObject, int id)
     {
         GameObject newMarker = Instantiate(playerMarkerPrefab, transform);
         MiniMapMarker miniMapMarker = newMarker.GetComponent<MiniMapMarker>();
-        miniMapMarker.setValues(worldCenter, scaleChange, gameObject);
+        miniMapMarker.setValues(worldCenter, scaleChange, gameObject,id);
     }
 }

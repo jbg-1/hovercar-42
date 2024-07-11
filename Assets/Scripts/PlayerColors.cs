@@ -51,6 +51,7 @@ public class PlayerColors : MonoBehaviour
         }
     }
 
+    public static PlayerColors instance;
 
     [SerializeField] private Material orangeMaterial;
     [SerializeField] private Material blueMaterial;
@@ -65,6 +66,7 @@ public class PlayerColors : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
         colors = new List<PlayerColor>
         {
             new PlayerColor("Orange", "#FFA500", orangeMaterial, new[] { "#FFA500", "#FF8C00", "#FF7043", "#FFAB40" }),
@@ -81,5 +83,10 @@ public class PlayerColors : MonoBehaviour
     public List<PlayerColor> GetAllColors()
     {
         return colors;
+    }
+
+    public PlayerColor getColor(int id)
+    {
+        return colors[id];
     }
 }
