@@ -10,6 +10,7 @@ public class RaceController : NetworkBehaviour
 {
     public static RaceController instance;
 
+
     [SerializeField] GameObject carPrefab; //Car to spawn
     [SerializeField] GameObject[] spawnPoints;
     [SerializeField] RankingManager rankingManager;
@@ -20,8 +21,8 @@ public class RaceController : NetworkBehaviour
         instance = this;
     }
 
-    public GameObject[] carGameobjects { get; private set; }
-    public CarController[] carController { get; private set; }
+    public Dictionary<int, GameObject> carGameobjects = new Dictionary<int, GameObject>();
+    public Dictionary<int, CarController> carController = new Dictionary<int, CarController>();
 
     private List<int> finishedPlayers = new List<int>();
 
@@ -90,7 +91,7 @@ public class RaceController : NetworkBehaviour
         }
 
 
-        if (finishedPlayers.Count == carController.Length)
+        if (finishedPlayers.Count == carController.Count)
         {
             RaceFinishedServerRpc();
             StopEarlyClientRpc();
@@ -137,9 +138,6 @@ public class RaceController : NetworkBehaviour
     {
         if (IsServer) {
             int i = 0;
-            carGameobjects = new GameObject[NetworkManager.Singleton.ConnectedClientsList.Count];
-            carController = new CarController[NetworkManager.Singleton.ConnectedClientsList.Count];
-
 
             foreach (NetworkClient x in NetworkManager.Singleton.ConnectedClientsList)
             {
