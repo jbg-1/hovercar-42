@@ -285,4 +285,20 @@ public class CarController : NetworkBehaviour
         HUD.instance.miniMap.InstantiateMarker(gameObject,id);
     }
 
+    public void Lightning() 
+    {
+        carRigidbody.velocity = Vector3.zero;
+        carRigidbody.isKinematic = true;
+    }
+
+    public void switchPositionWihtOtherCar(CarController otherCar)
+    {
+        //Keine Ahnung ob das Funktioniert das war Copilot
+        Vector3 tempPosition = otherCar.transform.position;
+        otherCar.transform.position = this.transform.position;
+        this.transform.position = tempPosition;
+    }
+
+
+
 }
