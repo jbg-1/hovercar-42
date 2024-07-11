@@ -63,6 +63,7 @@ public class CarController : NetworkBehaviour
     private PlayerIcons playerIcons;
     public bool hasPlayerIcon = false;
     public PlayerColors.PlayerColor playerColor;
+    public HUD hud;
 
 
     private void Start()
@@ -83,13 +84,13 @@ public class CarController : NetworkBehaviour
             if (debugMode)
             {
                 rotationInput = Input.GetAxis("Horizontal");
-                HUD.instance.RotateSteeringWheelIndicator(rotationInput);
+                hud.RotateSteeringWheelIndicator(rotationInput);
 
             }
             else
             {
                 rotationInput = Angle(AppInputController.Orientation);
-                HUD.instance.RotateSteeringWheelIndicator(AppInputController.Orientation/180);
+                hud.RotateSteeringWheelIndicator(AppInputController.Orientation/180);
 
             }
 
@@ -144,7 +145,7 @@ public class CarController : NetworkBehaviour
             }
             else
             {
-                acceleration += Math.Max((1 - (total - flyingHeight) / flyingBuffer),0) * carSettings.upwardTurbineStrength * transform.up;
+                acceleration += (1 - (total - flyingHeight) / flyingBuffer) * carSettings.upwardTurbineStrength * transform.up;
             }
             acceleration += gravity;
 
@@ -212,7 +213,7 @@ public class CarController : NetworkBehaviour
         if (collision.gameObject.CompareTag("DeathBarrier"))
         {
             ReturnToLastCheckpoint();
-            HUD.instance.ToggleWrongDirectionText(false);
+            hud.ToggleWrongDirectionText(false);
         }
     }
 
@@ -293,10 +294,7 @@ public class CarController : NetworkBehaviour
 
     public void switchPositionWihtOtherCar()
     {
-        //Keine Ahnung ob das Funktioniert das war Copilot
-        Vector3 tempPosition = transform.position;
-        transform.position = this.transform.position;
-        this.transform.position = tempPosition;
+        //switch position with other car
     }
 
 
