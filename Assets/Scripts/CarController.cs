@@ -62,7 +62,6 @@ public class CarController : NetworkBehaviour
     private PlayerIcons playerIcons;
     public bool hasPlayerIcon = false;
     public PlayerColors.PlayerColor playerColor;
-    public HUD hud;
 
     private void Start()
     {
@@ -70,13 +69,10 @@ public class CarController : NetworkBehaviour
         {
             CarCameraScript.instance.Setup(cameraTarget, cameraLookAt);
 
-            playerIcons = FindObjectOfType<PlayerIcons>();
-            playerIcons.Init();
+            HUD.instance.UpdateRounds(1);
+            HUD.instance.ChangeColors(playerColor.color, playerColor.gradientColors);
 
-            hud = FindObjectOfType<HUD>();
-            hud.UpdateRounds(1);
-
-            hud.ChangeColors(playerColor.color, playerColor.gradientColors);
+            HUD.instance.miniMap.InstantiateMarker(gameObject);
         }
     }
 
@@ -88,13 +84,13 @@ public class CarController : NetworkBehaviour
             if (debugMode)
             {
                 rotationInput = Input.GetAxis("Horizontal");
-                hud.RotateSteeringWheelIndicator(rotationInput);
+                HUD.instance.RotateSteeringWheelIndicator(rotationInput);
 
             }
             else
             {
                 rotationInput = Angle(AppInputController.Orientation);
-                hud.RotateSteeringWheelIndicator(AppInputController.Orientation/180);
+                HUD.instance.RotateSteeringWheelIndicator(AppInputController.Orientation/180);
 
             }
 
@@ -149,7 +145,7 @@ public class CarController : NetworkBehaviour
             }
             else
             {
-                acceleration += (1 - (total - flyingHeight) / flyingBuffer) * carSettings.upwardTurbineStrength * transform.up;
+                acceleration += Math.Max((1 - (total - flyingHeight) / flyingBuffer),0) * carSettings.upwardTurbineStrength * transform.up;
             }
             acceleration += gravity;
 
@@ -217,7 +213,7 @@ public class CarController : NetworkBehaviour
         if (collision.gameObject.CompareTag("DeathBarrier"))
         {
             ReturnToLastCheckpoint();
-            hud.ToggleWrongDirectionText(false);
+            HUD.instance.ToggleWrongDirectionText(false);
         }
     }
 

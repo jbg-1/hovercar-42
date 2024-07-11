@@ -13,6 +13,8 @@ public class RaceController : NetworkBehaviour
     [SerializeField] RankingManager rankingManager;
     [SerializeField] CheckpointLogic checkpointLogic;
 
+    [SerializeField] MiniMap miniMap;
+
     public struct PlayerInformation
     {
         public CarController carController;

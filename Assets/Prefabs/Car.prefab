@@ -135,8 +135,8 @@ MonoBehaviour:
   debugMode: 0
   carSettings:
     forewardTurbineStrength: 10
-    upwardTurbineStrength: 25
-    maxSpeed: 30
+    upwardTurbineStrength: 20
+    maxSpeed: 25
     rotationSpeedCarVelocityInfluence: 0.5
     groundStabilisationRotationStrengthForeward: 4
     groundStabilisationRotationStrengthSide: 2
@@ -186,9 +186,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   isDriving: 1
-  gravity: {x: 0, y: -20, z: 0}
-  flyingHeight: 2
-  flyingBuffer: 1
+  gravity: {x: 0, y: -10, z: 0}
+  flyingHeight: 2.5
+  flyingBuffer: 0.2
   groundMask:
     serializedVersion: 2
     m_Bits: 64
