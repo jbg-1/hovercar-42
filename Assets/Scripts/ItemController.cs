@@ -1,8 +1,10 @@
+using System.Collections;
 using UnityEngine;
 
 public class ItemController : MonoBehaviour
 {
     public Item item;
+    private Coroutine autoUseItemCoroutine;
 
     // Method to use the item
     public void UseItem()
@@ -12,6 +14,7 @@ public class ItemController : MonoBehaviour
             Debug.Log("hasCarItem is true");
             item.useItem(this);
             item = null;
+            HUD.instance.ToggleItemDisplay(false);
         }
         else
         {
@@ -24,13 +27,14 @@ public class ItemController : MonoBehaviour
         AppInputController.onUseItem += UseItem;
     }
 
-    public void collectItem() {
+    public void collectItem()
+    {
+        Debug.Log("Item collected");
         CarController carController = GetComponent<CarController>();
-    
-        if(item == null){
-            //generate a random number between 1 and 4
+
+        if (item == null)
+        {
             int random = Random.Range(1, 5);
-            //switch case to determine which item to generate
             switch (random)
             {
                 case 1:
@@ -50,7 +54,23 @@ public class ItemController : MonoBehaviour
                     item = new SwitchCarItem();
                     break;
             }
-        }
 
+            // Start the coroutine to use the item after 3 seconds
+            if (autoUseItemCoroutine != null)
+            {
+                Debug.Log("Item Stop auto use item coroutine");
+                StopCoroutine(autoUseItemCoroutine);
+            }
+            Debug.Log("Item Start auto use item coroutine");
+            autoUseItemCoroutine = StartCoroutine(AutoUseItemAfterDelay(3f));
+        }
+    }
+
+    private IEnumerator AutoUseItemAfterDelay(float delay)
+    {
+        Debug.Log("Item Auto use item after delay");
+        yield return new WaitForSeconds(delay);
+        UseItem();
     }
 }
+
