@@ -1,7 +1,8 @@
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
-public class ItemController : MonoBehaviour
+public class ItemController : NetworkBehaviour
 {
     public Item item;
     private Coroutine autoUseItemCoroutine;
@@ -30,32 +31,35 @@ public class ItemController : MonoBehaviour
 
     public void collectItem()
     {
-        if (item == null)
+        if (IsOwner)
         {
-            //int random = Random.Range(1, 5);
-            int random = 2;
-            switch (random)
+            if (item == null)
             {
-                case 1:
-                    item = new BoostItem();
-                    break;
-                case 2:
-                    item = new FreezeItem();
-                    break;
-                case 3:
-                    item = new LightningItem();
-                    break;
-                case 4:
-                    item = new SwitchCarItem();
-                    break;
-            }
+                //int random = Random.Range(1, 5);
+                int random = 2;
+                switch (random)
+                {
+                    case 1:
+                        item = new BoostItem();
+                        break;
+                    case 2:
+                        item = new FreezeItem();
+                        break;
+                    case 3:
+                        item = new LightningItem();
+                        break;
+                    case 4:
+                        item = new SwitchCarItem();
+                        break;
+                }
 
-            // Start the coroutine to display random items for 2 seconds
-            if (displayRandomItemsCoroutine != null)
-            {
-                StopCoroutine(displayRandomItemsCoroutine);
+                // Start the coroutine to display random items for 2 seconds
+                if (displayRandomItemsCoroutine != null)
+                {
+                    StopCoroutine(displayRandomItemsCoroutine);
+                }
+                displayRandomItemsCoroutine = StartCoroutine(DisplayRandomItemsForDuration(2f));
             }
-            displayRandomItemsCoroutine = StartCoroutine(DisplayRandomItemsForDuration(2f));
         }
     }
 
