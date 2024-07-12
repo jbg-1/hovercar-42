@@ -118,7 +118,7 @@ public class RaceController : NetworkBehaviour
             }
         }
 
-        string finalRankings = string.Join("\n", finishedPlayers.Select((playerIndex, index) => $"{index + 1}. {carController[playerIndex].playerColor.name}"));
+        string finalRankings = string.Join("\n", finishedPlayers.Select((playerIndex, index) => $"{index + 1}. {PlayerColors.instance.getColor(playerIndex).name}"));
         ShowFinalRankClientRpc(finalRankings);
     }
 

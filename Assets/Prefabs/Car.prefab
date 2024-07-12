@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2402211658
+  GlobalObjectIdHash: 3057357318
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -134,9 +134,9 @@ MonoBehaviour:
   LastCheckpointGravity: {x: 0, y: 0, z: 0}
   debugMode: 0
   carSettings:
-    forewardTurbineStrength: 10
+    forewardTurbineStrength: 12
     upwardTurbineStrength: 18
-    maxSpeed: 25
+    maxSpeed: 30
     rotationSpeedCarVelocityInfluence: 0.5
     groundStabilisationRotationStrengthForeward: 4
     groundStabilisationRotationStrengthSide: 2
@@ -202,14 +202,6 @@ MonoBehaviour:
   cameraTarget: {fileID: 8229356006506970794}
   cameraParent: {fileID: 3275331330825546680}
   velocity: {x: 0, y: 0, z: 0}
-  hasPlayerIcon: 0
-  playerColor:
-    name: 
-    material: {fileID: 0}
-    hexValue: 
-    gradientHexValues: []
-    color: {r: 0, g: 0, b: 0, a: 0}
-    gradientColors: []
 --- !u!114 &4246866200816361627
 MonoBehaviour:
   m_ObjectHideFlags: 0

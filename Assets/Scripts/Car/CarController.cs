@@ -1,10 +1,7 @@
 using UnityEngine;
-using System.Collections;
-using System.Linq;
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
-using Unity.Collections;
 
 [Serializable]
 public struct CarSettings
@@ -59,11 +56,6 @@ public class CarController : NetworkBehaviour
 
     [ReadOnlyField]
     public Vector3 velocity;
-
-    private PlayerIcons playerIcons;
-    public bool hasPlayerIcon = false;
-    public PlayerColors.PlayerColor playerColor;
-
 
     private void Start()
     {
@@ -253,11 +245,6 @@ public class CarController : NetworkBehaviour
     public void StopDrivingClientRpc()
     {
         isDriving = false;
-    }
-
-    public void SetColor(PlayerColors.PlayerColor color)
-    {
-        playerColor = color;
     }
 
     public void Boost(float boostAmount)

@@ -11,7 +11,6 @@ public class NetworkManagerUI : MonoBehaviour
   [SerializeField] private Button serverButton;
   [SerializeField] private GameObject menuCanvas;
   [SerializeField] private GameObject hudCanvas;
-  [SerializeField] private PlayerIcons playerIcons;
 
   private void Awake()
   {
