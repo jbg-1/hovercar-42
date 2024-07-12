@@ -1,24 +1,41 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FreezeItem : Item
 {
     public override void useItem(ItemController itemController)
     {
-        
         Debug.Log("FreezeItem used");
-        itemController.gameObject.GetComponent<CarController>().Freeze();
-        itemController.StartCoroutine(BoostAfterFreeze(itemController, 10f, 2f));
+        CarController usingCar = itemController.gameObject.GetComponent<CarController>();
 
+        // Freeze all other cars
+        foreach (var car in RaceController.instance.carController.Values)
+        {
+            Debug.Log("Freeze Item on all cars");
+            if (car != usingCar)
+            {
+                car.FreezeClientRpc();
+            }
+        }
+
+        // Start coroutine to unfreeze all other cars after duration
+        itemController.StartCoroutine(UnfreezeCarsAfterDelay(usingCar, 2f, 10f));
     }
 
-    private IEnumerator BoostAfterFreeze(ItemController itemController, float boostAmount, float freezeDuration)
+    private IEnumerator UnfreezeCarsAfterDelay(CarController usingCar, float delay, float boostAmount)
     {
-        yield return new WaitForSeconds(freezeDuration);
-        itemController.gameObject.GetComponent<CarController>().Unfreeze();
-        itemController.gameObject.GetComponent<CarController>().Boost(boostAmount);
+        yield return new WaitForSeconds(delay);
+
+        foreach (var car in RaceController.instance.carController.Values)
+        {
+            if (car != usingCar)
+            {
+                car.Unfreeze();
+            }
+        }
+
+        // Boost the car that used the item after unfreezing others
+        usingCar.Boost(boostAmount);
     }
-
-
 }
+

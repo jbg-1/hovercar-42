@@ -267,7 +267,8 @@ public class CarController : NetworkBehaviour
         
     }
 
-    public void Freeze()
+    [ClientRpc]
+    public void FreezeClientRpc()
     {
         carRigidbody.velocity = Vector3.zero;
         carRigidbody.isKinematic = true;
@@ -298,7 +299,5 @@ public class CarController : NetworkBehaviour
     {
         //switch position with other car
     }
-
-
 
 }

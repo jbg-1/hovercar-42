@@ -32,7 +32,8 @@ public class ItemController : MonoBehaviour
     {
         if (item == null)
         {
-            int random = Random.Range(1, 5);
+            //int random = Random.Range(1, 5);
+            int random = 2;
             switch (random)
             {
                 case 1:
