@@ -273,8 +273,8 @@ public class CarController : NetworkBehaviour
         carRigidbody.velocity = Vector3.zero;
         carRigidbody.isKinematic = true;
     }
-
-    public void Unfreeze()
+    [ClientRpc]
+    public void UnfreezeClinetRpc()
     {
         carRigidbody.isKinematic = false;
     }
