@@ -7,6 +7,6 @@ public class SwitchCarItem : Item
     public override void useItem(ItemController itemController)
     {
         Debug.Log("SwitchCarItem used");
-        itemController.gameObject.GetComponent<CarController>().switchPositionWihtOtherCar();
+        itemController.gameObject.GetComponent<CarController>().switchPositionWihtOtherCarClientRpc();
     }
 }

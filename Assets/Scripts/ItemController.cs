@@ -36,7 +36,7 @@ public class ItemController : NetworkBehaviour
             if (item == null)
             {
                 //int random = Random.Range(1, 5);
-                int random = 2;
+                int random = 4;
                 switch (random)
                 {
                     case 1:
