@@ -1,6 +1,7 @@
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ItemController : NetworkBehaviour
 {
@@ -26,7 +27,8 @@ public class ItemController : NetworkBehaviour
 
     private void Start()
     {
-        AppInputController.onUseItem += UseItem;
+        ItemCountdown.onUseItem += UseItem;
+       
     }
 
     public void collectItem()
@@ -36,7 +38,7 @@ public class ItemController : NetworkBehaviour
             if (item == null)
             {
                 //int random = Random.Range(1, 5);
-                int random = 2;
+                int random = 4;
                 switch (random)
                 {
                     case 1:
@@ -91,6 +93,7 @@ public class ItemController : NetworkBehaviour
         // Display the actual item
         if (item != null)
         {
+            ItemCountdown.instance.StartCountdown(3f);
             if (item is BoostItem)
                 HUD.instance.ToggleItemDisplay(true, "banana");
             else if (item is FreezeItem)

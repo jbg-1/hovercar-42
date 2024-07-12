@@ -30,7 +30,7 @@ public class FreezeItem : Item
         {
             if (car != usingCar)
             {
-                car.Unfreeze();
+                car.UnfreezeClientRpc();
             }
         }
 

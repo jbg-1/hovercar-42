@@ -2,6 +2,8 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Collections;
+using Random = System.Random;
 
 [Serializable]
 public struct CarSettings
@@ -260,8 +262,8 @@ public class CarController : NetworkBehaviour
         carRigidbody.velocity = Vector3.zero;
         carRigidbody.isKinematic = true;
     }
-
-    public void Unfreeze()
+    [ClientRpc]
+    public void UnfreezeClientRpc()
     {
         carRigidbody.isKinematic = false;
     }
@@ -276,15 +278,40 @@ public class CarController : NetworkBehaviour
         HUD.instance.miniMap.InstantiateMarker(gameObject,id);
     }
 
-    public void Lightning() 
+    [ClientRpc]
+    public void LightningClientRpc() 
     {
         carRigidbody.velocity = Vector3.zero;
         carRigidbody.isKinematic = true;
     }
 
-    public void switchPositionWihtOtherCar()
+    [ClientRpc]
+    public void switchPositionWihtOtherCarClientRpc()
     {
-        //switch position with other car
+        // Get all car controllers
+        var carControllers = RaceController.instance.carController.Values;
+        List<CarController> otherCars = new List<CarController>(carControllers);
+        otherCars.Remove(this);
+
+        // Ensure there's at least one other car to switch with
+        if (otherCars.Count == 0)
+        {
+            Debug.Log("No other cars to switch with!");
+            return;
+        }
+
+        // Pick a random car to switch positions with
+        CarController randomCar = otherCars[UnityEngine.Random.Range(0, otherCars.Count)];
+
+        // Swap positions and rotations
+        Vector3 tempPosition = this.transform.position;
+        Quaternion tempRotation = this.transform.rotation;
+
+        this.transform.position = randomCar.transform.position;
+        this.transform.rotation = randomCar.transform.rotation;
+
+        randomCar.transform.position = tempPosition;
+        randomCar.transform.rotation = tempRotation;
     }
 
 }
