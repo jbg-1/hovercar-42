@@ -9,5 +9,4 @@ public class BoostItem : Item
         Debug.Log("BoostItem used");
         itemController.gameObject.GetComponent<CarController>().Boost(50f);
     }
-
 }
