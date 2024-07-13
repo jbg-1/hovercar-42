@@ -23,9 +23,10 @@ public class CarController : NetworkBehaviour
 
     public int carId;
 
-    public Vector3 LastCheckpointPosition;
-    public Vector3 LastCheckpointRotation;
-    public Vector3 LastCheckpointGravity;
+    private Vector3 LastCheckpointPosition;
+    private Vector3 LastCheckpointRotation;
+    private Vector3 LastCheckpointGravity;
+    private bool LastCheckpointUseTubeGravity;
 
     [SerializeField] bool debugMode = false;
 
@@ -35,6 +36,9 @@ public class CarController : NetworkBehaviour
     [SerializeField] private bool isDriving = false;
 
     [SerializeField] private Vector3 gravity;
+    private Vector3 normGravity;
+    [SerializeField] private bool useTubeGravity;
+
     [SerializeField] private float flyingHeight = 2f;
     [SerializeField] private float flyingBuffer = 1f;
 
@@ -61,9 +65,10 @@ public class CarController : NetworkBehaviour
 
     private void Start()
     {
+        normGravity = gravity.normalized;
         if (IsOwner)
         {
-            CarCameraScript.instance.Setup(cameraTarget, cameraLookAt);
+            CarCameraScript.instance.Setup(cameraTarget, cameraLookAt, transform);
 
             HUD.instance.UpdateRounds(1);
         }
@@ -111,8 +116,7 @@ public class CarController : NetworkBehaviour
             float rightFrontHeight = flyingHeight * 2;
             float leftBackHeight = flyingHeight * 2;
             float rightBackHeight = flyingHeight * 2;
-            Vector3 raycastDirection = gravity;
-            Vector3 boostAccerleration = Vector3.zero;
+            Vector3 raycastDirection = -transform.up;
             if (Physics.Raycast(LeftFrontTurbine.transform.position, raycastDirection, out RaycastHit hitLF, flyingHeight * 2, groundMask))
             {
                 leftFrontHeight = hitLF.distance;
@@ -139,7 +143,14 @@ public class CarController : NetworkBehaviour
             {
                 acceleration += Math.Max((1 - (total - flyingHeight) / flyingBuffer),0) * carSettings.upwardTurbineStrength * transform.up;
             }
-            acceleration += gravity;
+            if (useTubeGravity)
+            {
+                acceleration -= transform.up * gravity.magnitude;
+            }
+            else
+            {
+                acceleration += gravity;
+            }
 
             float turnRight;
             float turnForward;
@@ -164,8 +175,16 @@ public class CarController : NetworkBehaviour
             }
             else
             {
-                turnForward = -Vector3.Dot(gravity, transform.forward) * carSettings.airStabilisationRotationStrengthForeward;
-                turnRight = Vector3.Dot(gravity, transform.right) * carSettings.airStabilisationRotationStrengthSide;
+                if (useTubeGravity)
+                {
+                    turnForward = Vector3.Dot(normGravity, transform.up) * carSettings.airStabilisationRotationStrengthForeward;
+                    turnRight = 0;
+                }
+                else
+                {
+                    turnForward = -Vector3.Dot(normGravity, transform.forward) * carSettings.airStabilisationRotationStrengthForeward;
+                    turnRight = Vector3.Dot(normGravity, transform.right) * carSettings.airStabilisationRotationStrengthSide;
+                }
             }
 
             if (isDriving)
@@ -213,7 +232,14 @@ public class CarController : NetworkBehaviour
     public void ChangeGravityDirectionTo(Vector3 newGravityDirection)
     {
         gravity = newGravityDirection;
+        normGravity = gravity.normalized;
     }
+
+    public void SetUseTubeGravity(bool value)
+    {
+        useTubeGravity = value;
+    }
+
 
     // Checkpoint Logic
     public void SetLastCheckpoint(Vector3 checkpointPosition, Vector3 checkpointRotation)
@@ -222,6 +248,7 @@ public class CarController : NetworkBehaviour
         LastCheckpointPosition = checkpointPosition + offset;
         LastCheckpointRotation = checkpointRotation;
         LastCheckpointGravity = gravity;
+        LastCheckpointUseTubeGravity = useTubeGravity;
     }
 
     public void ReturnToLastCheckpoint()
@@ -231,12 +258,14 @@ public class CarController : NetworkBehaviour
         carRigidbody.angularVelocity = Vector3.zero;
         transform.position = LastCheckpointPosition;
         transform.eulerAngles = LastCheckpointRotation;
+        useTubeGravity = LastCheckpointUseTubeGravity;
+
     }
     protected override void OnOwnershipChanged(ulong previous, ulong current)
     {
         if (IsOwner)
         {
-            CarCameraScript.instance.Setup(cameraTarget, cameraLookAt);
+            CarCameraScript.instance.Setup(cameraTarget, cameraLookAt, transform);
             
             PlayerColors.PlayerColor color = PlayerColors.instance.GetAllColors()[carId];
             HUD.instance.ChangeColors(color.color, color.gradientColors);

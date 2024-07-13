@@ -9,6 +9,7 @@ public class GravityChanger : MonoBehaviour {
     public bool useGravityTransformDown = true;
     public float gravityStrength = 10;
     public Vector3 gravityDirection = -Vector3.up;
+    public bool useTubeGravity = false;
 
 #if UNITY_EDITOR
     public LayerMask layerMask;
@@ -29,6 +30,7 @@ public class GravityChanger : MonoBehaviour {
         if(other.TryGetComponent<CarController>(out carControllerVar))
         {
             carControllerVar.ChangeGravityDirectionTo(gravityDirection);
+            carControllerVar.SetUseTubeGravity(useTubeGravity);
         }
     }
 
@@ -51,12 +53,16 @@ public class GravityChangerEditor : Editor
     SerializedProperty gravityStrength;
     SerializedProperty gravityDirection;
     SerializedProperty layerMask;
+    SerializedProperty useTubeGravity;
+
 
     void OnEnable()
     {
         gravityStrength = serializedObject.FindProperty("gravityStrength");
         gravityDirection = serializedObject.FindProperty("gravityDirection");
         layerMask = serializedObject.FindProperty("layerMask");
+        useTubeGravity = serializedObject.FindProperty("useTubeGravity");
+
     }
 
     override public void OnInspectorGUI()
@@ -78,6 +84,7 @@ public class GravityChangerEditor : Editor
         }
 
         EditorGUILayout.PropertyField(layerMask);
+        EditorGUILayout.PropertyField(useTubeGravity);
 
 
         serializedObject.ApplyModifiedProperties();
