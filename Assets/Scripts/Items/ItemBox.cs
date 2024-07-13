@@ -3,13 +3,12 @@ using UnityEngine;
 
 public class ItemBox : MonoBehaviour
 {
-    private Renderer itemRenderer;
+    [SerializeField] private Renderer itemRenderer;
     private Collider itemCollider;
 
     // Start is called before the first frame update
     void Start()
     {
-        itemRenderer = GetComponent<Renderer>();
         itemCollider = GetComponent<Collider>();
     }
 
