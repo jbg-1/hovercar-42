@@ -26,8 +26,6 @@ public class RaceController : NetworkBehaviour
 
     private List<int> finishedPlayers = new List<int>();
 
-    [SerializeField] private Button spawn;
-
     [Header("UI")]
     [SerializeField] private EOGUI eogui;
 
@@ -44,13 +42,9 @@ public class RaceController : NetworkBehaviour
         eogui.gameObject.SetActive(false);
         HUD.instance.gameObject.SetActive(false);
 
-        spawn.onClick.AddListener(() =>
-        {
-            SpawnCars();
-        });
-
         checkpointLogic.onFinish += CarFinishedServerRpc;
         colors = playerColors.GetAllColors().ToArray();
+        
     }
 
     private void Update()
