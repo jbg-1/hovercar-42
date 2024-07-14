@@ -68,7 +68,7 @@ public class CarController : NetworkBehaviour
         normGravity = gravity.normalized;
         if (IsOwner)
         {
-            CarCameraScript.instance.Setup(cameraTarget, cameraLookAt, transform);
+            CarCamera.instance.Setup(cameraTarget, cameraLookAt, transform);
 
             HUD.instance.UpdateRounds(1);
         }
@@ -265,7 +265,7 @@ public class CarController : NetworkBehaviour
     {
         if (IsOwner)
         {
-            CarCameraScript.instance.Setup(cameraTarget, cameraLookAt, transform);
+            CarCamera.instance.Setup(cameraTarget, cameraLookAt, transform);
             
             PlayerColors.PlayerColor color = PlayerColors.instance.GetAllColors()[carId];
             HUD.instance.ChangeColors(color.color, color.gradientColors);

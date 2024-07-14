@@ -2,9 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CarCameraScript : MonoBehaviour
+public class CarCamera : MonoBehaviour
 {
-    public static CarCameraScript instance;
+    public static CarCamera instance;
+
+    public enum CameraStatus
+    {
+        Spectator, CarFollow
+    }
+
+    private CameraStatus cameraStatus = CameraStatus.Spectator;
+
+
+    
+
+
 
     [SerializeField] private Transform cameraTartgetPosition;
     [SerializeField] private Transform lookAtPosition;

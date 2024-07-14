@@ -50,6 +50,7 @@ public class LobbyManager : NetworkBehaviour
         }
     }
 
+    //TODO Start
     public void LoadRace() {
         if (NetworkManager.IsServer)
         {
