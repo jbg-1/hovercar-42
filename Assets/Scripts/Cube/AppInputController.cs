@@ -15,6 +15,10 @@ public class AppInputController : AppController
 
     public static event OnUseItem onUseItem;
 
+    private void Start()
+    {
+        DontDestroyOnLoad(this);
+    }
 
     public void HandleCubeControl(CubeControl cubeControl)
     {

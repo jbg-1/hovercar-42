@@ -1,0 +1,200 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6753212626346258502
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2741110202442180800}
+  - component: {fileID: 6827311251855503352}
+  - component: {fileID: 4947533179154157195}
+  - component: {fileID: 4373007261717402286}
+  - component: {fileID: 9161438026154732321}
+  - component: {fileID: 5795837135787610219}
+  m_Layer: 0
+  m_Name: CubeController
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2741110202442180800
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6753212626346258502}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5, y: 0, z: 5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6827311251855503352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6753212626346258502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e28e28743131240409e32927c15582c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jsonEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4373007261717402286}
+        m_TargetAssemblyTypeName: PuzzleCubes.Communication.EventDispatcher, Unity.com.mirevi.pc-unity-base
+        m_MethodName: HandleJsonEvent
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  host: localhost
+  port: 5555
+--- !u!114 &4947533179154157195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6753212626346258502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7869bba1833b10f4d921625ed1eb5b0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  connectedEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9161438026154732321}
+        m_TargetAssemblyTypeName: PuzzleCubes.Controller.AppController, Unity.com.mirevi.pc-unity-base
+        m_MethodName: HandleMqttConnected
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  host: localhost
+  clientId: 
+  port: 1883
+--- !u!114 &4373007261717402286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6753212626346258502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ae90542d68ca5a448eb1708c56894df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cubeControlEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9161438026154732321}
+        m_TargetAssemblyTypeName: AppInputController, Assembly-CSharp
+        m_MethodName: HandleCubeControl
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  cubeStateEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  notificationEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  validConnectionEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  debugControlEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  appDatagramEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  poseEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  mqttCommunication: {fileID: 4947533179154157195}
+  zmqCommunication: {fileID: 6827311251855503352}
+  appController: {fileID: 9161438026154732321}
+--- !u!114 &9161438026154732321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6753212626346258502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff96e33d186b76a48938fdbce15ea60c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  splashScreen: {fileID: 0}
+  ownPoseEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  state:
+    appName: <APP>
+    appVersion: 
+    processId: 0
+    cubeId: 
+    isRunning: 0
+    volume: 0
+    mqttConnected: 0
+  stateEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &5795837135787610219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6753212626346258502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea752298e78e70d448d46b276c5ed46d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jsonEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4373007261717402286}
+        m_TargetAssemblyTypeName: PuzzleCubes.Communication.EventDispatcher, Unity.com.mirevi.pc-unity-base
+        m_MethodName: HandleJsonEvent
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  orientation: 0
