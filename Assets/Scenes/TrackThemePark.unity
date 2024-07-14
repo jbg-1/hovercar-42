@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.010341352, g: 0.010003541, b: 0.018100325, a: 1}
+  m_IndirectSpecularColor: {r: 0.010340692, g: 0.010002876, b: 0.018099057, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4223,7 +4223,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 773827392}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
@@ -5795,6 +5795,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 614787784}
+  isCountingDown: 0
 --- !u!1001 &630634976
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11249,11 +11250,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 495e25e9eeec89b44bdb2c00975a22e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hostButton: {fileID: 387359789}
-  clientButton: {fileID: 1983146041}
-  serverButton: {fileID: 119254594}
   menuCanvas: {fileID: 1168103103}
   hudCanvas: {fileID: 672952545}
+  networkManager: {fileID: 1295122157}
 --- !u!114 &1168103105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19774,42 +19773,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ae90542d68ca5a448eb1708c56894df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cubeControlEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2025204369}
-        m_TargetAssemblyTypeName: AppInputController, Assembly-CSharp
-        m_MethodName: HandleCubeControl
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  cubeStateEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  notificationEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  validConnectionEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  debugControlEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  appDatagramEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  poseEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  mqttCommunication: {fileID: 2025204371}
-  zmqCommunication: {fileID: 2025204373}
-  appController: {fileID: 2025204369}
+  startOfGame: {fileID: 1168103104}
 --- !u!114 &2025204371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21397,3 +21361,4 @@ SceneRoots:
   - {fileID: 2045602789}
   - {fileID: 1633562672}
   - {fileID: 843961201}
+  - {fileID: 478121463}

@@ -134,7 +134,7 @@ public class RaceController : NetworkBehaviour
 
 
     //only on server
-    private void SpawnCars()
+    public void SpawnCars()
     {
         if (IsServer) {
             int i = 0;
