@@ -2,6 +2,7 @@ using PuzzleCubes.Controller;
 using PuzzleCubes.Models;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using static FinishTimer;
 
@@ -14,6 +15,12 @@ public class AppInputController : AppController
     private bool firstDataLoaded = false;
 
     public static event OnUseItem onUseItem;
+
+    protected override void Initialize()
+    {
+        base.Initialize();
+        state.CubeId = GUID.Generate().ToString();
+    }
 
     private void Start()
     {
