@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: -4852181485128226319}
   - component: {fileID: 5786665654183605096}
   - component: {fileID: -2058501417474608324}
+  - component: {fileID: 5157048313132542937}
   m_Layer: 0
-  m_Name: CarFollowCamera
+  m_Name: CarCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,8 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cda14d39dab55a4cb33214b65056abd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraTartgetPosition: {fileID: 0}
-  lookAtPosition: {fileID: 0}
+  camera: {fileID: -4852181485128226319}
+  audioListener: {fileID: 5157048313132542937}
 --- !u!114 &-2058501417474608324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -143,3 +144,11 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!81 &5157048313132542937
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8665301113304934016}
+  m_Enabled: 1

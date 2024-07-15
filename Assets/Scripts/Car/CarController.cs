@@ -33,7 +33,7 @@ public class CarController : NetworkBehaviour
     [SerializeField] public CarSettings carSettings;
     [SerializeField] private float rotationSpeed = 2;
     [SerializeField] private AnimationCurve rotationStrength;
-    [SerializeField] private bool isDriving = false;
+    [SerializeField] public bool isDriving { get; private set; } = false;
 
     [SerializeField] private Vector3 gravity;
     private Vector3 normGravity;
@@ -53,11 +53,6 @@ public class CarController : NetworkBehaviour
     [SerializeField] private GameObject RightBackTurbine;
     [SerializeField] private GameObject LeftBackTurbine;
 
-    [Header("Camera")]
-    [SerializeField] private Transform cameraLookAt;
-    [SerializeField] private Transform cameraTarget;
-    [SerializeField] private Transform cameraParent;
-
     private float rotationInput;
 
     [ReadOnlyField]
@@ -68,8 +63,6 @@ public class CarController : NetworkBehaviour
         normGravity = gravity.normalized;
         if (IsOwner)
         {
-            CarCamera.instance.Setup(cameraTarget, cameraLookAt, transform);
-
             HUD.instance.UpdateRounds(1);
         }
     }
@@ -197,17 +190,6 @@ public class CarController : NetworkBehaviour
         }
     }
 
-    private void LateUpdate()
-    {
-        if (IsOwner)
-        {
-            if (!isDriving)
-                cameraParent.rotation = Quaternion.LookRotation(transform.forward);
-            else
-                cameraParent.rotation = Quaternion.LookRotation(carRigidbody.velocity);
-        }
-    }
-
     private float Angle(float orientation)
     {
         float normalizedValue = orientation / 180;
@@ -264,9 +246,7 @@ public class CarController : NetworkBehaviour
     protected override void OnOwnershipChanged(ulong previous, ulong current)
     {
         if (IsOwner)
-        {
-            CarCamera.instance.Setup(cameraTarget, cameraLookAt, transform);
-            
+        {            
             PlayerColors.PlayerColor color = PlayerColors.instance.GetAllColors()[carId];
             HUD.instance.ChangeColors(color.color, color.gradientColors);
         }
@@ -276,6 +256,12 @@ public class CarController : NetworkBehaviour
     public void StopDrivingClientRpc()
     {
         isDriving = false;
+    }
+
+    [ClientRpc]
+    public void StartDrivingClientRpc()
+    {
+        isDriving = true;
     }
 
     public void Boost(float boostAmount)
@@ -301,7 +287,7 @@ public class CarController : NetworkBehaviour
     public void setSpawnInformationClientRpc(int id)
     {
         this.carId = id;
-        RaceController.instance.registerCar(id,this);
+        RaceController.instance.RegisterCar(id,this);
 
         helmet.SetMaterials(new List<Material>() {PlayerColors.instance.GetAllColors()[id].material});
         HUD.instance.miniMap.InstantiateMarker(gameObject,id);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,10 @@ public class RaceController : NetworkBehaviour
 {
     public static RaceController instance;
 
-
+    [Header("Prefabs of objects to spawn")]
     [SerializeField] GameObject carPrefab; //Car to spawn
+    [SerializeField] GameObject carCameraPrefab;
+
     [SerializeField] GameObject[] spawnPoints;
     [SerializeField] RankingManager rankingManager;
     [SerializeField] CheckpointLogic checkpointLogic;
@@ -24,9 +27,14 @@ public class RaceController : NetworkBehaviour
     public Dictionary<int, GameObject> carGameobjects = new Dictionary<int, GameObject>();
     public Dictionary<int, CarController> carController = new Dictionary<int, CarController>();
 
+    private Dictionary<ulong, int> clientIDCarIdDicrionary = new Dictionary<ulong, int>();
+
+
     private List<int> finishedPlayers = new List<int>();
 
     [SerializeField] private Button spawn;
+    [SerializeField] private CameraController cameraController;
+
 
     [Header("UI")]
     [SerializeField] private EOGUI eogui;
@@ -35,22 +43,20 @@ public class RaceController : NetworkBehaviour
 
     [SerializeField] private PlayerColors playerColors;
 
-    private PlayerColors.PlayerColor[] colors;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        SpawnCars();
+        cameraController.onMapShown = OnMapShown;
+        cameraController.ShowMap();
+
         eogui.gameObject.SetActive(false);
         HUD.instance.gameObject.SetActive(false);
 
-        spawn.onClick.AddListener(() =>
-        {
-            SpawnCars();
-        });
 
         checkpointLogic.onFinish += CarFinishedServerRpc;
-        colors = playerColors.GetAllColors().ToArray();
     }
 
     private void Update()
@@ -68,11 +74,42 @@ public class RaceController : NetworkBehaviour
         }
     }
 
+    public void OnMapShown()
+    {
+        cameraController.SwitchToCarCamera(clientIDCarIdDicrionary[NetworkManager.LocalClientId]);
+        if (IsServer)
+        {
+            StartCoroutine(CountDown());
+        }
+    }
+
+    IEnumerator CountDown()
+    {
+        SetCountDownToClientRpc(3);
+        yield return new WaitForSeconds(1f);
+        SetCountDownToClientRpc(2);
+        yield return new WaitForSeconds(1f);
+        SetCountDownToClientRpc(1);
+        yield return new WaitForSeconds(1f);
+        SetCountDownToClientRpc(0);
+        StartRace();
+    }
+
+    [ClientRpc]
+    public void SetCountDownToClientRpc(int value)
+    {
+        
+    }
+
+
 
 
     public void StartRace()
     {
-        HUD.instance.gameObject.SetActive(true);
+        for (int i = 0; i < carController.Count; i++)
+        {
+            carController[i].StartDrivingClientRpc();
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -141,6 +178,7 @@ public class RaceController : NetworkBehaviour
 
             foreach (NetworkClient x in NetworkManager.Singleton.ConnectedClientsList)
             {
+                clientIDCarIdDicrionary[x.ClientId] = i;
                 GameObject newCar = Instantiate(carPrefab, spawnPoints[i].transform.position, spawnPoints[i].transform.rotation);
                 newCar.GetComponent<NetworkObject>().Spawn();
                 newCar.GetComponent<CarController>().setSpawnInformationClientRpc(i);
@@ -149,6 +187,7 @@ public class RaceController : NetworkBehaviour
             }
         }
     }
+
 
     [ClientRpc]
     private void StartTimerClientRpc()
@@ -171,9 +210,15 @@ public class RaceController : NetworkBehaviour
         }
     }
 
-    public void registerCar(int id, CarController carController)
+    public void RegisterCar(int carId, CarController carController)
     {
-        this.carController[id] = carController;
-        this.carGameobjects[id] = carController.gameObject;
+        this.carController[carId] = carController;
+        this.carGameobjects[carId] = carController.gameObject;
+
+        GameObject carCameraGameObject = Instantiate(carCameraPrefab, carController.transform.position, carController.transform.rotation);
+        CarCamera carCamera = carCameraGameObject.GetComponent<CarCamera>();
+        carCamera.Setup(carController.GetComponent<CarCameraTarget>().GetCarCameraPoints());
+        cameraController.AddCarCamera(carId, carCamera);
+
     }
 }

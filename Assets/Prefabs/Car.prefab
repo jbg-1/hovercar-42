@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1204701178504809845}
   - component: {fileID: 1167683794303109056}
   - component: {fileID: 4422478382746698628}
+  - component: {fileID: 1594538848051704974}
   - component: {fileID: 409883570070344538}
   - component: {fileID: 4246866200816361627}
   - component: {fileID: 3072062855007368488}
@@ -119,8 +120,27 @@ MonoBehaviour:
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 1
   SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
+  DontDestroyWithOwner: 1
   AutoObjectParentSync: 1
+--- !u!114 &1594538848051704974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528598495421748030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 113161482a1be664e91bdd3c359025af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  carController: {fileID: 409883570070344538}
+  carCameraPoints:
+    cameraTartgetPosition: {fileID: 8229356006506970794}
+    lookAtPosition: {fileID: 3275331330825546680}
+    upVector: {fileID: 3083587652464786982}
+  cameraParent: {fileID: 3275331330825546680}
+  carRigdbody: {fileID: 1204701178504809845}
 --- !u!114 &409883570070344538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,7 +207,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  isDriving: 1
   gravity: {x: 0, y: -10, z: 0}
   useTubeGravity: 0
   flyingHeight: 2.5
@@ -201,9 +220,6 @@ MonoBehaviour:
   LeftFrontTurbine: {fileID: 8939063287214039177}
   RightBackTurbine: {fileID: 7594664244091242849}
   LeftBackTurbine: {fileID: 3582148278432951305}
-  cameraLookAt: {fileID: 3275331330825546680}
-  cameraTarget: {fileID: 8229356006506970794}
-  cameraParent: {fileID: 3275331330825546680}
   velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &4246866200816361627
 MonoBehaviour:
