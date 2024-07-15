@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4373007261717402286}
   - component: {fileID: 9161438026154732321}
   - component: {fileID: 5795837135787610219}
+  - component: {fileID: 5857321599174260428}
   m_Layer: 0
   m_Name: CubeController
   m_TagString: Player
@@ -104,7 +105,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6753212626346258502}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ae90542d68ca5a448eb1708c56894df, type: 3}
+  m_Script: {fileID: 11500000, guid: d7ebd729cee0bff499cfba62ca6a62aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cubeControlEvent:
@@ -140,9 +141,9 @@ MonoBehaviour:
   poseEvent:
     m_PersistentCalls:
       m_Calls: []
-  mqttCommunication: {fileID: 4947533179154157195}
-  zmqCommunication: {fileID: 6827311251855503352}
-  appController: {fileID: 9161438026154732321}
+  mqttCommunication: {fileID: 0}
+  zmqCommunication: {fileID: 0}
+  appController: {fileID: 0}
 --- !u!114 &9161438026154732321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,3 +199,39 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   orientation: 0
+--- !u!114 &5857321599174260428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6753212626346258502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ebd729cee0bff499cfba62ca6a62aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cubeControlEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  cubeStateEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  notificationEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  validConnectionEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  debugControlEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  appDatagramEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  poseEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  mqttCommunication: {fileID: 0}
+  zmqCommunication: {fileID: 0}
+  appController: {fileID: 0}
