@@ -18,6 +18,7 @@ public class StartCountdownUI : MonoBehaviour
 
     public void SetCountdownToValue(int value)
     {
+        Debug.Log(value);
         if (value < countdownStates.Length)
         {
             text.enabled = true;

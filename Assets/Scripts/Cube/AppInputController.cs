@@ -34,7 +34,7 @@ public class AppInputController : AppController
                 startOrientation = (float)cubeControl.Orientation;
             }
 
-            float input = (float)(cubeControl.Orientation - startOrientation) + 520;
+            float input = (float)(cubeControl.Orientation - startOrientation) + 540;
             Orientation = -(input % 360 - 180);
         }   
     }

@@ -23,6 +23,7 @@ public class MiniMapMarker : MonoBehaviour
 
     private void Update()
     {
-        rectTransform.anchoredPosition = new Vector2((carGameObject.transform.position.x-worldCenter.x) * scale.x, (carGameObject.transform.position.z - worldCenter.z) * scale.y);
+        Vector2 anchor = new Vector2((carGameObject.transform.position.x - worldCenter.x) * scale.x, (carGameObject.transform.position.z - worldCenter.z) * scale.y);
+        rectTransform.anchoredPosition = anchor;
     }
 }
