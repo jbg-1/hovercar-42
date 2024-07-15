@@ -17,14 +17,12 @@ public class MqttCommunicationHoverCar : MonoBehaviour
   private MqttCommunication mqttCommunication;
   private string clientId;
 
-  [SerializeField] private StartOfGameUI startOfGame;
+  [SerializeField] private LobbyManager lobbyManager;
 
   private NetworkManager networkManager;
 
   private bool isHost = false;
   private bool isClient = false;
-
-  [SerializeField] private RaceController raceController;
 
   void Start()
   {
@@ -81,7 +79,7 @@ public class MqttCommunicationHoverCar : MonoBehaviour
 
   private void StartHost()
   {
-    startOfGame.StartHost(); //TODO
+    lobbyManager.StartAsHost(); 
     isHost = true;
 
     // Get the host IP
@@ -123,12 +121,12 @@ public class MqttCommunicationHoverCar : MonoBehaviour
     }
 
     string payload = Encoding.UTF8.GetString(message.Payload);
-    var hostIP = JsonUtility.FromJson<HostIPMessage>(payload);
-    if (hostIP.command == "setHostIPForClients")
+    var hostIPMessage = JsonUtility.FromJson<HostIPMessage>(payload);
+    if (hostIPMessage.command == "setHostIPForClients")
     {
-      Debug.Log("Setting host IP: " + hostIP.hostIP);
+      Debug.Log("Setting host IP: " + hostIPMessage.hostIP);
       // Set the host IP in the network manager and start the client
-      startOfGame.StartClient(hostIP.hostIP); // TODO
+      lobbyManager.StartAsClient(hostIPMessage.hostIP); 
       isClient = true;
     }
   }
@@ -140,20 +138,12 @@ public class MqttCommunicationHoverCar : MonoBehaviour
     if (isHost)
     {
       string payload = Encoding.UTF8.GetString(message.Payload);
-      Debug.Log("Received setLevel command with payload: " + payload);
-
-      // Deserialize the payload to a LevelCommand object
       var levelCommand = JsonUtility.FromJson<LevelCommand>(payload);
-
-      Debug.Log("levelCommand: " + levelCommand);
-      Debug.Log("levelCommand.command: " + levelCommand.command);
-      Debug.Log("levelCommand.levelId: " + levelCommand.levelId);
 
       if (levelCommand.command == "setLevel")
       {
         // Print levelId to the debug log
-        Debug.Log($"Received setLevel command with levelId: {levelCommand.levelId}");
-        //// TODO SetLevel using levelCommand.levelId
+        lobbyManager.SelectLevel(levelCommand.levelId);
       }
     }
   }
@@ -163,7 +153,7 @@ public class MqttCommunicationHoverCar : MonoBehaviour
     if (isHost)
     {
       Debug.Log("All clients connected. Starting game...");
-      raceController.SpawnCars(); //TODO
+      lobbyManager.LoadRace(); //TODO
     }
   }
 }
