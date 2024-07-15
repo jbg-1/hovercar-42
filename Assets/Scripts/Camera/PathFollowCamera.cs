@@ -55,7 +55,6 @@ public class PathFollowCamera : SpectatorCamera
                 else
                 {
                     onMapShown();
-                    Debug.Log(gameObject.name);
                 }
             }
             else

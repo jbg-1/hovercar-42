@@ -36,9 +36,6 @@ public class RaceController : NetworkBehaviour
     [SerializeField] private CameraController cameraController;
 
 
-    [Header("UI")]
-    [SerializeField] private EOGUI eogui;
-
     [SerializeField] private FinishTimer finishTimer;
 
     [SerializeField] private PlayerColors playerColors;
@@ -51,10 +48,6 @@ public class RaceController : NetworkBehaviour
         SpawnCars();
         cameraController.onMapShown = OnMapShown;
         cameraController.ShowMap();
-
-        eogui.gameObject.SetActive(false);
-        HUD.instance.gameObject.SetActive(false);
-
 
         checkpointLogic.onFinish += CarFinishedServerRpc;
     }
@@ -85,20 +78,22 @@ public class RaceController : NetworkBehaviour
 
     IEnumerator CountDown()
     {
-        SetCountDownToClientRpc(3);
-        yield return new WaitForSeconds(1f);
-        SetCountDownToClientRpc(2);
+        SetCountDownToClientRpc(0);
         yield return new WaitForSeconds(1f);
         SetCountDownToClientRpc(1);
         yield return new WaitForSeconds(1f);
-        SetCountDownToClientRpc(0);
+        SetCountDownToClientRpc(2);
+        yield return new WaitForSeconds(1f);
+        SetCountDownToClientRpc(3);
         StartRace();
+        yield return new WaitForSeconds(1f);
+        SetCountDownToClientRpc(4);
     }
 
     [ClientRpc]
     public void SetCountDownToClientRpc(int value)
     {
-        
+        HUD.instance.SetCountdownToValue(value);
     }
 
 
@@ -164,9 +159,6 @@ public class RaceController : NetworkBehaviour
     [ClientRpc]
     private void ShowFinalRankClientRpc(string result)
     {
-        eogui.gameObject.SetActive(true);
-        HUD.instance.gameObject.SetActive(false);
-        eogui.ShowAndSetRankings(result);
     }
 
 

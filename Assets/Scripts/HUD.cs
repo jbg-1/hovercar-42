@@ -7,8 +7,8 @@ using System.IO;
 public class HUD : MonoBehaviour
 {
     public static HUD instance;
-    public MiniMap miniMap;
-
+    [SerializeField] public MiniMap miniMap;
+    [SerializeField] private StartCountdownUI startCountdownUI;
 
 
     public TextMeshProUGUI timerText;
@@ -168,5 +168,10 @@ public class HUD : MonoBehaviour
         Color color = wrongDirectionText.color;
         color.a = alpha;
         wrongDirectionText.color = color;
+    }
+
+    public void SetCountdownToValue(int value)
+    {
+        startCountdownUI.SetCountdownToValue(value);
     }
 }
