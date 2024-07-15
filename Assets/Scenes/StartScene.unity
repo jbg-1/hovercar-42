@@ -171,6 +171,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4373007261717402286, guid: 23fa3e4428045db4faf662498f3bf521, type: 3}
+      propertyPath: MqttCommunicationHoverCar
+      value: 
+      objectReference: {fileID: 775680145}
     - target: {fileID: 6753212626346258502, guid: 23fa3e4428045db4faf662498f3bf521, type: 3}
       propertyPath: m_Name
       value: CubeController
@@ -481,6 +485,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 67117722a812a2e46ab8cb8eafbf5f5e, type: 3}
+--- !u!114 &775680145 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7580244532630050104, guid: 23fa3e4428045db4faf662498f3bf521, type: 3}
+  m_PrefabInstance: {fileID: 470400657}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e727d08a5268f2744a1ddd1f272970f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &889538198
 GameObject:
   m_ObjectHideFlags: 0

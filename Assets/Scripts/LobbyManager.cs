@@ -30,6 +30,7 @@ public class LobbyManager : NetworkBehaviour
     private void Start()
     {
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+        MqttCommunicationHoverCar.instance.lobbyManager = this;
     }
 
     public void SelectLevel(int id)
