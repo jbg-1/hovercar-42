@@ -186,7 +186,7 @@ public class RaceController : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void AddClientIDToDictonaryClintRpc(ulong clientID, int carID)
+    public void AddClientIDToDictonaryClientRpc(ulong clientID, int carID)
     {
         clientIDCarIdDicrionary[clientID] = carID;
     }
