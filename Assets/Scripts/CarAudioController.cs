@@ -8,9 +8,10 @@ public class CarAudioController : NetworkBehaviour
     [SerializeField] private AudioSource carTurbine;
     [SerializeField] private AudioSource bounce;
 
-    [ClientRpc]
+    [Rpc(SendTo.Everyone)]
     public void BounceClientRpc(float value)
     {
+        Debug.Log(value);
         bounce.volume = value;
         bounce.Play();
     }
