@@ -10,6 +10,6 @@ public class DebugLevelInput : MonoBehaviour
 
     public void OnInput()
     {
-        
+        lobbyManager.SelectLevel(int.Parse(inputField.text));
     }
 }
