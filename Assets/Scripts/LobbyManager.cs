@@ -1,12 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
-using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Net;
 using Unity.Netcode.Transports.UTP;
-using System;
 
 
 
@@ -30,6 +25,7 @@ public class LobbyManager : NetworkBehaviour
     private void Start()
     {
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+        MqttCommunicationHoverCar.instance.lobbyManager = this;
     }
 
     public void SelectLevel(int id)
@@ -62,7 +58,7 @@ public class LobbyManager : NetworkBehaviour
             }
             else
             {
-                levelDisplay.SetStatus("Es wurde noch keine Strecke ausgewählt");
+                levelDisplay.SetStatus("Es wurde noch keine Strecke ausgewï¿½hlt");
             }
         }
         else {
@@ -84,8 +80,30 @@ public class LobbyManager : NetworkBehaviour
     //Start
     public void StartAsClient(string ip)
     {
-        NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(ip, 7777);
+        if (NetworkManager.Singleton != null)
+        {
+            var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+
+            if (transport != null)
+            {
+                transport.SetConnectionData(ip, 7777);
+
+                Debug.Log($"IP Address set to: {ip} on port: 7777");
+            }
+            else
+            {
+                Debug.LogError("UnityTransport component not found on the NetworkManager.");
+            }
+        }
+        else
+        {
+            Debug.LogError("NetworkManager component not found.");
+        }
+
+        // Start the client
         NetworkManager.StartClient();
+
+        Debug.Log("Client started with IP: " + ip);
     }
 
     public void StartAsHost()

@@ -54,6 +54,8 @@ public class CarController : NetworkBehaviour
     [SerializeField] private GameObject RightBackTurbine;
     [SerializeField] private GameObject LeftBackTurbine;
 
+    [SerializeField] private CarAudioController carAudioController;
+
     private float rotationInput;
 
     [ReadOnlyField]
@@ -203,6 +205,8 @@ public class CarController : NetworkBehaviour
         {
             carRigidbody.AddForce(collision.impulse.normalized * 5, ForceMode.VelocityChange);
             carRigidbody.AddForce(collision.impulse * collisionBouncer.BounceRate(), ForceMode.Impulse);
+            Debug.Log(collision.impulse.magnitude);
+            carAudioController.Bounce(collision.impulse.magnitude/25000);
         }
 
         if (collision.gameObject.CompareTag("DeathBarrier"))

@@ -1,4 +1,3 @@
-using Palmmedia.ReportGenerator.Core.Common;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -11,6 +10,6 @@ public class DebugLevelInput : MonoBehaviour
 
     public void OnInput()
     {
-        lobbyManager.SelectLevel(inputField.text.ParseLargeInteger());
+        
     }
 }

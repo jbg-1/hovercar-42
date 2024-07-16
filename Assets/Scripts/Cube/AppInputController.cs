@@ -1,7 +1,9 @@
 using PuzzleCubes.Controller;
 using PuzzleCubes.Models;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using static FinishTimer;
 
@@ -14,6 +16,12 @@ public class AppInputController : AppController
     private bool firstDataLoaded = false;
 
     public static event OnUseItem onUseItem;
+
+    protected override void Initialize()
+    {
+        base.Initialize();
+        state.CubeId = Guid.NewGuid().ToString();
+    }
 
     private void Start()
     {
@@ -34,7 +42,7 @@ public class AppInputController : AppController
                 startOrientation = (float)cubeControl.Orientation;
             }
 
-            float input = (float)(cubeControl.Orientation - startOrientation) + 520;
+            float input = (float)(cubeControl.Orientation - startOrientation) + 540;
             Orientation = -(input % 360 - 180);
         }   
     }
