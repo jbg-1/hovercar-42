@@ -77,13 +77,15 @@ public class MqttCommunicationHoverCar : MonoBehaviour
 
     private void StartHost()
     {
+
         lobbyManager.StartAsHost();
-        isHost = true;
 
         // Get the host IP
         var hostIP = Dns.GetHostEntry(Dns.GetHostName()).AddressList
           .FirstOrDefault(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)?.ToString();
+        isHost = true;
 
+        
         if (hostIP != null)
         {
             // Prepare the message

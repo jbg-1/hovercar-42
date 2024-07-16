@@ -2,6 +2,8 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Unity.Netcode.Transports.UTP;
+using System.Net;
+using System.Linq;
 
 
 
@@ -109,6 +111,11 @@ public class LobbyManager : NetworkBehaviour
 
     public void StartAsHost()
     {
+        // Get the host IP
+        string hostIP = Dns.GetHostEntry(Dns.GetHostName()).AddressList
+          .FirstOrDefault(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)?.ToString();
+
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(hostIP, 7777,"0.0.0.0");
         NetworkManager.StartHost();
     }
 
