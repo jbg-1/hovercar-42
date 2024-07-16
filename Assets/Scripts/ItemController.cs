@@ -142,7 +142,7 @@ public class ItemController : NetworkBehaviour
     {
         if(Physics.Raycast(raycastPosition, -Vector3.up, out RaycastHit hit, 5f, ground))
         {
-            GameObject banana = GameObject.Instantiate(bananaPrefab, hit.point, Quaternion.Euler(hit.normal));
+            GameObject banana = GameObject.Instantiate(bananaPrefab, hit.point, Quaternion.LookRotation(hit.normal,transform.forward));
             banana.GetComponent<NetworkObject>().Spawn();
         }
     }
