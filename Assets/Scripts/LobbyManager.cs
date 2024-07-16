@@ -69,6 +69,7 @@ public class LobbyManager : NetworkBehaviour
     private void OnClientConnected(ulong clientId)
     {
         if (IsServer) {
+            Debug.Log(clientId + "joined");
             SelectLevelClientRpc(currentlySelectedLevel);
         }
         if(NetworkManager.LocalClientId == clientId)
