@@ -22,7 +22,7 @@ public class ItemBox : MonoBehaviour
     {
         if(other.TryGetComponent(out ItemController itemController))
         {
-            itemController.collectItem();
+            itemController.CollectItem();
             StartCoroutine(RespawnItem());
 
         }

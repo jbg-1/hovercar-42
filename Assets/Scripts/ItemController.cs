@@ -1,10 +1,11 @@
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class ItemController : NetworkBehaviour
 {
+    [SerializeField] private LayerMask ground;
+
     public GameObject bananaPrefab;
     public GameObject bombPrefab;
 
@@ -17,22 +18,10 @@ public class ItemController : NetworkBehaviour
     {
         if (item != null)
         {
-            Debug.Log("hasCarItem is true");
-            UseItemServerRpc();
+            item.useItem(this);
             item = null;
             HUD.instance.ToggleItemDisplay(false);
         }
-        else
-        {
-            Debug.Log("No item to use");
-        }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void UseItemServerRpc()
-    {
-        item.useItem(this);
-        item = null;
     }
 
     private void Start()
@@ -41,15 +30,13 @@ public class ItemController : NetworkBehaviour
        
     }
 
-    public void collectItem()
+    public void CollectItem()
     {
         if (IsOwner)
         {
             if (item == null)
             {
-                //int random = Random.Range(1, 5);
-                int random = 5;
-                collectItemServerRpc(random);
+                int random = Random.Range(1, 5);
                 switch (random)
                 {
                     case 1:
@@ -62,12 +49,10 @@ public class ItemController : NetworkBehaviour
                         item = new LightningItem();
                         break;
                     case 4:
-                        BananaItem bananaItem = new BananaItem();
-                        item = bananaItem;
+                        item = new BananaItem();
                         break;
                     case 5:
-                        BombItem bombItem = new BombItem();
-                        item = bombItem;
+                        item = new BombItem();
                         break;
                 }
 
@@ -77,33 +62,6 @@ public class ItemController : NetworkBehaviour
                     StopCoroutine(displayRandomItemsCoroutine);
                 }
                 displayRandomItemsCoroutine = StartCoroutine(DisplayRandomItemsForDuration(2f));
-            }
-        }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void collectItemServerRpc(int itemId) {         
-        if (item == null)
-        {
-            switch (itemId)
-            {
-                case 1:
-                    item = new BoostItem();
-                    break;
-                case 2:
-                    item = new FreezeItem();
-                    break;
-                case 3:
-                    item = new LightningItem();
-                    break;
-                case 4:
-                    BananaItem bananaItem = new BananaItem();
-                    item = bananaItem;
-                    break;
-                case 5:
-                    BombItem bombItem = new BombItem();
-                    item = bombItem;
-                    break;
             }
         }
     }
@@ -169,5 +127,23 @@ public class ItemController : NetworkBehaviour
         UseItem();
     }
 
-    
+    [ServerRpc]
+    public void SpawnBombServerRpc(Vector3 spawnPosition, Quaternion spawnRotation, Vector3 throwForce)
+    {
+        GameObject bomb = GameObject.Instantiate(this.bombPrefab, spawnPosition, spawnRotation);
+        bomb.GetComponent<NetworkObject>().Spawn();
+
+        Rigidbody bombRigidbody = bomb.GetComponent<Rigidbody>();
+        bombRigidbody.AddForce(throwForce, ForceMode.VelocityChange);
+    }
+
+    [ServerRpc]
+    public void SpawnBananaServerRpc(Vector3 raycastPosition)
+    {
+        if(Physics.Raycast(raycastPosition, -Vector3.up, out RaycastHit hit, 5f, ground))
+        {
+            GameObject banana = GameObject.Instantiate(bananaPrefab, hit.point, Quaternion.Euler(hit.normal));
+            banana.GetComponent<NetworkObject>().Spawn();
+        }
+    }
 }

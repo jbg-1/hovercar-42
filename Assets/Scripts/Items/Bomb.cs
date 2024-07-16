@@ -17,31 +17,31 @@ public class Bomb : NetworkBehaviour
         if (IsServer && !exploded)
         {
             exploded = true;
-            Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
-
-            foreach (Collider collider in colliders)
-            {
-                if (collider.TryGetComponent<CarController>(out CarController car))
-                {
-                    car.BombClientRpc((car.transform.position - transform.position).normalized * explosionForce);
-                }
-            }
-            StartCoroutine(StartDestroy());
+            explodeClientRpc();
         }
+    }
+
+    [ClientRpc]
+    public void explodeClientRpc()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
+
+        foreach (Collider collider in colliders)
+        {
+            if (collider.TryGetComponent<CarController>(out CarController car) && car.IsOwner)
+            {
+                car.BombClientRpc((car.transform.position - transform.position).normalized * explosionForce);
+            }
+        }
+        StartCoroutine(StartDestroy());
     }
 
     private IEnumerator StartDestroy()
     {
-        PlayParticleClientRpc();
         sound.Play();
-        yield return new WaitForSeconds(2f);
-        Destroy(gameObject);
-    }
-
-    [ClientRpc]
-    public void PlayParticleClientRpc()
-    {
         particlSystem.Play();
         mesh.enabled = false;
+        yield return new WaitForSeconds(2f);
+        Destroy(gameObject);
     }
 }
