@@ -1,5 +1,6 @@
 using PuzzleCubes.Controller;
 using PuzzleCubes.Models;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -19,7 +20,7 @@ public class AppInputController : AppController
     protected override void Initialize()
     {
         base.Initialize();
-        state.CubeId = GUID.Generate().ToString();
+        state.CubeId = Guid.NewGuid().ToString();
     }
 
     private void Start()
