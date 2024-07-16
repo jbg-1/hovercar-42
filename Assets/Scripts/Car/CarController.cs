@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.Collections;
 using Random = System.Random;
+using System.Collections;
 
 [Serializable]
 public struct CarSettings
@@ -80,7 +81,7 @@ public class CarController : NetworkBehaviour
             else
             {
                 rotationInput = Angle(AppInputController.Orientation);
-                HUD.instance.RotateSteeringWheelIndicator(AppInputController.Orientation/180);
+                HUD.instance.RotateSteeringWheelIndicator(AppInputController.Orientation / 180);
             }
 
         }
@@ -134,7 +135,7 @@ public class CarController : NetworkBehaviour
             }
             else
             {
-                acceleration += Math.Max((1 - (total - flyingHeight) / flyingBuffer),0) * carSettings.upwardTurbineStrength * transform.up;
+                acceleration += Math.Max((1 - (total - flyingHeight) / flyingBuffer), 0) * carSettings.upwardTurbineStrength * transform.up;
             }
             if (useTubeGravity)
             {
@@ -246,7 +247,7 @@ public class CarController : NetworkBehaviour
     protected override void OnOwnershipChanged(ulong previous, ulong current)
     {
         if (IsOwner)
-        {            
+        {
             PlayerColors.PlayerColor color = PlayerColors.instance.GetAllColors()[carId];
             HUD.instance.ChangeColors(color.color, color.gradientColors);
         }
@@ -266,9 +267,9 @@ public class CarController : NetworkBehaviour
 
     public void Boost(float boostAmount)
     {
-  
-            carRigidbody.AddForce(transform.forward * boostAmount, ForceMode.VelocityChange);
-        
+
+        carRigidbody.AddForce(transform.forward * boostAmount, ForceMode.VelocityChange);
+
     }
 
     [ClientRpc]
@@ -287,14 +288,14 @@ public class CarController : NetworkBehaviour
     public void setSpawnInformationClientRpc(int id)
     {
         this.carId = id;
-        RaceController.instance.RegisterCar(id,this);
+        RaceController.instance.RegisterCar(id, this);
 
-        helmet.SetMaterials(new List<Material>() {PlayerColors.instance.GetAllColors()[id].material});
-        HUD.instance.miniMap.InstantiateMarker(gameObject,id);
+        helmet.SetMaterials(new List<Material>() { PlayerColors.instance.GetAllColors()[id].material });
+        HUD.instance.miniMap.InstantiateMarker(gameObject, id);
     }
 
     [ClientRpc]
-    public void LightningClientRpc() 
+    public void LightningClientRpc()
     {
         carRigidbody.velocity = Vector3.zero;
         carRigidbody.isKinematic = true;
@@ -329,4 +330,24 @@ public class CarController : NetworkBehaviour
         randomCar.transform.rotation = tempRotation;
     }
 
+    public void spinCar()
+    {
+        StartCoroutine(SpinOutCoroutine());
+    }
+
+    private IEnumerator SpinOutCoroutine()
+    {
+        // Example logic for spinning out
+        float spinDuration = 2f;
+        float spinSpeed = 360f;  // degrees per second
+
+        float timer = 0f;
+        while (timer < spinDuration)
+        {
+            carRigidbody.MoveRotation(carRigidbody.rotation * Quaternion.Euler(0, spinSpeed * Time.deltaTime, 0));
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+    }
 }

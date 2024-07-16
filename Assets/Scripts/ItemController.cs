@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class ItemController : NetworkBehaviour
 {
+    public GameObject bananaPrefab;
+    public GameObject bombPrefab;
+
     public Item item;
     private Coroutine autoUseItemCoroutine;
     private Coroutine displayRandomItemsCoroutine;
@@ -38,7 +41,7 @@ public class ItemController : NetworkBehaviour
             if (item == null)
             {
                 //int random = Random.Range(1, 5);
-                int random = 4;
+                int random = 6;
                 switch (random)
                 {
                     case 1:
@@ -52,6 +55,14 @@ public class ItemController : NetworkBehaviour
                         break;
                     case 4:
                         item = new SwitchCarItem();
+                        break;
+                    case 5:
+                        BananaItem bananaItem = new BananaItem();
+                        item = bananaItem;
+                        break;
+                    case 6:
+                        BombItem bombItem = new BombItem();
+                        item = bombItem;
                         break;
                 }
 
@@ -86,6 +97,12 @@ public class ItemController : NetworkBehaviour
                 case 4:
                     HUD.instance.ToggleItemDisplay(true, "bomb");
                     break;
+                case 5:
+                    HUD.instance.ToggleItemDisplay(true, "banana");
+                    break;
+                case 6:
+                    HUD.instance.ToggleItemDisplay(true, "bomb");
+                    break;
             }
             yield return new WaitForSeconds(0.2f);
         }
@@ -101,6 +118,10 @@ public class ItemController : NetworkBehaviour
             else if (item is LightningItem)
                 HUD.instance.ToggleItemDisplay(true, "thunder");
             else if (item is SwitchCarItem)
+                HUD.instance.ToggleItemDisplay(true, "bomb");
+            else if (item is BananaItem)
+                HUD.instance.ToggleItemDisplay(true, "banana");
+            else if (item is BombItem)
                 HUD.instance.ToggleItemDisplay(true, "bomb");
 
             // Start the coroutine to use the item after 3 seconds
