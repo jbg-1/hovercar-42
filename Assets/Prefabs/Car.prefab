@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2402211658
+  GlobalObjectIdHash: 3057357318
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -156,6 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0f09a24437d6ce4dbf4be33b09bb8c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  drivingClientID: 0
   carId: 0
   debugMode: 0
   carSettings:
@@ -280,6 +281,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0931cded4dab2844fbfb157d54e95e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ground:
+    serializedVersion: 2
+    m_Bits: 64
   bananaPrefab: {fileID: 1481861166459305089, guid: 72e9f7814549d034a96e6c3b9de421d7, type: 3}
   bombPrefab: {fileID: 1258127407050923892, guid: 9ff6beac92277594c9cdbe14fbbbab8a, type: 3}
 --- !u!82 &801680247016807932
@@ -303,7 +307,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 3
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 200
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -399,7 +403,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 200
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
