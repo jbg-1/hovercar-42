@@ -178,7 +178,7 @@ public class RaceController : NetworkBehaviour
                 AddClientIDToDictonaryClientRpc(x.ClientId, i);
                 GameObject newCar = Instantiate(carPrefab, spawnPoints[i].transform.position, spawnPoints[i].transform.rotation);
                 newCar.GetComponent<NetworkObject>().Spawn();
-                newCar.GetComponent<CarController>().setSpawnInformationClientRpc(i);
+                newCar.GetComponent<CarController>().SetSpawnInformationClientRpc(i, x.ClientId);
                 newCar.GetComponent<NetworkObject>().ChangeOwnership(x.ClientId);
                 i++;
             }

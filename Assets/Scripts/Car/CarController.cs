@@ -21,6 +21,7 @@ public struct CarSettings
 
 public class CarController : NetworkBehaviour
 {
+    public ulong drivingClientID;
 
     public int carId;
 
@@ -73,7 +74,7 @@ public class CarController : NetworkBehaviour
     private void Update()
     {
 
-        if (IsOwner)
+        if (IsOwner && OwnerClientId == drivingClientID)
         {
             if (debugMode)
             {
@@ -250,7 +251,7 @@ public class CarController : NetworkBehaviour
     }
     protected override void OnOwnershipChanged(ulong previous, ulong current)
     {
-        if (IsOwner)
+        if (IsOwner && OwnerClientId == drivingClientID)
         {
             PlayerColors.PlayerColor color = PlayerColors.instance.GetAllColors()[carId];
             HUD.instance.ChangeColors(color.color, color.gradientColors);
@@ -289,8 +290,9 @@ public class CarController : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void setSpawnInformationClientRpc(int id)
+    public void SetSpawnInformationClientRpc(int id, ulong clientID)
     {
+        this.drivingClientID = clientID;
         this.carId = id;
         RaceController.instance.RegisterCar(id, this);
 
@@ -306,7 +308,7 @@ public class CarController : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void switchPositionWihtOtherCarClientRpc()
+    public void SwitchPositionWihtOtherCarClientRpc()
     {
         // Get all car controllers
         var carControllers = RaceController.instance.carController.Values;
@@ -334,7 +336,7 @@ public class CarController : NetworkBehaviour
         randomCar.transform.rotation = tempRotation;
     }
 
-    public void spinCar()
+    public void SpinCar()
     {
         StartCoroutine(SpinOutCoroutine());
     }

@@ -7,7 +7,7 @@ public class Banana : MonoBehaviour
         if (other.TryGetComponent(out CarController carController))
         {
                 // Apply the effect to the other car
-                carController.spinCar();
+                carController.SpinCar();
                 Destroy(gameObject);
         }
     }
