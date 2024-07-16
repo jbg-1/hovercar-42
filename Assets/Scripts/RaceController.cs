@@ -175,7 +175,7 @@ public class RaceController : NetworkBehaviour
 
             foreach (NetworkClient x in NetworkManager.Singleton.ConnectedClientsList)
             {
-                AddClientIDToDictonaryClintRpc(x.ClientId, i);
+                AddClientIDToDictonaryClientRpc(x.ClientId, i);
                 GameObject newCar = Instantiate(carPrefab, spawnPoints[i].transform.position, spawnPoints[i].transform.rotation);
                 newCar.GetComponent<NetworkObject>().Spawn();
                 newCar.GetComponent<CarController>().setSpawnInformationClientRpc(i);
