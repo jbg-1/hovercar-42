@@ -7,14 +7,6 @@ public class CarAudioController : NetworkBehaviour
 {
     [SerializeField] private AudioSource carTurbine;
     [SerializeField] private AudioSource bounce;
-    
-    public void Bounce(float value) 
-    {
-        if (IsOwner)
-        {
-            BounceClientRpc(value);
-        }
-    }
 
     [ClientRpc]
     public void BounceClientRpc(float value)

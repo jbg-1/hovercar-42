@@ -202,20 +202,24 @@ public class CarController : NetworkBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.TryGetComponent<Bouncer>(out Bouncer collisionBouncer))
+        if (IsOwner)
         {
-            carRigidbody.AddForce(collision.impulse.normalized * 5, ForceMode.VelocityChange);
-            carRigidbody.AddForce(collision.impulse * collisionBouncer.BounceRate(), ForceMode.Impulse);
-            Debug.Log(collision.impulse.magnitude);
-            carAudioController.Bounce(collision.impulse.magnitude/25000);
-        }
+            if (collision.gameObject.TryGetComponent<Bouncer>(out Bouncer collisionBouncer))
+            {
+                carRigidbody.AddForce(collision.impulse.normalized * 5, ForceMode.VelocityChange);
+                carRigidbody.AddForce(collision.impulse * collisionBouncer.BounceRate(), ForceMode.Impulse);
+                carAudioController.BounceClientRpc(collision.impulse.magnitude / 25000);
+            }
 
-        if (collision.gameObject.CompareTag("DeathBarrier"))
-        {
-            ReturnToLastCheckpoint();
-            HUD.instance.ToggleWrongDirectionText(false);
+            if (collision.gameObject.CompareTag("DeathBarrier"))
+            {
+                ReturnToLastCheckpoint();
+                HUD.instance.ToggleWrongDirectionText(false);
+            }
         }
     }
+
+
 
     public void ChangeGravityDirectionTo(Vector3 newGravityDirection)
     {
@@ -339,6 +343,15 @@ public class CarController : NetworkBehaviour
     public void SpinCar()
     {
         StartCoroutine(SpinOutCoroutine());
+    }
+
+    [ClientRpc]
+    public void BombClientRpc(Vector3 bombImpulse)
+    {
+        if (IsOwner)
+        {
+            carRigidbody.AddForce(bombImpulse, ForceMode.VelocityChange);
+        }
     }
 
     private IEnumerator SpinOutCoroutine()
