@@ -41,7 +41,7 @@ public class ItemController : NetworkBehaviour
             if (item == null)
             {
                 //int random = Random.Range(1, 5);
-                int random = 6;
+                int random = 5;
                 switch (random)
                 {
                     case 1:
@@ -54,13 +54,10 @@ public class ItemController : NetworkBehaviour
                         item = new LightningItem();
                         break;
                     case 4:
-                        item = new SwitchCarItem();
-                        break;
-                    case 5:
                         BananaItem bananaItem = new BananaItem();
                         item = bananaItem;
                         break;
-                    case 6:
+                    case 5:
                         BombItem bombItem = new BombItem();
                         item = bombItem;
                         break;
@@ -110,15 +107,13 @@ public class ItemController : NetworkBehaviour
         // Display the actual item
         if (item != null)
         {
-            ItemCountdown.instance.StartCountdown(3f);
+            ItemCountdown.instance.StartCountdown(2f);
             if (item is BoostItem)
                 HUD.instance.ToggleItemDisplay(true, "banana");
             else if (item is FreezeItem)
                 HUD.instance.ToggleItemDisplay(true, "ice-cube");
             else if (item is LightningItem)
                 HUD.instance.ToggleItemDisplay(true, "thunder");
-            else if (item is SwitchCarItem)
-                HUD.instance.ToggleItemDisplay(true, "bomb");
             else if (item is BananaItem)
                 HUD.instance.ToggleItemDisplay(true, "banana");
             else if (item is BombItem)

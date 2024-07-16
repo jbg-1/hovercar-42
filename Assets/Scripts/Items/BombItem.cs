@@ -7,8 +7,8 @@ public class BombItem : Item
     {
         Debug.Log("BombItem used");
 
-        // Get the position in front of the kart
-        Vector3 spawnPosition = itemController.transform.position + itemController.transform.forward * 2;
+       // Get the position above the kart
+        Vector3 spawnPosition = itemController.transform.position + itemController.transform.up * 4;
         Quaternion spawnRotation = Quaternion.identity;
 
         // Spawn the bomb
@@ -16,10 +16,12 @@ public class BombItem : Item
         Rigidbody bombRigidbody = bomb.GetComponent<Rigidbody>();
 
         // Apply forward and upward force to throw the bomb in an arc
-        Vector3 throwForce = itemController.GetComponent<Rigidbody>().velocity + itemController.transform.forward * 10f + itemController.transform.up * 5f;
+        
+
         // Ensure the bomb is networked (if applicable)
         bomb.GetComponent<NetworkObject>().Spawn();
 
+        Vector3 throwForce = itemController.GetComponent<Rigidbody>().velocity + itemController.transform.forward * 10f + itemController.transform.up * 5f;
         bombRigidbody.AddForce(throwForce, ForceMode.VelocityChange);
 
     }

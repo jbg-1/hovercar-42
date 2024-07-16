@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Bomb : MonoBehaviour
 {
-    [SerializeField] private float explosionForce = 10f;
-    [SerializeField] private float radius = 5f;
+    [SerializeField] private float explosionForce = 40f;
+    [SerializeField] private float radius = 8f;
 
 
     private void OnCollisionEnter(Collision collision)
