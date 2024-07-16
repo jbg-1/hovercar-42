@@ -15,9 +15,13 @@ public class RaceController : NetworkBehaviour
     [SerializeField] GameObject carPrefab; //Car to spawn
     [SerializeField] GameObject carCameraPrefab;
 
+    [Header("")]
     [SerializeField] GameObject[] spawnPoints;
     [SerializeField] RankingManager rankingManager;
     [SerializeField] CheckpointLogic checkpointLogic;
+
+    [Header("Sound")]
+    [SerializeField] AudioSource startSound;
 
     private void Awake()
     {
@@ -32,7 +36,6 @@ public class RaceController : NetworkBehaviour
 
     private List<int> finishedPlayers = new List<int>();
 
-    [SerializeField] private Button spawn;
     [SerializeField] private CameraController cameraController;
 
 
@@ -93,6 +96,8 @@ public class RaceController : NetworkBehaviour
     [ClientRpc]
     public void SetCountDownToClientRpc(int value)
     {
+        if (value == 0)
+            startSound.Play();
         HUD.instance.SetCountdownToValue(value);
     }
 
