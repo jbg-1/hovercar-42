@@ -280,6 +280,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0931cded4dab2844fbfb157d54e95e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bananaPrefab: {fileID: 1481861166459305089, guid: 72e9f7814549d034a96e6c3b9de421d7, type: 3}
+  bombPrefab: {fileID: 1258127407050923892, guid: 9ff6beac92277594c9cdbe14fbbbab8a, type: 3}
 --- !u!82 &801680247016807932
 AudioSource:
   m_ObjectHideFlags: 0
