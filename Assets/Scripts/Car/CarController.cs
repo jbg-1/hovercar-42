@@ -251,11 +251,18 @@ public class CarController : NetworkBehaviour
     }
     protected override void OnOwnershipChanged(ulong previous, ulong current)
     {
-        if (IsOwner && OwnerClientId == drivingClientID)
+        if (IsOwner)
         {
-            PlayerColors.PlayerColor color = PlayerColors.instance.GetAllColors()[carId];
-            HUD.instance.ChangeColors(color.color, color.gradientColors);
+            if (OwnerClientId == drivingClientID)
+            {
+                PlayerColors.PlayerColor color = PlayerColors.instance.GetAllColors()[carId];
+                HUD.instance.ChangeColors(color.color, color.gradientColors);
+            }
+            else { 
+                isDriving = false;
+            }
         }
+       
     }
 
     [ClientRpc]
