@@ -18,7 +18,7 @@ public class ItemController : NetworkBehaviour
         if (item != null)
         {
             Debug.Log("hasCarItem is true");
-            item.useItem(this);
+            UseItemServerRpc();
             item = null;
             HUD.instance.ToggleItemDisplay(false);
         }
@@ -26,6 +26,13 @@ public class ItemController : NetworkBehaviour
         {
             Debug.Log("No item to use");
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UseItemServerRpc()
+    {
+        item.useItem(this);
+        item = null;
     }
 
     private void Start()
@@ -42,6 +49,7 @@ public class ItemController : NetworkBehaviour
             {
                 //int random = Random.Range(1, 5);
                 int random = 5;
+                collectItemServerRpc(random);
                 switch (random)
                 {
                     case 1:
@@ -69,6 +77,33 @@ public class ItemController : NetworkBehaviour
                     StopCoroutine(displayRandomItemsCoroutine);
                 }
                 displayRandomItemsCoroutine = StartCoroutine(DisplayRandomItemsForDuration(2f));
+            }
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void collectItemServerRpc(int itemId) {         
+        if (item == null)
+        {
+            switch (itemId)
+            {
+                case 1:
+                    item = new BoostItem();
+                    break;
+                case 2:
+                    item = new FreezeItem();
+                    break;
+                case 3:
+                    item = new LightningItem();
+                    break;
+                case 4:
+                    BananaItem bananaItem = new BananaItem();
+                    item = bananaItem;
+                    break;
+                case 5:
+                    BombItem bombItem = new BombItem();
+                    item = bombItem;
+                    break;
             }
         }
     }
@@ -133,4 +168,6 @@ public class ItemController : NetworkBehaviour
         yield return new WaitForSeconds(delay);
         UseItem();
     }
+
+    
 }

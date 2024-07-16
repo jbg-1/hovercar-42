@@ -175,7 +175,7 @@ public class RaceController : NetworkBehaviour
 
             foreach (NetworkClient x in NetworkManager.Singleton.ConnectedClientsList)
             {
-                clientIDCarIdDicrionary[x.ClientId] = i;
+                AddClientIDToDictonaryClintRpc(x.ClientId, i);
                 GameObject newCar = Instantiate(carPrefab, spawnPoints[i].transform.position, spawnPoints[i].transform.rotation);
                 newCar.GetComponent<NetworkObject>().Spawn();
                 newCar.GetComponent<CarController>().setSpawnInformationClientRpc(i);
@@ -185,6 +185,11 @@ public class RaceController : NetworkBehaviour
         }
     }
 
+    [ClientRpc]
+    public void AddClientIDToDictonaryClintRpc(ulong clientID, int carID)
+    {
+        clientIDCarIdDicrionary[clientID] = carID;
+    }
 
     [ClientRpc]
     private void StartTimerClientRpc()
