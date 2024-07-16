@@ -12,7 +12,7 @@ public class CarCameraTarget : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (carController.isDriving)
+        if (carController.isDriving && carRigdbody.velocity != Vector3.zero)
         {
             cameraParent.rotation = Quaternion.LookRotation(carRigdbody.velocity);
         }

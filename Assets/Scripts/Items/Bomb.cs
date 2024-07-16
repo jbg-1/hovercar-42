@@ -1,24 +1,47 @@
 using UnityEngine;
+using Unity.Netcode;
+using System.Collections;
 
-public class Bomb : MonoBehaviour
+public class Bomb : NetworkBehaviour
 {
     [SerializeField] private float explosionForce = 40f;
     [SerializeField] private float radius = 8f;
+    [SerializeField] private ParticleSystem particlSystem;
+    [SerializeField] private MeshRenderer mesh;
+    [SerializeField] private AudioSource sound;
 
+    private bool exploded = false;
 
     private void OnCollisionEnter(Collision collision)
     {
-         Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
-
-         foreach (Collider collider in colliders)
+        if (IsServer && !exploded)
         {
-            if (collider.TryGetComponent<Rigidbody>(out Rigidbody rigidbody))
-            {
-                rigidbody.AddForce((rigidbody.transform.position - transform.position).normalized * explosionForce, ForceMode.VelocityChange);
-            }
-        }
-         //TODO EFFECT
+            exploded = true;
+            Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
 
-         Destroy(gameObject);
+            foreach (Collider collider in colliders)
+            {
+                if (collider.TryGetComponent<CarController>(out CarController car))
+                {
+                    car.BombClientRpc((car.transform.position - transform.position).normalized * explosionForce);
+                }
+            }
+            StartCoroutine(StartDestroy());
+        }
+    }
+
+    private IEnumerator StartDestroy()
+    {
+        PlayParticleClientRpc();
+        sound.Play();
+        yield return new WaitForSeconds(2f);
+        Destroy(gameObject);
+    }
+
+    [ClientRpc]
+    public void PlayParticleClientRpc()
+    {
+        particlSystem.Play();
+        mesh.enabled = false;
     }
 }
