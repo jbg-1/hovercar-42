@@ -293,7 +293,7 @@ public class CarController : NetworkBehaviour
     {
         carRigidbody.velocity = Vector3.zero;
         carRigidbody.isKinematic = true;
-        delay();
+        delayFreeze();
     }
     [ClientRpc]
     public void UnfreezeClientRpc()
@@ -319,34 +319,6 @@ public class CarController : NetworkBehaviour
         carRigidbody.isKinematic = true;
     }
 
-    [ClientRpc]
-    public void SwitchPositionWihtOtherCarClientRpc()
-    {
-        // Get all car controllers
-        var carControllers = RaceController.instance.carController.Values;
-        List<CarController> otherCars = new List<CarController>(carControllers);
-        otherCars.Remove(this);
-
-        // Ensure there's at least one other car to switch with
-        if (otherCars.Count == 0)
-        {
-            Debug.Log("No other cars to switch with!");
-            return;
-        }
-
-        // Pick a random car to switch positions with
-        CarController randomCar = otherCars[UnityEngine.Random.Range(0, otherCars.Count)];
-
-        // Swap positions and rotations
-        Vector3 tempPosition = this.transform.position;
-        Quaternion tempRotation = this.transform.rotation;
-
-        this.transform.position = randomCar.transform.position;
-        this.transform.rotation = randomCar.transform.rotation;
-
-        randomCar.transform.position = tempPosition;
-        randomCar.transform.rotation = tempRotation;
-    }
 
     public void SpinCar()
     {
@@ -377,15 +349,16 @@ public class CarController : NetworkBehaviour
         }
     }
 
-    private IEnumerator delay()
+    private IEnumerator delayFreeze()
     {
         //wait for 2 seconds
         yield return new WaitForSeconds(2);
         UnfreezeClientRpc();
     }
 
+
     [ClientRpc]
-    public void spinLightningCLientRPC()
+    public void spinLightningClientRpc()
     {
         StartCoroutine(SpinOutCoroutine());
     }
