@@ -22,7 +22,8 @@ public class RaceController : NetworkBehaviour
     [SerializeField] CheckpointLogic checkpointLogic;
 
     [Header("Sound")]
-    [SerializeField] AudioSource startSound;
+    [SerializeField] AudioSource countdownSound;
+    [SerializeField] AudioSource backgroundMusic;
 
     private void Awake()
     {
@@ -51,6 +52,11 @@ public class RaceController : NetworkBehaviour
         cameraController.ShowMap();
 
         checkpointLogic.onFinish += CarFinishedServerRpc;
+
+        // if (IsHost)
+        // {
+        //     backgroundMusic.Play();
+        // }
     }
 
     private void Update()
@@ -96,7 +102,7 @@ public class RaceController : NetworkBehaviour
     {
         HUD.instance.toggleVisibility(true);
         if (value == 0)
-            startSound.Play();
+            countdownSound.Play();
         HUD.instance.SetCountdownToValue(value);
     }
 
