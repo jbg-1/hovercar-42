@@ -42,9 +42,6 @@ public class RaceController : NetworkBehaviour
 
     [SerializeField] private FinishTimer finishTimer;
 
-    [SerializeField] private PlayerColors playerColors;
-
-
 
     // Start is called before the first frame update
     void Start()

@@ -57,6 +57,8 @@ public class CarController : NetworkBehaviour
 
     [SerializeField] private CarAudioController carAudioController;
 
+    [SerializeField] private GameObject ice;
+
     private float rotationInput;
 
     [ReadOnlyField]
@@ -291,13 +293,15 @@ public class CarController : NetworkBehaviour
     [ClientRpc]
     public void FreezeClientRpc()
     {
+        ice.SetActive(true);
         carRigidbody.velocity = Vector3.zero;
         carRigidbody.isKinematic = true;
-        delayFreeze();
+        StartCoroutine(delayFreeze());
     }
     [ClientRpc]
     public void UnfreezeClientRpc()
     {
+        ice.SetActive(false);
         carRigidbody.isKinematic = false;
     }
 
