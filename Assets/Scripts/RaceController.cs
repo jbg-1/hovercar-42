@@ -153,7 +153,7 @@ public class RaceController : NetworkBehaviour
         NetworkManager.SceneManager.OnLoadComplete += DestroyCar;
     }
 
-    [ClientRpc]
+    [Rpc(SendTo.Everyone)]
     public void ResultSetClientRpc(int rank1, int rank2, int rank3)
     {
         ResultNet.instance.LastRaceResult = new List<int> { rank1, rank2, rank3};
