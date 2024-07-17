@@ -293,6 +293,7 @@ public class CarController : NetworkBehaviour
     {
         carRigidbody.velocity = Vector3.zero;
         carRigidbody.isKinematic = true;
+        delay();
     }
     [ClientRpc]
     public void UnfreezeClientRpc()
@@ -374,6 +375,12 @@ public class CarController : NetworkBehaviour
             timer += Time.deltaTime;
             yield return null;
         }
+    }
 
+    private IEnumerator delay()
+    {
+        //wait for 2 seconds
+        yield return new WaitForSeconds(2);
+        UnfreezeClientRpc();
     }
 }
