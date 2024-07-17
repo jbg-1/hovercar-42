@@ -29,7 +29,7 @@ public class FinishTimer : MonoBehaviour
         {
             finishTimerDuration -= Time.deltaTime;
             hud.UpdateTimer(FormatTimer(finishTimerDuration));
-            if (finishTimerDuration < 0)
+            if (finishTimerDuration < 1)
             {
                 onFinish();
                 timerRunning = false;

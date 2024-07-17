@@ -21,6 +21,7 @@ public class CheckpointLogic : NetworkBehaviour
 
     private void Start()
     {
+        HUD.instance.toggleVisibility(false);
         checkpoints = checkPointParent.GetComponentsInChildren<Checkpoint>();
         totalCheckpointAmount = checkpoints.Length;
 
@@ -66,6 +67,10 @@ public class CheckpointLogic : NetworkBehaviour
             else if (checkPointCount[carController.carId] == totalCheckpointAmount * 3)
             {
                 onFinish(carController.carId);
+                HUD.instance.toggleVisibility(false);
+            } else if (checkPointCount[carController.carId] == 4){
+                onFinish(carController.carId);
+                HUD.instance.toggleVisibility(false);
             }
         }
         NotifyTriggerClientRpc(checkPointId, carController.carId);
