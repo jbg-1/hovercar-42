@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731704, g: 0.13414727, b: 0.121078536, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -175,6 +175,10 @@ PrefabInstance:
       propertyPath: MqttCommunicationHoverCar
       value: 
       objectReference: {fileID: 775680145}
+    - target: {fileID: 5206738867714785965, guid: 23fa3e4428045db4faf662498f3bf521, type: 3}
+      propertyPath: host
+      value: 192.168.111.1
+      objectReference: {fileID: 0}
     - target: {fileID: 6753212626346258502, guid: 23fa3e4428045db4faf662498f3bf521, type: 3}
       propertyPath: m_Name
       value: CubeController

@@ -19422,10 +19422,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 103157756940610999, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
-      propertyPath: startSound
-      value: 
-      objectReference: {fileID: 1680742364677125823}
-    - target: {fileID: 103157756940610999, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
       propertyPath: cameraController
       value: 
       objectReference: {fileID: 880217200}
@@ -19477,10 +19473,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4333767053996428034, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
-      propertyPath: m_PlayOnAwake
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4914552965189943591, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
       propertyPath: hud
       value: 
@@ -19494,11 +19486,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
---- !u!82 &1680742364677125823 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 4333767053996428034, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
-  m_PrefabInstance: {fileID: 1680742364677125822}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4166478434704327850 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5048766843230711803, guid: 218edaee672a7b34386d5414cbf907d4, type: 3}

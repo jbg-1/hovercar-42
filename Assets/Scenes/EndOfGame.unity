@@ -587,9 +587,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lights:
-  - {fileID: 1458868262}
-  - {fileID: 1125610084}
   - {fileID: 842485318}
+  - {fileID: 1125610084}
+  - {fileID: 1458868262}
 --- !u!1 &1125610082
 GameObject:
   m_ObjectHideFlags: 0

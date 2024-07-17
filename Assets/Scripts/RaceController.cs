@@ -102,9 +102,6 @@ public class RaceController : NetworkBehaviour
         HUD.instance.SetCountdownToValue(value);
     }
 
-
-
-
     public void StartRace()
     {
         for (int i = 0; i < carController.Count; i++)
@@ -147,6 +144,9 @@ public class RaceController : NetworkBehaviour
     {
         List<int> rank = rankingManager.CalculateRankings();
         NetworkManager.SceneManager.LoadScene("EndOfGame", LoadSceneMode.Single);
+        foreach (GameObject x in carGameobjects.Values) { 
+            Destroy(x);
+        }
     }
 
 
@@ -171,6 +171,7 @@ public class RaceController : NetworkBehaviour
     [ClientRpc]
     public void AddClientIDToDictonaryClientRpc(ulong clientID, int carID)
     {
+
         clientIDCarIdDicrionary[clientID] = carID;
     }
 

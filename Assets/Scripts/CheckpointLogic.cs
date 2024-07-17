@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
 using static FinishTimer;
 
 [System.Serializable]
-public class CheckpointLogic : MonoBehaviour
+public class CheckpointLogic : NetworkBehaviour
 {
     [SerializeField] GameObject checkPointParent;
 
@@ -32,7 +33,6 @@ public class CheckpointLogic : MonoBehaviour
 
     public void NotifyTrigger(int checkPointId, CarController carController)
     {
-
         if (!checkPointCount.ContainsKey(carController.carId))
         {
             checkPointCount.Add(carController.carId, 0);
@@ -49,6 +49,11 @@ public class CheckpointLogic : MonoBehaviour
 
             if (!carController.IsOwner)
                 return;
+            if (checkPointCount[carController.carId] == 4)
+            {
+                onFinish(carController.carId);
+                return;
+            }
 
             if (checkPointCount[carController.carId] == totalCheckpointAmount)
             {
@@ -63,7 +68,25 @@ public class CheckpointLogic : MonoBehaviour
                 onFinish(carController.carId);
             }
         }
+        NotifyTriggerClientRpc(checkPointId, carController.carId);
     }
+
+    [ClientRpc]
+    public void NotifyTriggerClientRpc(int checkPointId, int carId)
+    {
+        if (!checkPointCount.ContainsKey(carId))
+        {
+            checkPointCount.Add(carId, 0);
+        }
+        else
+        {
+            if (checkPointId == (checkPointCount[carId] + 1) % checkpoints.Length)
+            {
+                checkPointCount[carId] = checkPointCount[carId] + 1;
+            }
+        }
+    }
+
 
     public GameObject getCheckpoint(int checkpointCount)
     {

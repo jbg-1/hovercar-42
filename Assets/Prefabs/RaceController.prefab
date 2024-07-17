@@ -118,7 +118,7 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 0
   ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
+  SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
@@ -148,8 +148,7 @@ MonoBehaviour:
   - {fileID: 129745041835305674}
   rankingManager: {fileID: 4510371173533586466}
   checkpointLogic: {fileID: 2223144377705767187}
-  startSound: {fileID: 0}
-  spawn: {fileID: 0}
+  startSound: {fileID: 4333767053996428034}
   cameraController: {fileID: 0}
   finishTimer: {fileID: 4914552965189943591}
   playerColors: {fileID: 4486350453419376104}
@@ -223,7 +222,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: b8c7bfbc14c57c74c8c2102d68089f7b, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
