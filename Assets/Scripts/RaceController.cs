@@ -145,9 +145,9 @@ public class RaceController : NetworkBehaviour
         List<int> rank = rankingManager.CalculateRankings();
         if(rank.Count >= 3)
             ResultSetClientRpc(rank[0], rank[1], rank[2]);
-        if (rank.Count >= 2)
+        else if (rank.Count >= 2)
             ResultSetClientRpc(rank[0], rank[1], -1);
-        if (rank.Count >= 1)
+        else if (rank.Count >= 1)
             ResultSetClientRpc(rank[0], -1, -1);
         NetworkManager.SceneManager.LoadScene("EndOfGame", LoadSceneMode.Single);
         NetworkManager.SceneManager.OnLoadComplete += DestroyCar;
