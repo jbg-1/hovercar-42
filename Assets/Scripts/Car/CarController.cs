@@ -383,4 +383,10 @@ public class CarController : NetworkBehaviour
         yield return new WaitForSeconds(2);
         UnfreezeClientRpc();
     }
+
+    [ClientRpc]
+    public void spinLightningCLientRPC()
+    {
+        StartCoroutine(SpinOutCoroutine());
+    }
 }

@@ -8,23 +8,16 @@ public class LightningItem : Item
     {
         CarController usingCar = itemController.gameObject.GetComponent<CarController>();
 
+        
         foreach (var car in RaceController.instance.carController.Values)
         {
+            Debug.Log("Freeze Item on all cars");
             if (car != usingCar)
             {
-                car.LightningClientRpc();
+                car.spinLightningCLientRPC();
             }
         }
-        Debug.Log("LightningItem used");
-        itemController.gameObject.GetComponent<CarController>().LightningClientRpc();
-        itemController.StartCoroutine(BoostAfterLightning(itemController, 10f, 2f));
-    }
 
-    private IEnumerator BoostAfterLightning(ItemController itemController, float boostAmount, float freezeDuration)
-    {
-        yield return new WaitForSeconds(freezeDuration);
-        itemController.gameObject.GetComponent<CarController>().UnfreezeClientRpc();
-        itemController.gameObject.GetComponent<CarController>().Boost(boostAmount);
     }
 }
 
