@@ -41,7 +41,10 @@ public class Bomb : NetworkBehaviour
         sound.Play();
         particlSystem.Play();
         mesh.enabled = false;
-        yield return new WaitForSeconds(2f);
-        Destroy(gameObject);
+        yield return new WaitForSeconds(3f);
+        if (IsServer)
+        {
+            Destroy(gameObject);
+        }
     }
 }

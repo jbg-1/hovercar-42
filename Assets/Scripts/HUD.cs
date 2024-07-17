@@ -9,6 +9,7 @@ public class HUD : MonoBehaviour
     public static HUD instance;
     [SerializeField] public MiniMap miniMap;
     [SerializeField] private StartCountdownUI startCountdownUI;
+    [SerializeField] private Sprite[] itemSprites;
 
 
     public TextMeshProUGUI timerText;
@@ -61,25 +62,19 @@ public class HUD : MonoBehaviour
         steeringWheelIndicator.transform.rotation = Quaternion.Euler(0, 0, -rotation * 180f);
     }
 
-    public void ToggleItemDisplay(bool show, string itemName = "", string itemFileEnding = "png")
+    public void ToggleItemDisplay(bool show, int itemID = 0)
     {
-        if (!show && itemName == "")
+        if (!show)
         {
             itemDisplay.SetActive(false);
             return;
         }
 
-        string pathToItem = $"Assets/Images/Items/{itemName}.{itemFileEnding}";
-        Texture2D texture = LoadTexture(pathToItem);
-
-        if (texture != null)
+        Image image = itemDisplay.GetComponent<Image>();
+        if (image != null)
         {
-            RawImage rawImage = itemDisplay.GetComponent<RawImage>();
-            if (rawImage != null)
-            {
-                rawImage.texture = texture;
-                itemDisplay.SetActive(true);
-            }
+            image.sprite = itemSprites[itemID];
+            itemDisplay.SetActive(true);
         }
     }
 

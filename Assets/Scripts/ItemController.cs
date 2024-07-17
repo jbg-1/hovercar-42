@@ -72,25 +72,8 @@ public class ItemController : NetworkBehaviour
         while (elapsedTime < duration)
         {
             elapsedTime += 0.2f; // Change item every 0.2 seconds
-            int random = Random.Range(1, 6);
-            switch (random)
-            {
-                case 1:
-                    HUD.instance.ToggleItemDisplay(true, "boost");
-                    break;
-                case 2:
-                    HUD.instance.ToggleItemDisplay(true, "ice-cube");
-                    break;
-                case 3:
-                    HUD.instance.ToggleItemDisplay(true, "thunder");
-                    break;
-                case 4:
-                    HUD.instance.ToggleItemDisplay(true, "banana");
-                    break;
-                case 5:
-                    HUD.instance.ToggleItemDisplay(true, "bomb");
-                    break;
-            }
+            int random = Random.Range(0, 5);
+            HUD.instance.ToggleItemDisplay(true, random);
             yield return new WaitForSeconds(0.2f);
         }
 
@@ -99,15 +82,15 @@ public class ItemController : NetworkBehaviour
         {
             ItemCountdown.instance.StartCountdown(3f);
             if (item is BoostItem)
-                HUD.instance.ToggleItemDisplay(true, "boost");
+                HUD.instance.ToggleItemDisplay(true, 0);
             else if (item is FreezeItem)
-                HUD.instance.ToggleItemDisplay(true, "ice-cube");
+                HUD.instance.ToggleItemDisplay(true, 1);
             else if (item is LightningItem)
-                HUD.instance.ToggleItemDisplay(true, "thunder");
+                HUD.instance.ToggleItemDisplay(true, 2);
             else if (item is BananaItem)
-                HUD.instance.ToggleItemDisplay(true, "banana");
+                HUD.instance.ToggleItemDisplay(true, 3);
             else if (item is BombItem)
-                HUD.instance.ToggleItemDisplay(true, "bomb");
+                HUD.instance.ToggleItemDisplay(true, 4);
 
             // Start the coroutine to use the item after 3 seconds
             if (autoUseItemCoroutine != null)

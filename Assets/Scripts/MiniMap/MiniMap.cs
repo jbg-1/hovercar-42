@@ -14,8 +14,6 @@ public class MiniMap : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log(rectTransform.rect.width / scale.x);
-        Debug.Log(rectTransform.rect.height / scale.y);
         scaleChange = new Vector2(rectTransform.rect.width/scale.x, rectTransform.rect.height / scale.y);
     }
 

@@ -50,11 +50,6 @@ public class CheckpointLogic : NetworkBehaviour
 
             if (!carController.IsOwner)
                 return;
-            if (checkPointCount[carController.carId] == totalCheckpointAmount)
-            {
-                onFinish(carController.carId);
-                return;
-            }
 
             if (checkPointCount[carController.carId] == totalCheckpointAmount)
             {
@@ -66,9 +61,6 @@ public class CheckpointLogic : NetworkBehaviour
             }
             else if (checkPointCount[carController.carId] == totalCheckpointAmount * 3)
             {
-                onFinish(carController.carId);
-                HUD.instance.toggleVisibility(false);
-            } else if (checkPointCount[carController.carId] == 4){
                 onFinish(carController.carId);
                 HUD.instance.toggleVisibility(false);
             }
