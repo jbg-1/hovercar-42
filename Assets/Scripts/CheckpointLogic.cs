@@ -49,7 +49,7 @@ public class CheckpointLogic : NetworkBehaviour
 
             if (!carController.IsOwner)
                 return;
-            if (checkPointCount[carController.carId] == 4)
+            if (checkPointCount[carController.carId] == totalCheckpointAmount)
             {
                 onFinish(carController.carId);
                 return;

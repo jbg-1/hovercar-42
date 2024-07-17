@@ -57,7 +57,7 @@ public class RaceController : NetworkBehaviour
     }
 
     private void Update()
-{
+    {
         List<int> rank = rankingManager.CalculateRankings();
         int ranking = 1;
         foreach (int x in rank)
@@ -143,8 +143,27 @@ public class RaceController : NetworkBehaviour
     public void RaceFinishedServerRpc()
     {
         List<int> rank = rankingManager.CalculateRankings();
+        if(rank.Count >= 3)
+            ResultSetClientRpc(rank[0], rank[1], rank[2]);
+        if (rank.Count >= 2)
+            ResultSetClientRpc(rank[0], rank[1], -1);
+        if (rank.Count >= 1)
+            ResultSetClientRpc(rank[0], -1, -1);
         NetworkManager.SceneManager.LoadScene("EndOfGame", LoadSceneMode.Single);
-        foreach (GameObject x in carGameobjects.Values) { 
+        NetworkManager.SceneManager.OnLoadComplete += DestroyCar;
+    }
+
+    [ClientRpc]
+    public void ResultSetClientRpc(int rank1, int rank2, int rank3)
+    {
+        ResultNet.instance.LastRaceResult = new List<int> { rank1, rank2, rank3};
+    }
+
+    public void DestroyCar(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
+    {
+        NetworkManager.SceneManager.OnLoadComplete -= DestroyCar;
+        foreach (GameObject x in carGameobjects.Values)
+        {
             Destroy(x);
         }
     }
