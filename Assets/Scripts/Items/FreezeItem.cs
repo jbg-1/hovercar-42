@@ -19,9 +19,10 @@ public class FreezeItem : Item
         }
 
         // Start coroutine to unfreeze all other cars after duration
-        itemController.StartCoroutine(UnfreezeCarsAfterDelay(usingCar, 2f, 10f));
+        //itemController.StartCoroutine(UnfreezeCarsAfterDelay(usingCar, 2f, 10f));
     }
 
+    /**
     private IEnumerator UnfreezeCarsAfterDelay(CarController usingCar, float delay, float boostAmount)
     {
         yield return new WaitForSeconds(delay);
@@ -37,5 +38,6 @@ public class FreezeItem : Item
         // Boost the car that used the item after unfreezing others
         usingCar.Boost(boostAmount);
     }
+    **/
 }
 

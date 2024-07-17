@@ -14,7 +14,7 @@ public class LightningItem : Item
             Debug.Log("Freeze Item on all cars");
             if (car != usingCar)
             {
-                car.spinLightningCLientRPC();
+                car.spinLightningClientRpc();
             }
         }
 
