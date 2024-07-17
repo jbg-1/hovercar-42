@@ -94,6 +94,7 @@ public class RaceController : NetworkBehaviour
     [ClientRpc]
     public void SetCountDownToClientRpc(int value)
     {
+        HUD.instance.toggleVisibility(true);
         if (value == 0)
             startSound.Play();
         HUD.instance.SetCountdownToValue(value);

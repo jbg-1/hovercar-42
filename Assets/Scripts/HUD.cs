@@ -174,4 +174,9 @@ public class HUD : MonoBehaviour
     {
         startCountdownUI.SetCountdownToValue(value);
     }
+
+    public void toggleVisibility(bool visible)
+    {
+        gameObject.SetActive(visible);
+    }
 }
