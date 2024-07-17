@@ -14,6 +14,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TrackThemePark.unity
     guid: 42fbbd73eaefd8b43a50fe9207e0783d
+  - enabled: 1
+    path: Assets/Scenes/EndOfGame.unity
+    guid: 8cf65292f61fd6d439272e4bbe4eedb9
   - enabled: 0
     path: Assets/Scenes/TestTrackRoad.unity
     guid: 0643e5cd562dfce4b832071446271145

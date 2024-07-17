@@ -5,6 +5,7 @@ using System.Linq;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class RaceController : NetworkBehaviour
@@ -145,25 +146,7 @@ public class RaceController : NetworkBehaviour
     public void RaceFinishedServerRpc()
     {
         List<int> rank = rankingManager.CalculateRankings();
-
-        foreach (int x in rank)
-        {
-            if (!finishedPlayers.Contains(x))
-            {
-                finishedPlayers.Add(x);
-                carController[x].StopDrivingClientRpc();
-            }
-        }
-
-        string finalRankings = string.Join("\n", finishedPlayers.Select((playerIndex, index) => $"{index + 1}. {PlayerColors.instance.getColor(playerIndex).name}"));
-        ShowFinalRankClientRpc(finalRankings);
-    }
-
-
-
-    [ClientRpc]
-    private void ShowFinalRankClientRpc(string result)
-    {
+        NetworkManager.SceneManager.LoadScene("EndOfGame", LoadSceneMode.Single);
     }
 
 
