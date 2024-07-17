@@ -97,7 +97,7 @@ public class ItemController : NetworkBehaviour
         // Display the actual item
         if (item != null)
         {
-            ItemCountdown.instance.StartCountdown(2f);
+            ItemCountdown.instance.StartCountdown(3f);
             if (item is BoostItem)
                 HUD.instance.ToggleItemDisplay(true, "boost");
             else if (item is FreezeItem)
