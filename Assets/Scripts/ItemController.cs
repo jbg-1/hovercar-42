@@ -72,11 +72,11 @@ public class ItemController : NetworkBehaviour
         while (elapsedTime < duration)
         {
             elapsedTime += 0.2f; // Change item every 0.2 seconds
-            int random = Random.Range(1, 5);
+            int random = Random.Range(1, 6);
             switch (random)
             {
                 case 1:
-                    HUD.instance.ToggleItemDisplay(true, "banana");
+                    HUD.instance.ToggleItemDisplay(true, "boost");
                     break;
                 case 2:
                     HUD.instance.ToggleItemDisplay(true, "ice-cube");
@@ -85,12 +85,9 @@ public class ItemController : NetworkBehaviour
                     HUD.instance.ToggleItemDisplay(true, "thunder");
                     break;
                 case 4:
-                    HUD.instance.ToggleItemDisplay(true, "bomb");
-                    break;
-                case 5:
                     HUD.instance.ToggleItemDisplay(true, "banana");
                     break;
-                case 6:
+                case 5:
                     HUD.instance.ToggleItemDisplay(true, "bomb");
                     break;
             }
@@ -102,7 +99,7 @@ public class ItemController : NetworkBehaviour
         {
             ItemCountdown.instance.StartCountdown(2f);
             if (item is BoostItem)
-                HUD.instance.ToggleItemDisplay(true, "banana");
+                HUD.instance.ToggleItemDisplay(true, "boost");
             else if (item is FreezeItem)
                 HUD.instance.ToggleItemDisplay(true, "ice-cube");
             else if (item is LightningItem)
