@@ -53,10 +53,10 @@ public class RaceController : NetworkBehaviour
 
         checkpointLogic.onFinish += CarFinishedServerRpc;
 
-        if (IsHost)
-        {
-            backgroundMusic.Play();
-        }
+        // if (IsHost)
+        // {
+        //     backgroundMusic.Play();
+        // }
     }
 
     private void Update()
