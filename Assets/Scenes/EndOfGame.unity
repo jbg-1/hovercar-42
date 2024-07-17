@@ -590,6 +590,10 @@ MonoBehaviour:
   - {fileID: 842485318}
   - {fileID: 1125610084}
   - {fileID: 1458868262}
+  cars:
+  - {fileID: 1670883403}
+  - {fileID: 1844280679}
+  - {fileID: 1896198477}
 --- !u!1 &1125610082
 GameObject:
   m_ObjectHideFlags: 0
@@ -1310,6 +1314,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e2ba5330808928a4a85d55243f4451b1, type: 3}
+--- !u!23 &1670883403 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1980167800451406729, guid: e2ba5330808928a4a85d55243f4451b1, type: 3}
+  m_PrefabInstance: {fileID: 1670883402}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1844280678
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1367,6 +1376,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e2ba5330808928a4a85d55243f4451b1, type: 3}
+--- !u!23 &1844280679 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1980167800451406729, guid: e2ba5330808928a4a85d55243f4451b1, type: 3}
+  m_PrefabInstance: {fileID: 1844280678}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1890579959
 GameObject:
   m_ObjectHideFlags: 0
@@ -1530,6 +1544,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e2ba5330808928a4a85d55243f4451b1, type: 3}
+--- !u!23 &1896198477 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1980167800451406729, guid: e2ba5330808928a4a85d55243f4451b1, type: 3}
+  m_PrefabInstance: {fileID: 1896198476}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2074386635
 PrefabInstance:
   m_ObjectHideFlags: 0

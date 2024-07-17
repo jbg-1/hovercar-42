@@ -19422,6 +19422,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 103157756940610999, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
+      propertyPath: playerColors
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 103157756940610999, guid: 4ec46abb0d670c14c9307b6bb269d207, type: 3}
       propertyPath: cameraController
       value: 
       objectReference: {fileID: 880217200}

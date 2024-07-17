@@ -613,6 +613,8 @@ GameObject:
   - component: {fileID: 947370827}
   - component: {fileID: 947370826}
   - component: {fileID: 947370825}
+  - component: {fileID: 947370828}
+  - component: {fileID: 947370829}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -699,6 +701,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &947370828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 947370824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c447ff3c4a509b94b9dec892ca274667, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LastRaceResult: 
+--- !u!114 &947370829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 947370824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d06ba10a40f989541a8cf5ee3f649514, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orangeMaterial: {fileID: 2100000, guid: 1614945c973e61744ae2e139bdb954f4, type: 2}
+  blueMaterial: {fileID: 2100000, guid: ee567576bd5937849ad34a04450b9185, type: 2}
+  redMaterial: {fileID: 2100000, guid: abcd5d7bcdd76e2488fd09496d969f21, type: 2}
+  greenMaterial: {fileID: 2100000, guid: 9d2a6a5e3e1a46c43bdccbf1e3404079, type: 2}
+  yellowMaterial: {fileID: 2100000, guid: 4e07fe2b0e2d10245a711b4808ab831d, type: 2}
+  purpleMaterial: {fileID: 2100000, guid: 2230d8a6fdace3d44bea3080e8b9024a, type: 2}
+  cyanMaterial: {fileID: 2100000, guid: ab6f616675b14724da27adad2f9e37b9, type: 2}
+  pinkMaterial: {fileID: 2100000, guid: ed528200a6da25d4980f16ef5c027d67, type: 2}
 --- !u!1 &1163396943
 GameObject:
   m_ObjectHideFlags: 0

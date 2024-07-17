@@ -73,7 +73,6 @@ GameObject:
   - component: {fileID: 3604931479087167660}
   - component: {fileID: 8212234238283600310}
   - component: {fileID: 103157756940610999}
-  - component: {fileID: 4486350453419376104}
   - component: {fileID: 4914552965189943591}
   - component: {fileID: 2223144377705767187}
   - component: {fileID: 4510371173533586466}
@@ -151,27 +150,7 @@ MonoBehaviour:
   startSound: {fileID: 4333767053996428034}
   cameraController: {fileID: 0}
   finishTimer: {fileID: 4914552965189943591}
-  playerColors: {fileID: 4486350453419376104}
---- !u!114 &4486350453419376104
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2210904463257407177}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d06ba10a40f989541a8cf5ee3f649514, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  orangeMaterial: {fileID: 2100000, guid: 1614945c973e61744ae2e139bdb954f4, type: 2}
-  blueMaterial: {fileID: 2100000, guid: ee567576bd5937849ad34a04450b9185, type: 2}
-  redMaterial: {fileID: 2100000, guid: abcd5d7bcdd76e2488fd09496d969f21, type: 2}
-  greenMaterial: {fileID: 2100000, guid: 9d2a6a5e3e1a46c43bdccbf1e3404079, type: 2}
-  yellowMaterial: {fileID: 2100000, guid: 4e07fe2b0e2d10245a711b4808ab831d, type: 2}
-  purpleMaterial: {fileID: 2100000, guid: 2230d8a6fdace3d44bea3080e8b9024a, type: 2}
-  cyanMaterial: {fileID: 2100000, guid: ab6f616675b14724da27adad2f9e37b9, type: 2}
-  pinkMaterial: {fileID: 2100000, guid: ed528200a6da25d4980f16ef5c027d67, type: 2}
+  playerColors: {fileID: 0}
 --- !u!114 &4914552965189943591
 MonoBehaviour:
   m_ObjectHideFlags: 0
