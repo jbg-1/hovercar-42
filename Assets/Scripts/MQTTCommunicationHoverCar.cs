@@ -1,16 +1,17 @@
 using PuzzleCubes.Communication;
 using PuzzleCubes.Models;
+using Unity.Netcode;
 using System.Collections;
 using UnityEngine;
 using MQTTnet;
 using MQTTnet.Client;
 using System;
 using System.Text;
-using Unity.Netcode;
 using System.Net;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using UnityEngine.SceneManagement;
 
 public class MqttCommunicationHoverCar : MonoBehaviour
 {
@@ -44,6 +45,7 @@ public class MqttCommunicationHoverCar : MonoBehaviour
         mqttCommunication.Subscribe("puzzleCubes/app/setHostIPForClients", HandleSetHostIPForClientsMessage);
         mqttCommunication.Subscribe("puzzleCubes/app/sendLevel", HandleSetLevel);
         mqttCommunication.Subscribe("puzzleCubes/app/startGameEvent", HandleStartGame);
+        mqttCommunication.Subscribe("puzzleCubes/app/restartGameEvent", HandleRestartGame);
 
         // Register client with the broker
         SendClientRegistration();
@@ -153,7 +155,17 @@ public class MqttCommunicationHoverCar : MonoBehaviour
         if (isHost)
         {
             Debug.Log("All clients connected. Starting game...");
-            lobbyManager.LoadRace(); //TODO
+            lobbyManager.LoadRace(); 
+        }
+    }
+
+    private void HandleRestartGame(MqttApplicationMessage message, object context)
+    {
+        if (isHost)
+        {
+            Debug.Log("Going back to lobby.");
+            NetworkManager.Singleton.SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
+
         }
     }
 }
