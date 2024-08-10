@@ -1,5 +1,5 @@
-![alt text](https://github.com/jbg-1/hovercar-42/blob/main/Assets/Images/banner.png?raw=true)
 # HoverCar 42 (Cubes)
+![alt text](https://github.com/jbg-1/hovercar-42/blob/main/Assets/Images/banner.png?raw=true)
 Das Projekt **HoverCar 42** ist ein mit Unity entwickeltes Rennspiel, das auf der [HelloCubes - DemoApp](https://github.com/dasdigitalefoyer/cubes-hellocubes-unity) aufbaut.
 
 Weitere wichtige Ressourcen: 
