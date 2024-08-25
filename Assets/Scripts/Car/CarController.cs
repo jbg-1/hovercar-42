@@ -290,7 +290,7 @@ public class CarController : NetworkBehaviour
 
     }
 
-    [ClientRpc]
+    [Rpc(SendTo.Everyone, RequireOwnership = false)]
     public void FreezeClientRpc()
     {
         ice.SetActive(true);
@@ -298,7 +298,8 @@ public class CarController : NetworkBehaviour
         carRigidbody.isKinematic = true;
         StartCoroutine(delayFreeze());
     }
-    [ClientRpc]
+
+    [Rpc(SendTo.Everyone, RequireOwnership = false)]
     public void UnfreezeClientRpc()
     {
         ice.SetActive(false);
@@ -316,7 +317,7 @@ public class CarController : NetworkBehaviour
         HUD.instance.miniMap.InstantiateMarker(gameObject, id);
     }
 
-    [ClientRpc]
+    [Rpc(SendTo.Everyone, RequireOwnership = false)]
     public void LightningClientRpc()
     {
         carRigidbody.velocity = Vector3.zero;
@@ -361,7 +362,7 @@ public class CarController : NetworkBehaviour
     }
 
 
-    [ClientRpc]
+    [Rpc(SendTo.Everyone, RequireOwnership = false)]
     public void spinLightningClientRpc()
     {
         StartCoroutine(SpinOutCoroutine());
